@@ -1,0 +1,959 @@
+<!doctype html>
+<!--
+  ┌────────────────────────────────────────────────────────────────────┐
+  │  Web-Handout PDF · Starter Template                                │
+  │                                                                    │
+  │  This file is a complete, working example. To adapt to your        │
+  │  project:                                                          │
+  │    1. Replace <title>, cover headline, tagline, lede               │
+  │    2. Update KPI blocks on cover, color swatches, fonts            │
+  │    3. Edit each <section class="page"> with your content           │
+  │    4. Reference your own screenshots from screenshots/<slug>-...   │
+  │    5. Customize closing/next-steps page                            │
+  │                                                                    │
+  │  Page types available (see below):                                 │
+  │    .cover · .compare · design-system · showcase-tall ·             │
+  │    showcase-pair · mobile-grid · tech-protect · stats · closing    │
+  │                                                                    │
+  │  Brand tokens are in :root at the top of <style> — change those    │
+  │  to recolor everything at once.                                    │
+  └────────────────────────────────────────────────────────────────────┘
+-->
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<title>Web-Handout</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --forest-50: #f1f6f2;
+    --forest-100: #dee9e1;
+    --forest-200: #bcd4c2;
+    --forest-700: #244635;
+    --forest-800: #1A3A2A;
+    --forest-900: #102A1D;
+    --forest-950: #081a12;
+    --gold-50: #fbf7ec;
+    --gold-200: #ecd590;
+    --gold-300: #e0bb5b;
+    --gold-600: #A16207;
+    --gold-700: #7d4b08;
+    --bone-50: #FAFAF9;
+    --bone-100: #f5f5f3;
+    --bone-200: #e7e5e1;
+    --bone-300: #d3d0c9;
+    --bone-500: #7d7870;
+    --bone-600: #5a5650;
+    --bone-700: #3f3c37;
+    --ink: #14151a;
+    --display: "Playfair Display", Georgia, serif;
+    --sans: "Inter", system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: var(--sans);
+    color: var(--ink);
+    background: var(--bone-50);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    font-size: 11pt;
+    line-height: 1.55;
+  }
+
+  @page { size: A4; margin: 0; }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 18mm 16mm;
+    page-break-after: always;
+    background: var(--bone-50);
+    position: relative;
+    overflow: hidden;
+  }
+  .page:last-child { page-break-after: auto; }
+
+  h1, h2, h3, h4 {
+    font-family: var(--display);
+    font-weight: 500;
+    color: var(--forest-900);
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+  h1 { font-size: 44pt; }
+  h2 { font-size: 26pt; }
+  h3 { font-size: 16pt; font-weight: 500; }
+  h4 { font-size: 12pt; font-weight: 600; font-family: var(--sans); }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 8pt;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--gold-600);
+  }
+  .eyebrow::before {
+    content: "";
+    width: 24px;
+    height: 1px;
+    background: currentColor;
+    display: inline-block;
+  }
+
+  .muted { color: var(--bone-600); }
+  .kicker { font-size: 9pt; color: var(--bone-600); }
+  .accent { color: var(--gold-600); }
+  .strong { font-weight: 600; color: var(--forest-900); }
+
+  /* Cover */
+  .cover {
+    background: linear-gradient(180deg, var(--forest-900) 0%, var(--forest-800) 65%, var(--forest-700) 100%);
+    color: white;
+    padding: 22mm 18mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 297mm;
+    position: relative;
+  }
+  .cover::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(800px 400px at 90% -10%, rgba(161,98,7,0.35), transparent 60%),
+      radial-gradient(600px 300px at -10% 100%, rgba(161,98,7,0.18), transparent 60%);
+    pointer-events: none;
+  }
+  .cover > * { position: relative; z-index: 1; }
+  .cover h1 {
+    color: white;
+    font-size: 60pt;
+    line-height: 1;
+    max-width: 16ch;
+  }
+  .cover h1 em { color: var(--gold-300); font-style: italic; }
+  .cover .lede {
+    font-size: 13pt;
+    color: rgba(255,255,255,0.78);
+    max-width: 52ch;
+    margin-top: 14mm;
+  }
+  .cover .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 10mm;
+    border-top: 1px solid rgba(255,255,255,0.18);
+    padding-top: 10mm;
+  }
+  .cover .meta .blocks {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8mm;
+    flex: 1;
+  }
+  .cover .meta .blocks > div span:first-child {
+    display: block;
+    font-size: 8pt;
+    color: var(--gold-300);
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .cover .meta .blocks > div span:last-child {
+    display: block;
+    margin-top: 2mm;
+    font-family: var(--display);
+    font-size: 22pt;
+    color: white;
+  }
+  .cover .brand-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8mm;
+  }
+  .cover .brand {
+    display: flex;
+    flex-direction: column;
+    gap: 2mm;
+  }
+  .cover .brand .top {
+    font-size: 8pt;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+  }
+  .cover .brand .name {
+    font-family: var(--display);
+    font-size: 20pt;
+    color: white;
+  }
+  .cover .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3mm 5mm;
+    border: 1px solid var(--gold-300);
+    border-radius: 999px;
+    color: var(--gold-300);
+    font-size: 9pt;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+  }
+
+  /* Section common */
+  .section-title {
+    margin-bottom: 10mm;
+  }
+  .section-title h2 { margin-top: 4mm; }
+  .section-title p.lede {
+    margin-top: 5mm;
+    font-size: 12pt;
+    color: var(--bone-600);
+    max-width: 60ch;
+  }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8mm; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6mm; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5mm; }
+
+  .card {
+    background: white;
+    border: 1px solid var(--bone-200);
+    border-radius: 10px;
+    padding: 7mm;
+  }
+  .card.dark {
+    background: var(--forest-800);
+    color: white;
+    border-color: var(--forest-900);
+  }
+  .card.dark h3, .card.dark h4 { color: white; }
+  .card.dark .muted { color: rgba(255,255,255,0.75); }
+  .card.gold {
+    background: var(--gold-50);
+    border-color: var(--gold-200);
+  }
+
+  table.compare {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 6mm;
+    font-size: 10.5pt;
+  }
+  table.compare th {
+    text-align: left;
+    padding: 4mm 5mm;
+    background: var(--forest-800);
+    color: white;
+    font-weight: 600;
+    font-size: 9pt;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  table.compare td {
+    padding: 4mm 5mm;
+    border-bottom: 1px solid var(--bone-200);
+    background: white;
+    vertical-align: top;
+  }
+  table.compare td:first-child { color: var(--bone-700); width: 38%; }
+  table.compare td:last-child { color: var(--forest-900); font-weight: 500; }
+
+  .swatch {
+    display: flex;
+    flex-direction: column;
+    gap: 4mm;
+    padding: 5mm;
+    background: white;
+    border: 1px solid var(--bone-200);
+    border-radius: 8px;
+  }
+  .swatch .chip {
+    width: 100%;
+    height: 22mm;
+    border-radius: 6px;
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+  .swatch .meta-block strong {
+    display: block;
+    font-family: var(--display);
+    font-size: 12pt;
+    color: var(--forest-900);
+    line-height: 1.1;
+  }
+  .swatch .meta-block span {
+    display: block;
+    font-size: 8.5pt;
+    color: var(--bone-600);
+    margin-top: 1.5mm;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    letter-spacing: -0.02em;
+  }
+  .swatch .meta-block em {
+    font-style: normal;
+    display: block;
+    font-size: 8.5pt;
+    color: var(--bone-700);
+    margin-top: 1mm;
+  }
+
+  .type-sample {
+    background: white;
+    border: 1px solid var(--bone-200);
+    border-radius: 8px;
+    padding: 6mm 7mm;
+  }
+  .type-sample .label {
+    font-size: 8pt;
+    color: var(--gold-600);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .type-sample .specimen-display {
+    font-family: var(--display);
+    font-size: 28pt;
+    line-height: 1;
+    color: var(--forest-900);
+    margin-top: 4mm;
+  }
+  .type-sample .specimen-sans {
+    font-family: var(--sans);
+    font-size: 13pt;
+    color: var(--ink);
+    margin-top: 4mm;
+    font-weight: 400;
+  }
+  .type-sample .meta {
+    margin-top: 4mm;
+    font-size: 9pt;
+    color: var(--bone-600);
+  }
+
+  /* Mockup frame */
+  .mockup {
+    border: 1px solid var(--bone-200);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--bone-100);
+  }
+  .mockup .browser-bar {
+    background: linear-gradient(180deg, #f7f7f5, #ececea);
+    border-bottom: 1px solid var(--bone-200);
+    padding: 2mm 4mm;
+    display: flex;
+    align-items: center;
+    gap: 3mm;
+  }
+  .mockup .browser-bar .dots {
+    display: inline-flex;
+    gap: 2mm;
+  }
+  .mockup .browser-bar .dots span {
+    width: 2.6mm;
+    height: 2.6mm;
+    border-radius: 999px;
+    background: #ddd;
+  }
+  .mockup .browser-bar .dots span:nth-child(1) { background: #f56565; }
+  .mockup .browser-bar .dots span:nth-child(2) { background: #ecc94b; }
+  .mockup .browser-bar .dots span:nth-child(3) { background: #48bb78; }
+  .mockup .browser-bar .url {
+    flex: 1;
+    background: white;
+    border: 1px solid var(--bone-200);
+    border-radius: 4px;
+    font-size: 8pt;
+    color: var(--bone-600);
+    padding: 1mm 3mm;
+    font-family: ui-monospace, Menlo, monospace;
+    text-align: center;
+  }
+  .mockup img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .mockup.tall img { height: 175mm; object-fit: cover; object-position: top; }
+  .mockup.crop-top img { height: 120mm; object-fit: cover; object-position: top; }
+  .mockup.fade { position: relative; }
+  .mockup.fade::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 18mm;
+    background: linear-gradient(180deg, transparent, white);
+    pointer-events: none;
+  }
+
+  .mockup-caption {
+    margin-top: 4mm;
+    font-size: 9.5pt;
+    color: var(--bone-600);
+  }
+  .mockup-caption strong {
+    color: var(--forest-900);
+  }
+
+  /* Phone frame */
+  .phone {
+    width: 40mm;
+    border-radius: 8mm;
+    border: 1.6mm solid #1c1917;
+    background: #1c1917;
+    overflow: hidden;
+    position: relative;
+  }
+  .phone::before {
+    content: "";
+    position: absolute;
+    top: 0.6mm;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16mm;
+    height: 2.6mm;
+    background: #1c1917;
+    border-radius: 0 0 3mm 3mm;
+    z-index: 2;
+  }
+  .phone img {
+    display: block;
+    width: 100%;
+    height: 78mm;
+    object-fit: cover;
+    object-position: top;
+    border-radius: 5mm;
+  }
+  .phone-caption {
+    margin-top: 3mm;
+    font-size: 9pt;
+    color: var(--bone-700);
+    text-align: center;
+    font-weight: 500;
+  }
+
+  ul.bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 3mm;
+  }
+  ul.bullets li {
+    display: flex;
+    align-items: flex-start;
+    gap: 3mm;
+    font-size: 10.5pt;
+    color: var(--bone-700);
+  }
+  ul.bullets li::before {
+    content: "";
+    width: 2.4mm;
+    height: 2.4mm;
+    border-radius: 999px;
+    background: var(--gold-600);
+    flex-shrink: 0;
+    margin-top: 2.4mm;
+  }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4mm;
+    margin-top: 6mm;
+  }
+  .stat {
+    background: white;
+    border: 1px solid var(--bone-200);
+    border-radius: 8px;
+    padding: 5mm;
+    text-align: left;
+  }
+  .stat .num {
+    font-family: var(--display);
+    font-size: 32pt;
+    color: var(--forest-900);
+    line-height: 1;
+  }
+  .stat .lbl {
+    font-size: 9pt;
+    color: var(--gold-600);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-top: 2mm;
+  }
+  .stat .desc {
+    font-size: 9.5pt;
+    color: var(--bone-600);
+    margin-top: 2mm;
+  }
+
+  .footer {
+    position: absolute;
+    left: 16mm;
+    right: 16mm;
+    bottom: 8mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 8.5pt;
+    color: var(--bone-500);
+    border-top: 1px solid var(--bone-200);
+    padding-top: 4mm;
+  }
+  .footer .pageno { font-family: var(--display); font-size: 11pt; color: var(--forest-900); }
+
+  .badge-line {
+    display: inline-flex;
+    gap: 4mm;
+    flex-wrap: wrap;
+    margin-top: 4mm;
+  }
+  .badge-line span {
+    background: var(--bone-100);
+    border: 1px solid var(--bone-200);
+    border-radius: 999px;
+    padding: 2mm 4mm;
+    font-size: 9pt;
+    color: var(--forest-800);
+    font-weight: 500;
+  }
+
+  .closing {
+    background: linear-gradient(135deg, var(--forest-800), var(--forest-700));
+    color: white;
+    padding: 22mm 18mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10mm;
+    min-height: 297mm;
+  }
+  .closing h2 {
+    color: white;
+    font-size: 36pt;
+    line-height: 1.05;
+    max-width: 18ch;
+  }
+  .closing .lede {
+    font-size: 13pt;
+    color: rgba(255,255,255,0.78);
+    max-width: 50ch;
+  }
+  .closing .next {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5mm;
+  }
+  .closing .next .step {
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 10px;
+    padding: 6mm;
+  }
+  .closing .next .step .num {
+    font-family: var(--display);
+    font-size: 22pt;
+    color: var(--gold-300);
+  }
+  .closing .next .step h4 {
+    color: white;
+    margin-top: 2mm;
+    font-size: 12pt;
+  }
+  .closing .next .step p {
+    margin-top: 2mm;
+    color: rgba(255,255,255,0.72);
+    font-size: 10pt;
+  }
+  .closing .signature {
+    border-top: 1px solid rgba(255,255,255,0.18);
+    padding-top: 6mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 9pt;
+    color: rgba(255,255,255,0.6);
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section class="page cover">
+  <div class="brand-row">
+    <div class="brand">
+      <span class="top">Projektname</span>
+      <span class="name">Website-Relaunch</span>
+    </div>
+    <span class="badge">Vorschau-Handout · Monat JJJJ</span>
+  </div>
+
+  <div>
+    <h1>Headline mit einem <em>betonten</em> Wort.</h1>
+    <p class="lede">
+      Ein bis zwei Sätze, was der neue Auftritt leisten soll — für wen er gebaut ist
+      und was sich für Besucher:innen ändert.
+    </p>
+  </div>
+
+  <div class="meta">
+    <div class="blocks">
+      <div><span>Kennzahl 1</span><span>00</span></div>
+      <div><span>Kennzahl 2</span><span>00</span></div>
+      <div><span>Kennzahl 3</span><span>00</span></div>
+      <div><span>Gegründet</span><span>JJJJ</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PAGE 2 — Warum -->
+<section class="page">
+  <div class="section-title">
+    <span class="eyebrow">Warum ein Relaunch</span>
+    <h2>Die Ausgangslage in einem Satz.<br>Das Ziel im zweiten.</h2>
+    <p class="lede">
+      Kurz beschreiben, was an der bisherigen Seite nicht mehr funktioniert und wie der neue
+      Auftritt das löst.
+    </p>
+  </div>
+
+  <table class="compare">
+    <thead>
+      <tr><th>Vorher</th><th>Jetzt</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Viele verstreute Unterseiten</td><td>Wenige, fokussierte Seiten</td></tr>
+      <tr><td>Veraltete Optik</td><td>Klares Design mit eindeutiger Hierarchie</td></tr>
+      <tr><td>Wichtigste Aktion versteckt</td><td>Primärer CTA auf jeder Seite sichtbar</td></tr>
+      <tr><td>Mobile suboptimal</td><td>Mobile-first, 44 px+ Touch-Targets</td></tr>
+      <tr><td>Keine SEO-Basis</td><td>Strukturierte Metadaten, OpenGraph, Sitemap</td></tr>
+    </tbody>
+  </table>
+
+  <div class="footer">
+    <span>Projektname · Relaunch-Handout · JJJJ</span>
+    <span class="pageno">02</span>
+  </div>
+</section>
+
+<!-- PAGE 3 — Design-Sprache -->
+<section class="page">
+  <div class="section-title">
+    <span class="eyebrow">Design-Sprache</span>
+    <h2>Name der Designrichtung.</h2>
+    <p class="lede">
+      Farben, Typografie und Stimmung in zwei Sätzen. Die Farbwerte kommen aus den
+      CSS-Variablen oben im Template.
+    </p>
+  </div>
+
+  <h4 style="margin-top: 4mm; color: var(--bone-600); font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; font-size: 9pt;">Farbpalette</h4>
+  <div class="grid-4" style="margin-top: 4mm;">
+    <div class="swatch">
+      <div class="chip" style="background: var(--forest-800)"></div>
+      <div class="meta-block">
+        <strong>Primärfarbe</strong>
+        <span>#1A3A2A</span>
+        <em>Primär</em>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="background: var(--gold-600)"></div>
+      <div class="meta-block">
+        <strong>Akzentfarbe</strong>
+        <span>#A16207</span>
+        <em>Akzent</em>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="background: var(--bone-50)"></div>
+      <div class="meta-block">
+        <strong>Hintergrund</strong>
+        <span>#FAFAF9</span>
+        <em>Hintergrund</em>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="background: var(--ink)"></div>
+      <div class="meta-block">
+        <strong>Text</strong>
+        <span>#14151A</span>
+        <em>Typografie</em>
+      </div>
+    </div>
+  </div>
+
+  <h4 style="margin-top: 12mm; color: var(--bone-600); font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; font-size: 9pt;">Typografie</h4>
+  <div class="grid-2" style="margin-top: 4mm;">
+    <div class="type-sample">
+      <span class="label">Headlines</span>
+      <div class="specimen-display">Aa Projektname</div>
+      <div class="meta">Playfair Display · Charakter der Headline-Schrift</div>
+    </div>
+    <div class="type-sample">
+      <span class="label">Body</span>
+      <div class="specimen-sans">Aa Fließtext · gut lesbar</div>
+      <div class="meta">Inter · Charakter der Textschrift</div>
+    </div>
+  </div>
+
+  <div class="badge-line">
+    <span>Großzügiger Whitespace</span>
+    <span>Klare Hierarchie</span>
+    <span>WCAG-AA Kontraste</span>
+    <span>prefers-reduced-motion</span>
+    <span>Sichtbare Fokus-Zustände</span>
+  </div>
+
+  <div class="footer">
+    <span>Design-System</span>
+    <span class="pageno">03</span>
+  </div>
+</section>
+
+<!-- PAGE 4 — Startseite (showcase-tall) -->
+<section class="page">
+  <div class="section-title">
+    <span class="eyebrow">Startseite</span>
+    <h2>Was der Hero in zwei Sekunden vermittelt.</h2>
+    <p class="lede">
+      Aufbau der Startseite kurz beschreiben: Hero, wichtigste Sektionen, primärer CTA.
+    </p>
+  </div>
+
+  <div class="mockup tall fade">
+    <div class="browser-bar">
+      <div class="dots"><span></span><span></span><span></span></div>
+      <div class="url">example.com</div>
+    </div>
+    <img src="screenshots/home-desktop.png" alt="Startseite Desktop">
+  </div>
+
+  <div class="footer">
+    <span>Startseite</span>
+    <span class="pageno">04</span>
+  </div>
+</section>
+
+<!-- PAGE 5 — Zwei Unterseiten (showcase-pair) -->
+<section class="page">
+  <div class="section-title">
+    <span class="eyebrow">Inhalte</span>
+    <h2>Über uns &amp; Preise.</h2>
+    <p class="lede">
+      Zwei Unterseiten nebeneinander, jeweils mit einer Zeile Bildunterschrift.
+    </p>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <div class="mockup crop-top fade">
+        <div class="browser-bar">
+          <div class="dots"><span></span><span></span><span></span></div>
+          <div class="url">/about</div>
+        </div>
+        <img src="screenshots/about-desktop.png" alt="Über uns">
+      </div>
+      <p class="mockup-caption"><strong>Über uns</strong> · Was die Seite zeigt, in einem Satz.</p>
+    </div>
+    <div>
+      <div class="mockup crop-top fade">
+        <div class="browser-bar">
+          <div class="dots"><span></span><span></span><span></span></div>
+          <div class="url">/pricing</div>
+        </div>
+        <img src="screenshots/pricing-desktop.png" alt="Preise">
+      </div>
+      <p class="mockup-caption"><strong>Preise</strong> · Was die Seite zeigt, in einem Satz.</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Über uns + Preise</span>
+    <span class="pageno">05</span>
+  </div>
+</section>
+
+<!-- PAGE 6 — Kontakt (showcase-tall) -->
+<section class="page">
+  <div class="section-title">
+    <span class="eyebrow">Kontakt</span>
+    <h2>Der Weg zur Anfrage.</h2>
+    <p class="lede">
+      Kontaktformular, Adresse, Öffnungszeiten — was Besucher:innen hier finden.
+    </p>
+  </div>
+
+  <div class="mockup tall fade">
+    <div class="browser-bar">
+      <div class="dots"><span></span><span></span><span></span></div>
+      <div class="url">example.com/contact</div>
+    </div>
+    <img src="screenshots/contact-desktop.png" alt="Kontakt Desktop">
+  </div>
+
+  <div class="footer">
+    <span>Kontakt</span>
+    <span class="pageno">06</span>
+  </div>
+</section>
+
+<!-- PAGE 7 — Mobile Showcase -->
+<section class="page">
+  <div class="section-title">
+    <span class="eyebrow">Mobile-First</span>
+    <h2>Auch auf dem Handy souverän.</h2>
+    <p class="lede">
+      Die Website wird auf 375 px konzipiert und nach oben skaliert. Touch-Targets ≥ 44 px,
+      keine horizontale Scrollerei, kein iOS-Auto-Zoom.
+    </p>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6mm; justify-items: center; margin-top: 6mm;">
+    <div style="display:flex;flex-direction:column;align-items:center;">
+      <div class="phone"><img src="screenshots/home-mobile.png" alt="Startseite Mobile"></div>
+      <div class="phone-caption">Startseite</div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;">
+      <div class="phone"><img src="screenshots/about-mobile.png" alt="Über uns Mobile"></div>
+      <div class="phone-caption">Über uns</div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;">
+      <div class="phone"><img src="screenshots/pricing-mobile.png" alt="Preise Mobile"></div>
+      <div class="phone-caption">Preise</div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;">
+      <div class="phone"><img src="screenshots/contact-mobile.png" alt="Kontakt Mobile"></div>
+      <div class="phone-caption">Kontakt</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Mobile-Vorschau</span>
+    <span class="pageno">07</span>
+  </div>
+</section>
+
+<!-- PAGE 8 — Stack & Schutz -->
+<section class="page">
+  <div class="section-title">
+    <span class="eyebrow">Tech, Performance, Schutz</span>
+    <h2>Schnell. Sicher. Indexierungsgeschützt.</h2>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>Technische Basis</h3>
+      <ul class="bullets" style="margin-top: 4mm;">
+        <li><span><strong class="strong">Framework</strong> · Version, Router, Sprache</span></li>
+        <li><span><strong class="strong">Styling</strong> · z. B. Tailwind mit token-basiertem Theme</span></li>
+        <li><span><strong class="strong">Rendering</strong> · statisch oder serverseitig</span></li>
+        <li><span>Automatische Bild-Optimierung (WebP/AVIF)</span></li>
+        <li><span>Hosting · wo und wie der Auftritt betrieben wird</span></li>
+      </ul>
+    </div>
+    <div class="card dark">
+      <h3>Vorschau-Schutz</h3>
+      <p class="muted" style="margin-top: 3mm;">Drei Schichten verhindern, dass die Vorschau öffentlich auftaucht oder ohne Login zugänglich ist:</p>
+      <ul class="bullets" style="margin-top: 4mm;">
+        <li><span style="color:white;"><strong style="color:var(--gold-300)">HTTP Basic Auth</strong> — User + Passwort vor jeder Seite</span></li>
+        <li><span style="color:white;"><strong style="color:var(--gold-300)">noindex / nofollow Meta</strong> in jedem HTML</span></li>
+        <li><span style="color:white;"><strong style="color:var(--gold-300)">/robots.txt Disallow: /</strong> für alle Crawler</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-title" style="margin-top: 14mm;">
+    <span class="eyebrow">Zahlen auf einen Blick</span>
+  </div>
+  <div class="stat-row">
+    <div class="stat">
+      <div class="num">00</div>
+      <div class="lbl">Seiten</div>
+      <div class="desc">Beschreibung</div>
+    </div>
+    <div class="stat">
+      <div class="num">00</div>
+      <div class="lbl">Kennzahl</div>
+      <div class="desc">Beschreibung</div>
+    </div>
+    <div class="stat">
+      <div class="num">00</div>
+      <div class="lbl">Kennzahl</div>
+      <div class="desc">Beschreibung</div>
+    </div>
+    <div class="stat">
+      <div class="num">100%</div>
+      <div class="lbl">Kennzahl</div>
+      <div class="desc">Beschreibung</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Tech-Stack &amp; Sicherheit</span>
+    <span class="pageno">08</span>
+  </div>
+</section>
+
+<!-- CLOSING — Nächste Schritte -->
+<section class="page closing">
+  <div>
+    <span class="eyebrow" style="color: var(--gold-300);">Nächste Schritte</span>
+    <h2>Bereit für den Live-Schritt — sobald das Feedback da ist.</h2>
+    <p class="lede" style="margin-top: 6mm;">
+      Diese Vorschau ist passwortgeschützt. Sobald Feedback und letzte Inhalte vorliegen,
+      geht der Auftritt live.
+    </p>
+  </div>
+
+  <div class="next">
+    <div class="step">
+      <span class="num">01</span>
+      <h4>Feedback einholen</h4>
+      <p>Vorschau mit den Entscheider:innen teilen, Anmerkungen sammeln.</p>
+    </div>
+    <div class="step">
+      <span class="num">02</span>
+      <h4>Inhalte vervollständigen</h4>
+      <p>Fehlende Texte, Fotos und Downloads zusammentragen.</p>
+    </div>
+    <div class="step">
+      <span class="num">03</span>
+      <h4>Feinschliff</h4>
+      <p>Anmerkungen einarbeiten, finale Abnahme.</p>
+    </div>
+    <div class="step">
+      <span class="num">04</span>
+      <h4>Domain &amp; Hosting</h4>
+      <p>Domain umziehen, SSL aktivieren, Betrieb einrichten.</p>
+    </div>
+    <div class="step">
+      <span class="num">05</span>
+      <h4>Live gehen</h4>
+      <p>Launch, Monitoring der ersten Tage, kleine Korrekturen.</p>
+    </div>
+    <div class="step">
+      <span class="num">06</span>
+      <h4>Weiterentwickeln</h4>
+      <p>Auswertung nach einigen Wochen, nächste Ausbaustufe planen.</p>
+    </div>
+  </div>
+
+  <div class="signature">
+    <span>Projektname · Straße 1, 12345 Ort</span>
+    <span>Relaunch-Vorschau · Monat JJJJ</span>
+  </div>
+</section>
+
+</body>
+</html>

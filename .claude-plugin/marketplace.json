@@ -1,0 +1,21 @@
+{
+  "name": "my-skills",
+  "owner": {
+    "name": "Marcel Wiskow"
+  },
+  "metadata": {
+    "description": "Marcels Agent Skills",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "web-handout-pdf",
+      "description": "PDF-Handout eines Web-Projekts mit Screenshots in Browser- und Phone-Mockups",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/web-handout-pdf"
+      ]
+    }
+  ]
+}

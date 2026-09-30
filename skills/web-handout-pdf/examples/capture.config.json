@@ -1,0 +1,22 @@
+{
+  "$schema": "Capture config for web-handout-pdf skill",
+  "baseUrl": "http://localhost:3000",
+  "auth": {
+    "user": "",
+    "pass": ""
+  },
+  "outDir": "handout/screenshots",
+  "deviceScaleFactor": 2,
+  "waitUntil": "networkidle",
+  "settleMs": 800,
+  "viewports": [
+    { "name": "desktop", "width": 1440, "height": 900 },
+    { "name": "mobile", "width": 390, "height": 844 }
+  ],
+  "routes": [
+    { "slug": "home", "path": "/" },
+    { "slug": "about", "path": "/about" },
+    { "slug": "pricing", "path": "/pricing" },
+    { "slug": "contact", "path": "/contact" }
+  ]
+}

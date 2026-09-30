@@ -1,0 +1,10 @@
+{
+  "name": "web-handout-pdf",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Skill: Generate polished PDF handouts of web projects with embedded screenshots in mockup frames.",
+  "type": "module",
+  "dependencies": {
+    "playwright": "^1.59.0"
+  }
+}
