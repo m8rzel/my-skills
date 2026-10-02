@@ -1,0 +1,1282 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>shadcn Komponenten</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;600&display=swap">
+<script>try{var t=localStorage.getItem("shadcn-theme"),a=localStorage.getItem("shadcn-accent");if(t)document.documentElement.dataset.theme=t;if(a)document.documentElement.dataset.accent=a}catch(e){}</script>
+<!-- shadcn:css -->
+<style>
+  /* Layout: Doku-Seite – Kopfleiste, Inhaltsverzeichnis links, je Komponente ein Abschnitt mit Vorschaufläche */
+  .site-header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; border-bottom: 1px solid var(--border); background: color-mix(in oklch, var(--background) 85%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+  .site-header-inner { max-width: 80rem; margin-inline: auto; padding-inline: max(16px, 2rem); height: 3.5rem; display: flex; align-items: center; gap: 0.75rem; }
+  @media (max-width: 40rem) { .site-header-inner { padding-inline: 16px; } }
+  .brand { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; white-space: nowrap; }
+  .brand-mark { display: grid; place-items: center; width: 1.75rem; height: 1.75rem; border-radius: var(--radius-md); background: var(--primary); color: var(--primary-foreground); }
+  .search-trigger { width: 16rem; justify-content: space-between; color: var(--muted-foreground); font-weight: 400; }
+  .search-trigger .kbd { margin-left: auto; }
+  @media (max-width: 48rem) { .search-trigger { width: auto; } .search-trigger .label-text, .search-trigger .kbd { display: none; } .hide-sm { display: none; } }
+  .docs { max-width: 80rem; padding-top: 2rem; display: grid; grid-template-columns: 12rem minmax(0, 1fr); gap: 3rem; }
+  .toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 5rem); align-self: start; max-height: calc(100dvh - 7rem); overflow: auto; scrollbar-width: thin; }
+  .toc a { display: block; padding: 0.25rem 0.5rem; border-radius: var(--radius-sm); font-size: 0.875rem; color: var(--muted-foreground); transition: color 0.15s, background-color 0.15s; }
+  .toc a:hover { color: var(--foreground); background: var(--accent); }
+  .toc-title { padding: 0.25rem 0.5rem; margin-bottom: 0.25rem; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted-foreground); }
+  @media (max-width: 64rem) { .docs { grid-template-columns: minmax(0, 1fr); } .toc { display: none; } }
+  .intro { display: flex; flex-direction: column; gap: 0.75rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border); }
+  .demo { scroll-margin-top: 5rem; display: flex; flex-direction: column; gap: 1rem; padding-block: 2.5rem; border-bottom: 1px solid var(--border); min-width: 0; }
+  .demo-head { display: flex; flex-direction: column; gap: 0.375rem; }
+  .demo-head code { font-size: 0.75rem; }
+  .demo-preview { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 1rem; min-height: 11rem; padding: 2.5rem 1.5rem; border: 1px solid var(--border); border-radius: var(--radius-lg); min-width: 0; }
+  .demo-preview.start { justify-content: flex-start; align-items: flex-start; }
+  .demo-preview.col { flex-direction: column; align-items: stretch; }
+  .demo-preview.flush { padding: 0; overflow: hidden; }
+  @media (max-width: 40rem) { .demo-preview { padding: 1.5rem 1rem; } }
+  .slide { display: grid; place-items: center; aspect-ratio: 4 / 3; border-radius: var(--radius-lg); border: 1px solid var(--border); background: var(--card); }
+  .slide strong { font-size: 2.25rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .panel-fill { display: flex; height: 100%; align-items: center; justify-content: center; padding: 1.5rem; font-weight: 600; }
+  .tag-row { padding-block: 0.5rem; font-size: 0.875rem; }
+  .art { width: 9rem; flex-shrink: 0; }
+  .art .aspect-ratio { --ratio: 3 / 4; border-radius: var(--radius-md); }
+  .art figcaption { padding-top: 0.5rem; font-size: 0.75rem; color: var(--muted-foreground); }
+  .art figcaption strong { color: var(--foreground); font-weight: 600; }
+  .stat-number { font-size: 2rem; line-height: 1; font-weight: 700; letter-spacing: -0.025em; font-variant-numeric: tabular-nums; }
+  .goal { font-size: 4.5rem; line-height: 1; font-weight: 700; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; text-align: center; }
+  .w-sm { width: 100%; max-width: 24rem; }
+  .w-md { width: 100%; max-width: 28rem; }
+  .w-lg { width: 100%; max-width: 40rem; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="brand" href="#top"><span class="brand-mark"><i data-icon="layers" class="icon-sm"></i></span><span>shadcn-artifacts</span></a>
+    <span class="badge hide-sm" data-variant="secondary">57 Komponenten</span>
+    <span class="grow"></span>
+    <button class="button search-trigger" data-variant="outline" data-size="sm" data-open="palette"><i data-icon="search"></i><span class="label-text">Komponente suchen …</span><span class="kbd-group"><kbd class="kbd">⌘</kbd><kbd class="kbd">K</kbd></span></button>
+    <select class="select hide-sm" data-accent-select aria-label="Akzentfarbe" style="width: 8.5rem; height: 2rem">
+      <option value="">Neutral</option>
+      <option value="blue">Blau</option>
+      <option value="green">Grün</option>
+      <option value="orange">Orange</option>
+      <option value="rose">Rose</option>
+      <option value="violet">Violett</option>
+    </select>
+    <button class="button" data-variant="outline" data-size="icon-sm" popovertarget="theme-menu" aria-label="Farbschema"><i data-icon="sun"></i></button>
+    <div popover id="theme-menu" class="menu" data-align="end">
+      <button class="menu-item" role="menuitemradio" data-set-theme="light">Hell</button>
+      <button class="menu-item" role="menuitemradio" data-set-theme="dark">Dunkel</button>
+      <button class="menu-item" role="menuitemradio" data-set-theme="system">System</button>
+    </div>
+  </div>
+</header>
+
+<dialog id="palette" class="dialog command-dialog" data-hotkey="k" aria-label="Komponenten durchsuchen">
+  <div class="command" id="palette-command">
+    <div class="command-input-wrap"><i data-icon="search"></i><input class="command-input" placeholder="Komponente oder Aktion suchen …" aria-label="Suche"></div>
+    <div class="command-list">
+      <div class="command-empty" hidden>Keine Treffer.</div>
+      <div class="command-group" id="palette-components"><div class="command-group-heading">Komponenten</div></div>
+      <div class="command-separator"></div>
+      <div class="command-group">
+        <div class="command-group-heading">Darstellung</div>
+        <button class="command-item" data-value="theme-light" data-keywords="hell light">  <i data-icon="sun"></i>Helles Farbschema</button>
+        <button class="command-item" data-value="theme-dark" data-keywords="dunkel dark"><i data-icon="moon"></i>Dunkles Farbschema</button>
+        <button class="command-item" data-value="theme-system" data-keywords="system auto"><i data-icon="settings"></i>Farbschema vom System</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<main class="page docs" id="top">
+  <nav class="toc" aria-label="Komponenten">
+    <div class="toc-title">Komponenten</div>
+    <div id="toc-links"></div>
+  </nav>
+
+  <div class="stack" style="--gap: 0px">
+    <div class="intro">
+      <div class="row gap-2"><span class="badge" data-variant="outline">Vanilla HTML · CSS · JS</span><span class="badge" data-variant="outline">Single File</span><span class="badge" data-variant="outline">Hell &amp; Dunkel</span></div>
+      <h1 class="h1">Alle Komponenten auf einer Seite</h1>
+      <p class="lead">Die Bausteine von shadcn/ui als reines HTML: ohne React, ohne Build-Zwang, als eine Datei, die im Browser, im Claude-Artifact und offline funktioniert.</p>
+      <p class="muted text-sm">Varianten über <code class="inline-code">data-variant</code> und <code class="inline-code">data-size</code>, Verhalten über <code class="inline-code">data-*</code>-Attribute. Jeder Abschnitt nennt die Klassen, die er benutzt.</p>
+    </div>
+
+    <!-- ACCORDION -->
+    <section class="demo" id="accordion">
+      <div class="demo-head"><h2 class="h3">Accordion</h2><p class="muted text-sm">Aufklappbare Abschnitte. Gleicher <code class="inline-code">name</code> an den <code class="inline-code">&lt;details&gt;</code> = nur einer offen. Klassen: <code class="inline-code">.accordion .accordion-item .accordion-trigger .accordion-content</code></p></div>
+      <div class="demo-preview">
+        <div class="accordion w-md">
+          <details class="accordion-item" name="faq" open>
+            <summary class="accordion-trigger">Wie lange dauert ein Website-Relaunch?</summary>
+            <div class="accordion-content"><p>Bei zehn bis fünfzehn Seiten rechnen wir mit vier bis sechs Wochen – von der ersten Vorschau bis zum Livegang.</p></div>
+          </details>
+          <details class="accordion-item" name="faq">
+            <summary class="accordion-trigger">Wer pflegt die Inhalte danach?</summary>
+            <div class="accordion-content"><p>Ihr. Texte und Bilder lassen sich im CMS ändern, ohne dass jemand Code anfassen muss.</p><p>Für größere Umbauten gibt es ein monatliches Kontingent.</p></div>
+          </details>
+          <details class="accordion-item" name="faq">
+            <summary class="accordion-trigger">Wo wird die Seite gehostet?</summary>
+            <div class="accordion-content"><p>Auf einem eigenen Server in Deutschland, als Docker-Container hinter nginx mit automatisch erneuertem TLS-Zertifikat.</p></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ALERT -->
+    <section class="demo" id="alert">
+      <div class="demo-head"><h2 class="h3">Alert</h2><p class="muted text-sm">Hinweis im Seitenfluss. Klassen: <code class="inline-code">.alert .alert-title .alert-description</code>, Variante <code class="inline-code">destructive</code></p></div>
+      <div class="demo-preview col" style="align-items: center">
+        <div class="stack gap-4 w-lg">
+          <div class="alert" role="status"><i data-icon="circle-check"></i><div class="alert-title">Änderungen gespeichert</div><div class="alert-description">Die neue Startseite ist ab sofort in der Vorschau sichtbar.</div></div>
+          <div class="alert"><i data-icon="info"></i><div class="alert-title">Wartungsfenster am Sonntag, 02:00–03:00 Uhr</div></div>
+          <div class="alert" data-variant="destructive" role="alert"><i data-icon="circle-alert"></i><div class="alert-title">Zahlung fehlgeschlagen</div><div class="alert-description"><p>Die Karte wurde abgelehnt. Bitte prüfe:</p><ul class="list text-sm"><li>Ablaufdatum und Prüfnummer</li><li>ausreichendes Limit</li><li>Rechnungsadresse</li></ul></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ALERT DIALOG -->
+    <section class="demo" id="alert-dialog">
+      <div class="demo-head"><h2 class="h3">Alert Dialog</h2><p class="muted text-sm">Modale Rückfrage, die sich nicht per Klick daneben schließt. <code class="inline-code">&lt;dialog class="dialog" role="alertdialog"&gt;</code>, geöffnet mit <code class="inline-code">data-open="id"</code></p></div>
+      <div class="demo-preview">
+        <button class="button" data-variant="outline" data-open="confirm-delete">Projekt löschen</button>
+        <dialog id="confirm-delete" class="dialog" role="alertdialog" aria-labelledby="cd-title" aria-describedby="cd-desc">
+          <div class="dialog-body">
+            <div class="dialog-header"><h2 class="dialog-title" id="cd-title">Projekt wirklich löschen?</h2><p class="dialog-description" id="cd-desc">„Relaunch Sonnenhang“ wird mit allen 14 Seiten und 312 Bildern entfernt. Das lässt sich nicht rückgängig machen.</p></div>
+            <div class="dialog-footer"><button class="button" data-variant="outline" data-close>Abbrechen</button><button class="button" data-variant="destructive" data-close="delete" data-toast="Projekt gelöscht" data-toast-type="success">Endgültig löschen</button></div>
+          </div>
+        </dialog>
+      </div>
+    </section>
+
+    <!-- ASPECT RATIO -->
+    <section class="demo" id="aspect-ratio">
+      <div class="demo-head"><h2 class="h3">Aspect Ratio</h2><p class="muted text-sm">Fester Seitenverhältnis-Rahmen über <code class="inline-code">--ratio</code>. Bilder im Artifact nur als <code class="inline-code">data:</code>-URI oder Inline-SVG.</p></div>
+      <div class="demo-preview">
+        <div class="aspect-ratio w-md" style="--ratio: 16 / 9">
+          <svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice" aria-label="Berglandschaft in der Dämmerung" role="img">
+            <rect width="320" height="180" style="fill: var(--chart-1)"/>
+            <circle cx="236" cy="62" r="22" style="fill: var(--background); opacity: 0.85"/>
+            <path d="M0 140 70 70l50 45 40-35 70 60 40-30 50 40v30H0Z" style="fill: var(--chart-3)"/>
+            <path d="M0 160 60 115l60 35 50-25 70 30 80-20v45H0Z" style="fill: var(--chart-5)"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- AVATAR -->
+    <section class="demo" id="avatar">
+      <div class="demo-head"><h2 class="h3">Avatar</h2><p class="muted text-sm">Bild oder Initialen. Klassen: <code class="inline-code">.avatar .avatar-fallback .avatar-group</code>, Größen <code class="inline-code">sm lg</code></p></div>
+      <div class="demo-preview">
+        <span class="avatar" data-size="lg"><img alt="Profilbild Jana" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236366f1'/%3E%3Cstop offset='1' stop-color='%23ec4899'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='40' height='40' fill='url(%23g)'/%3E%3Ctext x='20' y='26' font-family='sans-serif' font-size='15' font-weight='600' fill='white' text-anchor='middle'%3EJB%3C/text%3E%3C/svg%3E"></span>
+        <span class="avatar"><span class="avatar-fallback">LK</span></span>
+        <span class="avatar rounded-lg"><span class="avatar-fallback">SP</span></span>
+        <span class="avatar" data-size="sm"><span class="avatar-fallback">AB</span></span>
+        <div class="avatar-group">
+          <span class="avatar"><span class="avatar-fallback">JS</span></span>
+          <span class="avatar"><span class="avatar-fallback">MK</span></span>
+          <span class="avatar"><span class="avatar-fallback">TR</span></span>
+          <span class="avatar"><span class="avatar-fallback">+4</span></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- BADGE -->
+    <section class="demo" id="badge">
+      <div class="demo-head"><h2 class="h3">Badge</h2><p class="muted text-sm">Status und Etiketten. Varianten <code class="inline-code">secondary destructive outline success warning</code>, Form <code class="inline-code">.pill</code></p></div>
+      <div class="demo-preview">
+        <span class="badge">Neu</span>
+        <span class="badge" data-variant="secondary">Entwurf</span>
+        <span class="badge" data-variant="destructive">Überfällig</span>
+        <span class="badge" data-variant="outline">v2.4.0</span>
+        <span class="badge" data-variant="success"><i data-icon="circle-check"></i>Bezahlt</span>
+        <span class="badge" data-variant="warning"><i data-icon="clock"></i>Ausstehend</span>
+        <span class="badge pill tabular">8</span>
+        <span class="badge pill tabular" data-variant="destructive">99+</span>
+        <a class="badge" href="#badge">Link-Badge <i data-icon="arrow-right"></i></a>
+      </div>
+    </section>
+
+    <!-- BREADCRUMB -->
+    <section class="demo" id="breadcrumb">
+      <div class="demo-head"><h2 class="h3">Breadcrumb</h2><p class="muted text-sm">Pfadnavigation; Trenner setzt das CSS. <code class="inline-code">ol.breadcrumb</code>, <code class="inline-code">data-separator="slash"</code></p></div>
+      <div class="demo-preview col" style="align-items: center">
+        <nav aria-label="Pfad">
+          <ol class="breadcrumb">
+            <li><a href="#breadcrumb">Start</a></li>
+            <li>
+              <button class="button" data-variant="ghost" data-size="icon-sm" popovertarget="bc-more" aria-label="Weitere Ebenen" style="width: 1.5rem; height: 1.5rem"><i data-icon="ellipsis"></i></button>
+              <div popover id="bc-more" class="menu"><a class="menu-item" href="#breadcrumb">Kunden</a><a class="menu-item" href="#breadcrumb">Golfclub</a></div>
+            </li>
+            <li><a href="#breadcrumb">Projekte</a></li>
+            <li><span aria-current="page">Relaunch 2026</span></li>
+          </ol>
+        </nav>
+        <nav aria-label="Pfad mit Schrägstrich"><ol class="breadcrumb" data-separator="slash"><li><a href="#breadcrumb">Doku</a></li><li><a href="#breadcrumb">Komponenten</a></li><li><span aria-current="page">Breadcrumb</span></li></ol></nav>
+      </div>
+    </section>
+
+    <!-- BUTTON -->
+    <section class="demo" id="button">
+      <div class="demo-head"><h2 class="h3">Button</h2><p class="muted text-sm"><code class="inline-code">.button</code> mit <code class="inline-code">data-variant="secondary|destructive|outline|ghost|link"</code> und <code class="inline-code">data-size="sm|lg|icon|icon-sm|icon-lg"</code></p></div>
+      <div class="demo-preview col">
+        <div class="row gap-2" style="justify-content: center">
+          <button class="button">Speichern</button>
+          <button class="button" data-variant="secondary">Entwurf</button>
+          <button class="button" data-variant="destructive">Löschen</button>
+          <button class="button" data-variant="outline">Abbrechen</button>
+          <button class="button" data-variant="ghost">Später</button>
+          <button class="button" data-variant="link">Mehr erfahren</button>
+        </div>
+        <div class="row gap-2" style="justify-content: center">
+          <button class="button" data-size="sm">Klein</button>
+          <button class="button">Standard</button>
+          <button class="button" data-size="lg">Groß</button>
+          <button class="button" data-variant="outline" data-size="icon-sm" aria-label="Hochladen"><i data-icon="upload"></i></button>
+          <button class="button" data-variant="outline" data-size="icon" aria-label="Kopieren"><i data-icon="copy"></i></button>
+          <button class="button" data-variant="outline" data-size="icon-lg" aria-label="Favorit"><i data-icon="star"></i></button>
+        </div>
+        <div class="row gap-2" style="justify-content: center">
+          <button class="button"><i data-icon="git-branch"></i>Neuer Branch</button>
+          <button class="button" data-variant="outline">Weiter<i data-icon="arrow-right"></i></button>
+          <button class="button" disabled><i data-icon="loader-circle" class="spinner"></i>Wird gespeichert</button>
+          <a class="button" data-variant="secondary" href="#button">Als Link</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- BUTTON GROUP -->
+    <section class="demo" id="button-group">
+      <div class="demo-head"><h2 class="h3">Button Group</h2><p class="muted text-sm">Zusammengehörige Aktionen. <code class="inline-code">.button-group</code>, <code class="inline-code">data-orientation="vertical"</code>, <code class="inline-code">.button-group-text</code></p></div>
+      <div class="demo-preview">
+        <div class="button-group" role="group" aria-label="Archiv">
+          <button class="button" data-variant="outline" data-size="icon" aria-label="Zurück"><i data-icon="arrow-left"></i></button>
+          <button class="button" data-variant="outline">Archivieren</button>
+          <button class="button" data-variant="outline">Melden</button>
+          <button class="button" data-variant="outline" data-size="icon" popovertarget="bg-more" aria-label="Mehr"><i data-icon="ellipsis"></i></button>
+        </div>
+        <div popover id="bg-more" class="menu" data-align="end">
+          <button class="menu-item"><i data-icon="mail"></i>Als ungelesen markieren</button>
+          <button class="menu-item"><i data-icon="clock"></i>Zurückstellen</button>
+          <div class="menu-separator"></div>
+          <button class="menu-item" data-variant="destructive"><i data-icon="trash-2"></i>Löschen</button>
+        </div>
+        <div class="button-group">
+          <span class="button-group-text" style="border-radius: var(--radius-md) 0 0 var(--radius-md)">https://</span>
+          <input class="input" placeholder="nordlicht.studio" aria-label="Domain">
+          <button class="button" data-variant="outline" aria-label="Suchen"><i data-icon="search"></i></button>
+        </div>
+        <div class="button-group" data-orientation="vertical" aria-label="Zoom">
+          <button class="button" data-variant="outline" data-size="icon" aria-label="Vergrößern"><i data-icon="plus"></i></button>
+          <button class="button" data-variant="outline" data-size="icon" aria-label="Verkleinern"><i data-icon="minus"></i></button>
+        </div>
+        <div class="button-group"><button class="button">Veröffentlichen</button><button class="button" data-size="icon" aria-label="Optionen"><i data-icon="chevron-down"></i></button></div>
+      </div>
+    </section>
+
+    <!-- CALENDAR -->
+    <section class="demo" id="calendar">
+      <div class="demo-head"><h2 class="h3">Calendar</h2><p class="muted text-sm"><code class="inline-code">.calendar</code> mit <code class="inline-code">data-mode="single|range"</code>, <code class="inline-code">data-value</code>, <code class="inline-code">data-months</code>; feuert <code class="inline-code">change</code>. Pfeiltasten bewegen den Fokus.</p></div>
+      <div class="demo-preview start" style="justify-content: center">
+        <div class="calendar bordered" data-value="2026-10-14"></div>
+        <div class="calendar bordered" data-mode="range" data-months="2" data-value="2026-10-08,2026-10-17"></div>
+      </div>
+    </section>
+
+    <!-- CARD -->
+    <section class="demo" id="card">
+      <div class="demo-head"><h2 class="h3">Card</h2><p class="muted text-sm"><code class="inline-code">.card .card-header .card-title .card-description .card-action .card-content .card-footer</code></p></div>
+      <div class="demo-preview">
+        <div class="card w-sm">
+          <div class="card-header">
+            <div class="card-title">Anmelden</div>
+            <div class="card-description">Mit deiner E-Mail-Adresse beim Kundenportal.</div>
+            <div class="card-action"><a class="button" data-variant="link" href="#card" style="height: auto; padding: 0">Registrieren</a></div>
+          </div>
+          <div class="card-content">
+            <form class="stack gap-4" data-demo-form>
+              <div class="field"><label class="label" for="login-mail">E-Mail</label><input class="input" id="login-mail" type="email" placeholder="name@firma.de" required></div>
+              <div class="field"><div class="row between"><label class="label" for="login-pw">Passwort</label><a class="text-sm muted" href="#card" style="text-decoration: underline; text-underline-offset: 4px">Vergessen?</a></div><input class="input" id="login-pw" type="password" required></div>
+            </form>
+          </div>
+          <div class="card-footer" style="flex-direction: column"><button class="button w-full">Anmelden</button><button class="button w-full" data-variant="outline">Mit Google anmelden</button></div>
+        </div>
+        <div class="card w-sm" data-size="sm">
+          <div class="card-header"><div class="card-description">Umsatz Oktober</div><div class="card-title stat-number">48.230 €</div><div class="card-action"><span class="badge" data-variant="outline"><i data-icon="zap"></i>+12,5 %</span></div></div>
+          <div class="card-footer" style="flex-direction: column; align-items: flex-start; gap: 0.25rem"><span class="text-sm font-medium">Bestes Quartal seit Gründung</span><span class="text-sm muted">Verglichen mit Juli bis September</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CAROUSEL -->
+    <section class="demo" id="carousel">
+      <div class="demo-head"><h2 class="h3">Carousel</h2><p class="muted text-sm">Scroll-Snap mit Buttons und Punkten. <code class="inline-code">.carousel .carousel-viewport .carousel-item</code>, Anzahl je Ansicht über <code class="inline-code">--per-view</code></p></div>
+      <div class="demo-preview col" style="align-items: center">
+        <div class="carousel w-sm">
+          <div class="carousel-viewport">
+            <div class="carousel-item"><div class="slide"><strong>1</strong></div></div>
+            <div class="carousel-item"><div class="slide"><strong>2</strong></div></div>
+            <div class="carousel-item"><div class="slide"><strong>3</strong></div></div>
+            <div class="carousel-item"><div class="slide"><strong>4</strong></div></div>
+            <div class="carousel-item"><div class="slide"><strong>5</strong></div></div>
+          </div>
+          <div class="carousel-controls">
+            <button class="button" data-variant="outline" data-size="icon-sm" data-carousel-prev aria-label="Vorherige Folie"><i data-icon="arrow-left"></i></button>
+            <div class="carousel-dots"></div>
+            <button class="button" data-variant="outline" data-size="icon-sm" data-carousel-next aria-label="Nächste Folie"><i data-icon="arrow-right"></i></button>
+          </div>
+        </div>
+        <div class="carousel w-lg" style="--per-view: 3; --carousel-gap: 0.75rem">
+          <div class="carousel-viewport">
+            <div class="carousel-item"><div class="slide"><strong>A</strong></div></div>
+            <div class="carousel-item"><div class="slide"><strong>B</strong></div></div>
+            <div class="carousel-item"><div class="slide"><strong>C</strong></div></div>
+            <div class="carousel-item"><div class="slide"><strong>D</strong></div></div>
+            <div class="carousel-item"><div class="slide"><strong>E</strong></div></div>
+            <div class="carousel-item"><div class="slide"><strong>F</strong></div></div>
+          </div>
+          <div class="carousel-controls"><button class="button" data-variant="outline" data-size="icon-sm" data-carousel-prev aria-label="Zurück"><i data-icon="arrow-left"></i></button><button class="button" data-variant="outline" data-size="icon-sm" data-carousel-next aria-label="Weiter"><i data-icon="arrow-right"></i></button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHART -->
+    <section class="demo" id="chart">
+      <div class="demo-head"><h2 class="h3">Chart</h2><p class="muted text-sm">SVG aus JSON in <code class="inline-code">&lt;figure class="chart"&gt;&lt;script type="application/json"&gt;</code>. Typen <code class="inline-code">bar line area donut pie</code>, Farben <code class="inline-code">--chart-1 … --chart-5</code>, Tooltip beim Überfahren.</p></div>
+      <div class="grid" style="--min: 22rem">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Besucher nach Gerät</div><div class="card-description">Januar – Juni 2026</div></div>
+          <div class="card-content">
+            <figure class="chart"><script type="application/json">{"type":"bar","labels":["Jan","Feb","Mär","Apr","Mai","Jun"],"series":[{"name":"Desktop","data":[186,305,237,73,209,214]},{"name":"Mobil","data":[80,200,120,190,130,140],"color":"var(--chart-4)"}]}</script></figure>
+          </div>
+          <div class="card-footer text-sm" style="flex-direction: column; align-items: flex-start; gap: 0.25rem"><span class="font-medium">Mobil wächst um 5,2 % pro Monat</span><span class="muted">Summe der letzten sechs Monate</span></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Umsatz</div><div class="card-description">Gestapelt nach Produkt, in Euro</div></div>
+          <div class="card-content">
+            <figure class="chart"><script type="application/json">{"type":"area","stacked":true,"labels":["Jan","Feb","Mär","Apr","Mai","Jun"],"series":[{"name":"Websites","data":[12400,15800,14200,18900,21300,24100]},{"name":"Wartung","data":[4200,4300,4300,4600,4700,4900],"color":"var(--chart-4)"}],"format":{"style":"currency","currency":"EUR","maximumFractionDigits":0}}</script></figure>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Ladezeit</div><div class="card-description">Largest Contentful Paint, Median in Sekunden</div></div>
+          <div class="card-content">
+            <figure class="chart"><script type="application/json">{"type":"line","dots":true,"labels":["KW 36","KW 37","KW 38","KW 39","KW 40"],"series":[{"name":"Vorher","data":[3.8,3.6,3.9,3.7,3.8],"color":"var(--muted-foreground)"},{"name":"Nachher","data":[3.7,2.4,1.6,1.3,1.2],"color":"var(--chart-3)"}],"format":{"maximumFractionDigits":1}}</script></figure>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Traffic-Quellen</div><div class="card-description">Oktober 2026</div></div>
+          <div class="card-content">
+            <figure class="chart"><script type="application/json">{"type":"donut","height":220,"labels":["Suche","Direkt","Social","Newsletter","Verweise"],"series":[{"name":"Sitzungen","data":[4820,2310,1650,980,420]}],"centerLabel":"Sitzungen"}</script></figure>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHECKBOX -->
+    <section class="demo" id="checkbox">
+      <div class="demo-head"><h2 class="h3">Checkbox</h2><p class="muted text-sm">Natives <code class="inline-code">input.checkbox</code>; Zustand <code class="inline-code">indeterminate</code> per Skript.</p></div>
+      <div class="demo-preview start" style="justify-content: center">
+        <div class="stack gap-4">
+          <label class="label"><input type="checkbox" class="checkbox" id="cb-terms" checked>AGB akzeptieren</label>
+          <div class="row start gap-3"><input type="checkbox" class="checkbox" id="cb-news" style="margin-top: 0.125rem"><div class="stack gap-1"><label class="label" for="cb-news">Newsletter</label><p class="text-sm muted">Einmal im Monat, jederzeit abbestellbar.</p></div></div>
+          <label class="label"><input type="checkbox" class="checkbox" id="cb-mixed">Teilweise ausgewählt</label>
+          <label class="label"><input type="checkbox" class="checkbox" disabled>Deaktiviert</label>
+        </div>
+        <label class="field-card w-sm"><input type="checkbox" class="checkbox" checked style="margin-top: 0.125rem"><span class="stack gap-1"><span class="text-sm font-medium">Benachrichtigungen aktivieren</span><span class="text-sm muted">Du bekommst eine Mail, sobald ein Kunde einen Kommentar hinterlässt.</span></span></label>
+      </div>
+    </section>
+
+    <!-- COLLAPSIBLE -->
+    <section class="demo" id="collapsible">
+      <div class="demo-head"><h2 class="h3">Collapsible</h2><p class="muted text-sm">Einzelner auf-/zuklappbarer Bereich. <code class="inline-code">details.collapsible</code></p></div>
+      <div class="demo-preview start" style="justify-content: center">
+        <details class="collapsible w-sm">
+          <summary class="collapsible-trigger"><span class="text-sm font-semibold">@jbecker hat 3 Repositories markiert</span><span class="button" data-variant="ghost" data-size="icon-sm" aria-hidden="true"><i data-icon="chevrons-up-down"></i></span></summary>
+          <div class="item" data-variant="outline" data-size="sm"><span class="mono text-sm">anthropics/skills</span></div>
+          <div class="collapsible-content">
+            <div class="item" data-variant="outline" data-size="sm"><span class="mono text-sm">shadcn-ui/ui</span></div>
+            <div class="item" data-variant="outline" data-size="sm"><span class="mono text-sm">lucide-icons/lucide</span></div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- COMBOBOX -->
+    <section class="demo" id="combobox">
+      <div class="demo-head"><h2 class="h3">Combobox</h2><p class="muted text-sm">Popover + Command. <code class="inline-code">.combobox</code>, Wert in <code class="inline-code">input[type=hidden]</code>, Ereignis <code class="inline-code">combobox:change</code></p></div>
+      <div class="demo-preview">
+        <div class="combobox" style="width: 15rem">
+          <input type="hidden" name="framework">
+          <button class="button combobox-trigger" data-variant="outline" popovertarget="cb-framework" data-empty><span>Framework wählen …</span><i data-icon="chevrons-up-down"></i></button>
+          <div popover id="cb-framework" class="popover p-0" style="width: 15rem">
+            <div class="command">
+              <div class="command-input-wrap"><i data-icon="search"></i><input class="command-input" placeholder="Framework suchen …" aria-label="Framework suchen"></div>
+              <div class="command-list">
+                <div class="command-empty" hidden>Kein Framework gefunden.</div>
+                <button class="command-item" data-value="next">Next.js<i data-icon="check" class="check"></i></button>
+                <button class="command-item" data-value="sveltekit">SvelteKit<i data-icon="check" class="check"></i></button>
+                <button class="command-item" data-value="nuxt">Nuxt<i data-icon="check" class="check"></i></button>
+                <button class="command-item" data-value="remix">Remix<i data-icon="check" class="check"></i></button>
+                <button class="command-item" data-value="astro">Astro<i data-icon="check" class="check"></i></button>
+                <button class="command-item" data-value="expo">Expo<i data-icon="check" class="check"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="combobox" style="width: 12rem">
+          <button class="button combobox-trigger" data-variant="outline" data-size="sm" popovertarget="cb-status"><span>In Arbeit</span><i data-icon="chevrons-up-down"></i></button>
+          <div popover id="cb-status" class="popover p-0" style="width: 12rem">
+            <div class="command">
+              <div class="command-input-wrap"><i data-icon="list-filter"></i><input class="command-input" placeholder="Status …" aria-label="Status filtern"></div>
+              <div class="command-list">
+                <div class="command-empty" hidden>Kein Status.</div>
+                <button class="command-item" data-value="backlog"><i data-icon="circle-help"></i>Backlog</button>
+                <button class="command-item" data-value="todo"><i data-icon="clock"></i>Offen</button>
+                <button class="command-item" data-value="progress" aria-selected="true"><i data-icon="loader-circle"></i>In Arbeit</button>
+                <button class="command-item" data-value="done"><i data-icon="circle-check"></i>Erledigt</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COMMAND -->
+    <section class="demo" id="command">
+      <div class="demo-head"><h2 class="h3">Command</h2><p class="muted text-sm">Filterbare Befehlsliste mit Gruppen und Tastatursteuerung. Als Dialog: oben rechts bzw. <kbd class="kbd">⌘</kbd> <kbd class="kbd">K</kbd>. Ereignis <code class="inline-code">command:select</code></p></div>
+      <div class="demo-preview">
+        <div class="command bordered w-md">
+          <div class="command-input-wrap"><i data-icon="search"></i><input class="command-input" placeholder="Befehl eingeben oder suchen …" aria-label="Befehl"></div>
+          <div class="command-list">
+            <div class="command-empty" hidden>Keine Ergebnisse.</div>
+            <div class="command-group">
+              <div class="command-group-heading">Vorschläge</div>
+              <button class="command-item" data-toast="Kalender geöffnet"><i data-icon="calendar"></i>Kalender</button>
+              <button class="command-item" data-toast="Emoji-Suche geöffnet" data-keywords="smiley"><i data-icon="sparkles"></i>Emoji suchen</button>
+              <button class="command-item" aria-disabled="true"><i data-icon="chart-column"></i>Rechner</button>
+            </div>
+            <div class="command-separator"></div>
+            <div class="command-group">
+              <div class="command-group-heading">Einstellungen</div>
+              <button class="command-item" data-toast="Profil"><i data-icon="user"></i>Profil<span class="command-shortcut">⌘P</span></button>
+              <button class="command-item" data-toast="Abrechnung"><i data-icon="credit-card"></i>Abrechnung<span class="command-shortcut">⌘B</span></button>
+              <button class="command-item" data-toast="Einstellungen"><i data-icon="settings"></i>Einstellungen<span class="command-shortcut">⌘S</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTEXT MENU -->
+    <section class="demo" id="context-menu">
+      <div class="demo-head"><h2 class="h3">Context Menu</h2><p class="muted text-sm">Menü per Rechtsklick. Fläche mit <code class="inline-code">data-context-menu="menu-id"</code></p></div>
+      <div class="demo-preview">
+        <div data-context-menu="ctx-menu" tabindex="0" style="display: grid; place-items: center; width: 100%; max-width: 20rem; height: 9rem; border: 1px dashed var(--border); border-radius: var(--radius-md); font-size: 0.875rem; color: var(--muted-foreground)">Hier rechts klicken</div>
+        <div popover id="ctx-menu" class="menu" style="width: 14rem">
+          <button class="menu-item" data-inset>Zurück<span class="menu-shortcut">⌘[</span></button>
+          <button class="menu-item" data-inset disabled>Vorwärts<span class="menu-shortcut">⌘]</span></button>
+          <button class="menu-item" data-inset>Neu laden<span class="menu-shortcut">⌘R</span></button>
+          <div class="menu-separator"></div>
+          <button class="menu-item" role="menuitemcheckbox" aria-checked="true">Lesezeichenleiste</button>
+          <button class="menu-item" role="menuitemcheckbox" aria-checked="false">Vollständige URLs</button>
+          <div class="menu-separator"></div>
+          <div class="menu-label" data-inset>Personen</div>
+          <div role="group">
+            <button class="menu-item" role="menuitemradio" aria-checked="true">Jana</button>
+            <button class="menu-item" role="menuitemradio" aria-checked="false">Lena</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DATA TABLE -->
+    <section class="demo" id="data-table">
+      <div class="demo-head"><h2 class="h3">Data Table</h2><p class="muted text-sm">Filter, Sortierung, Auswahl, Spalten und Seiten. <code class="inline-code">.data-table[data-page-size]</code>, <code class="inline-code">[data-table-filter] .sort-button [data-table-select] [data-table-column]</code>; Sortierwert aus <code class="inline-code">td[data-value]</code></p></div>
+      <div class="data-table" data-page-size="5">
+        <div class="data-table-toolbar">
+          <input class="input" placeholder="E-Mail filtern …" data-table-filter="2" aria-label="Nach E-Mail filtern">
+          <span class="grow"></span>
+          <button class="button" data-variant="outline" popovertarget="dt-cols">Spalten<i data-icon="chevron-down"></i></button>
+          <div popover id="dt-cols" class="menu" data-align="end">
+            <button class="menu-item" role="menuitemcheckbox" aria-checked="true" data-table-column="1">Status</button>
+            <button class="menu-item" role="menuitemcheckbox" aria-checked="true" data-table-column="2">E-Mail</button>
+            <button class="menu-item" role="menuitemcheckbox" aria-checked="true" data-table-column="3">Betrag</button>
+          </div>
+        </div>
+        <div class="table-bordered table-wrap">
+          <table class="table">
+            <thead><tr><th><input type="checkbox" class="checkbox" data-table-select-all aria-label="Alle auswählen"></th><th>Status</th><th><button class="sort-button">E-Mail</button></th><th class="num"><button class="sort-button">Betrag</button></th><th><span class="sr-only">Aktionen</span></th></tr></thead>
+            <tbody>
+              <tr><td><input type="checkbox" class="checkbox" data-table-select aria-label="Zeile auswählen"></td><td><span class="badge" data-variant="success">Bezahlt</span></td><td>kontakt@golfpark-sonnenhang.de</td><td class="num" data-value="2490">2.490,00 €</td><td><button class="button" data-variant="ghost" data-size="icon-sm" aria-label="Aktionen"><i data-icon="ellipsis"></i></button></td></tr>
+              <tr><td><input type="checkbox" class="checkbox" data-table-select aria-label="Zeile auswählen"></td><td><span class="badge" data-variant="warning">Offen</span></td><td>buero@schreinerei-baum.de</td><td class="num" data-value="860">860,00 €</td><td><button class="button" data-variant="ghost" data-size="icon-sm" aria-label="Aktionen"><i data-icon="ellipsis"></i></button></td></tr>
+              <tr><td><input type="checkbox" class="checkbox" data-table-select aria-label="Zeile auswählen"></td><td><span class="badge" data-variant="success">Bezahlt</span></td><td>hallo@atelier-lindgruen.de</td><td class="num" data-value="4120">4.120,00 €</td><td><button class="button" data-variant="ghost" data-size="icon-sm" aria-label="Aktionen"><i data-icon="ellipsis"></i></button></td></tr>
+              <tr><td><input type="checkbox" class="checkbox" data-table-select aria-label="Zeile auswählen"></td><td><span class="badge" data-variant="destructive">Überfällig</span></td><td>info@cafe-am-markt.de</td><td class="num" data-value="390">390,00 €</td><td><button class="button" data-variant="ghost" data-size="icon-sm" aria-label="Aktionen"><i data-icon="ellipsis"></i></button></td></tr>
+              <tr><td><input type="checkbox" class="checkbox" data-table-select aria-label="Zeile auswählen"></td><td><span class="badge" data-variant="secondary">Entwurf</span></td><td>team@physio-kinzig.de</td><td class="num" data-value="1750">1.750,00 €</td><td><button class="button" data-variant="ghost" data-size="icon-sm" aria-label="Aktionen"><i data-icon="ellipsis"></i></button></td></tr>
+              <tr><td><input type="checkbox" class="checkbox" data-table-select aria-label="Zeile auswählen"></td><td><span class="badge" data-variant="success">Bezahlt</span></td><td>verwaltung@weingut-schaefer.de</td><td class="num" data-value="3280">3.280,00 €</td><td><button class="button" data-variant="ghost" data-size="icon-sm" aria-label="Aktionen"><i data-icon="ellipsis"></i></button></td></tr>
+              <tr><td><input type="checkbox" class="checkbox" data-table-select aria-label="Zeile auswählen"></td><td><span class="badge" data-variant="warning">Offen</span></td><td>post@kanzlei-roth.de</td><td class="num" data-value="1190">1.190,00 €</td><td><button class="button" data-variant="ghost" data-size="icon-sm" aria-label="Aktionen"><i data-icon="ellipsis"></i></button></td></tr>
+              <tr><td><input type="checkbox" class="checkbox" data-table-select aria-label="Zeile auswählen"></td><td><span class="badge" data-variant="success">Bezahlt</span></td><td>office@fahrschule-lenz.de</td><td class="num" data-value="640">640,00 €</td><td><button class="button" data-variant="ghost" data-size="icon-sm" aria-label="Aktionen"><i data-icon="ellipsis"></i></button></td></tr>
+              <tr class="data-table-empty"><td colspan="5">Keine Rechnungen gefunden.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="data-table-footer">
+          <span data-table-selected></span>
+          <div class="row gap-2"><span data-table-page class="tabular"></span><button class="button" data-variant="outline" data-size="sm" data-table-prev>Zurück</button><button class="button" data-variant="outline" data-size="sm" data-table-next>Weiter</button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DATE PICKER -->
+    <section class="demo" id="date-picker">
+      <div class="demo-head"><h2 class="h3">Date Picker</h2><p class="muted text-sm">Popover mit Calendar. <code class="inline-code">.date-picker .date-picker-trigger</code>; schließt, sobald die Auswahl vollständig ist.</p></div>
+      <div class="demo-preview">
+        <div class="date-picker">
+          <button class="button date-picker-trigger" data-variant="outline" popovertarget="dp-single" data-empty><i data-icon="calendar"></i><span>Datum wählen</span></button>
+          <div popover id="dp-single" class="popover calendar-popover"><div class="calendar"></div></div>
+        </div>
+        <div class="date-picker" data-format="short">
+          <button class="button date-picker-trigger" data-variant="outline" popovertarget="dp-range" style="width: 18rem"><i data-icon="calendar"></i><span>08.10.2026 – 17.10.2026</span></button>
+          <div popover id="dp-range" class="popover calendar-popover"><div class="calendar" data-mode="range" data-months="2" data-value="2026-10-08,2026-10-17"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DIALOG -->
+    <section class="demo" id="dialog">
+      <div class="demo-head"><h2 class="h3">Dialog</h2><p class="muted text-sm">Natives <code class="inline-code">&lt;dialog class="dialog"&gt;</code>: Esc, Fokus-Falle und Klick daneben schließen. <code class="inline-code">data-open</code> / <code class="inline-code">data-close</code></p></div>
+      <div class="demo-preview">
+        <button class="button" data-variant="outline" data-open="edit-profile">Profil bearbeiten</button>
+        <dialog id="edit-profile" class="dialog" aria-labelledby="ep-title">
+          <form class="dialog-body" data-demo-form data-toast-message="Profil gespeichert">
+            <div class="dialog-header"><h2 class="dialog-title" id="ep-title">Profil bearbeiten</h2><p class="dialog-description">Änderungen werden erst mit „Speichern“ übernommen.</p></div>
+            <div class="field-group" style="gap: 1rem">
+              <div class="field"><label class="label" for="ep-name">Name</label><input class="input" id="ep-name" value="Jana Becker"></div>
+              <div class="field"><label class="label" for="ep-user">Benutzername</label><input class="input" id="ep-user" value="@jbecker"></div>
+            </div>
+            <div class="dialog-footer"><button type="button" class="button" data-variant="outline" data-close>Abbrechen</button><button class="button">Speichern</button></div>
+            <button type="button" class="dialog-close" data-close aria-label="Schließen"><i data-icon="x"></i></button>
+          </form>
+        </dialog>
+      </div>
+    </section>
+
+    <!-- DRAWER -->
+    <section class="demo" id="drawer">
+      <div class="demo-head"><h2 class="h3">Drawer</h2><p class="muted text-sm">Bottom-Sheet für Mobilgeräte. <code class="inline-code">&lt;dialog class="drawer"&gt;</code></p></div>
+      <div class="demo-preview">
+        <button class="button" data-variant="outline" data-open="goal-drawer">Tagesziel setzen</button>
+        <dialog id="goal-drawer" class="drawer" aria-labelledby="gd-title">
+          <div class="drawer-inner">
+            <div class="drawer-header"><h2 class="sheet-title" id="gd-title">Tagesziel</h2><p class="sheet-description">Wie viele Kalorien willst du heute aktiv verbrennen?</p></div>
+            <div class="row gap-4" style="justify-content: center; padding: 1rem">
+              <button class="button" data-variant="outline" data-size="icon" style="border-radius: 999px" data-goal="-10" aria-label="Weniger"><i data-icon="minus"></i></button>
+              <div class="stack gap-1" style="align-items: center; min-width: 8rem"><div class="goal" id="goal-value">350</div><div class="text-xs muted" style="text-transform: uppercase; letter-spacing: 0.08em">Kalorien / Tag</div></div>
+              <button class="button" data-variant="outline" data-size="icon" style="border-radius: 999px" data-goal="10" aria-label="Mehr"><i data-icon="plus"></i></button>
+            </div>
+            <div class="drawer-footer"><button class="button" data-close data-toast="Tagesziel gespeichert">Speichern</button><button class="button" data-variant="outline" data-close>Abbrechen</button></div>
+          </div>
+        </dialog>
+      </div>
+    </section>
+
+    <!-- DROPDOWN MENU -->
+    <section class="demo" id="dropdown-menu">
+      <div class="demo-head"><h2 class="h3">Dropdown Menu</h2><p class="muted text-sm"><code class="inline-code">[popovertarget]</code> + <code class="inline-code">div.menu[popover]</code>. Items mit Icons, Kürzeln, Checkbox- und Radio-Rollen; Pfeiltasten navigieren.</p></div>
+      <div class="demo-preview">
+        <button class="button" data-variant="outline" popovertarget="account-menu">Mein Konto<i data-icon="chevron-down"></i></button>
+        <div popover id="account-menu" class="menu" style="width: 14rem">
+          <div class="menu-label">jana@nordlicht.studio</div>
+          <div class="menu-separator"></div>
+          <button class="menu-item"><i data-icon="user"></i>Profil<span class="menu-shortcut">⇧⌘P</span></button>
+          <button class="menu-item"><i data-icon="credit-card"></i>Abrechnung<span class="menu-shortcut">⌘B</span></button>
+          <button class="menu-item"><i data-icon="settings"></i>Einstellungen<span class="menu-shortcut">⌘S</span></button>
+          <div class="menu-separator"></div>
+          <button class="menu-item" role="menuitemcheckbox" aria-checked="true">Statusleiste anzeigen</button>
+          <button class="menu-item" role="menuitemcheckbox" aria-checked="false">Aktivitätsleiste anzeigen</button>
+          <div class="menu-separator"></div>
+          <div class="menu-label muted" data-inset>Panel-Position</div>
+          <div role="group">
+            <button class="menu-item" role="menuitemradio" aria-checked="false">Oben</button>
+            <button class="menu-item" role="menuitemradio" aria-checked="true">Unten</button>
+            <button class="menu-item" role="menuitemradio" aria-checked="false">Rechts</button>
+          </div>
+          <div class="menu-separator"></div>
+          <button class="menu-item" data-variant="destructive" data-toast="Abgemeldet"><i data-icon="log-out"></i>Abmelden<span class="menu-shortcut">⇧⌘Q</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- EMPTY -->
+    <section class="demo" id="empty">
+      <div class="demo-head"><h2 class="h3">Empty</h2><p class="muted text-sm">Leerzustand mit nächstem Schritt. <code class="inline-code">.empty .empty-media .empty-title .empty-description .empty-content</code></p></div>
+      <div class="demo-preview">
+        <div class="empty w-lg">
+          <div class="empty-header">
+            <div class="empty-media" data-variant="icon"><i data-icon="folder"></i></div>
+            <div class="empty-title">Noch keine Projekte</div>
+            <p class="empty-description">Lege dein erstes Projekt an oder importiere ein bestehendes aus GitHub.</p>
+          </div>
+          <div class="empty-content"><div class="row gap-2" style="justify-content: center"><button class="button"><i data-icon="plus"></i>Projekt anlegen</button><button class="button" data-variant="outline"><i data-icon="git-branch"></i>Importieren</button></div><a class="button" data-variant="link" data-size="sm" href="#empty" style="color: var(--muted-foreground)">Mehr erfahren<i data-icon="arrow-right"></i></a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FIELD / FORM -->
+    <section class="demo" id="field">
+      <div class="demo-head"><h2 class="h3">Field &amp; Form</h2><p class="muted text-sm">Formularaufbau mit Beschriftung, Beschreibung und Fehler. <code class="inline-code">.field .field-label .field-description .field-error .fieldset .field-group .field-separator</code>, Fehlerzustand <code class="inline-code">data-invalid</code> + <code class="inline-code">aria-invalid</code></p></div>
+      <div class="demo-preview">
+        <form class="w-md" data-demo-form data-toast-message="Zahlungsdaten gespeichert">
+          <div class="field-group">
+            <fieldset class="fieldset">
+              <legend class="field-legend">Zahlungsart</legend>
+              <p class="field-description" style="margin-top: -1rem">Alle Zahlungen laufen verschlüsselt über unseren Zahlungsdienstleister.</p>
+              <div class="field"><label class="field-label" for="f-name">Name auf der Karte</label><input class="input" id="f-name" placeholder="Jana Becker" required></div>
+              <div class="field" data-invalid><label class="field-label" for="f-card">Kartennummer</label><input class="input" id="f-card" value="4242 4242 4242" aria-invalid="true" aria-describedby="f-card-err"><p class="field-error" id="f-card-err">Die Kartennummer ist zu kurz – es fehlen vier Ziffern.</p></div>
+              <div class="grid" style="--min: 7rem; --gap: 1rem">
+                <div class="field"><label class="field-label" for="f-month">Monat</label><select class="select" id="f-month"><option>01</option><option>02</option><option selected>10</option><option>12</option></select></div>
+                <div class="field"><label class="field-label" for="f-year">Jahr</label><select class="select" id="f-year"><option>2026</option><option selected>2027</option><option>2028</option></select></div>
+                <div class="field"><label class="field-label" for="f-cvv">CVV</label><input class="input" id="f-cvv" placeholder="123" inputmode="numeric"></div>
+              </div>
+            </fieldset>
+            <div class="field-separator">oder</div>
+            <fieldset class="fieldset">
+              <legend class="field-legend">Abrechnungsadresse</legend>
+              <div class="field" data-orientation="horizontal"><input type="checkbox" class="checkbox" id="f-same" checked><label class="field-label" for="f-same">Wie Lieferadresse</label></div>
+              <div class="field"><label class="field-label" for="f-note">Anmerkung</label><textarea class="textarea" id="f-note" placeholder="z. B. Kostenstelle oder Bestellnummer"></textarea><p class="field-description">Erscheint auf der Rechnung.</p></div>
+            </fieldset>
+            <div class="row gap-2"><button class="button">Speichern</button><button type="reset" class="button" data-variant="outline">Zurücksetzen</button></div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- HOVER CARD -->
+    <section class="demo" id="hover-card">
+      <div class="demo-head"><h2 class="h3">Hover Card</h2><p class="muted text-sm">Vorschau beim Überfahren. Auslöser <code class="inline-code">data-hovercard="id"</code>, Karte <code class="inline-code">div.popover.hovercard[popover=manual]</code></p></div>
+      <div class="demo-preview">
+        <a class="button" data-variant="link" href="#hover-card" data-hovercard="hc-shadcn">@shadcn</a>
+        <div popover="manual" id="hc-shadcn" class="popover hovercard">
+          <div class="row start gap-4" style="flex-wrap: nowrap">
+            <span class="avatar"><span class="avatar-fallback">SC</span></span>
+            <div class="stack gap-1">
+              <h4 class="text-sm font-semibold">@shadcn</h4>
+              <p class="text-sm">Schöne Komponenten zum Kopieren. Zugänglich, anpassbar, Open Source.</p>
+              <div class="row gap-2 text-xs muted" style="padding-top: 0.25rem"><i data-icon="calendar" class="icon-sm"></i>Dabei seit Dezember 2021</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INPUT -->
+    <section class="demo" id="input">
+      <div class="demo-head"><h2 class="h3">Input</h2><p class="muted text-sm"><code class="inline-code">input.input</code> – auf Mobilgeräten 16 px, damit iOS nicht zoomt.</p></div>
+      <div class="demo-preview">
+        <div class="stack gap-4 w-sm">
+          <input class="input" type="email" placeholder="E-Mail" aria-label="E-Mail">
+          <input class="input" type="file" aria-label="Datei">
+          <input class="input" placeholder="Deaktiviert" disabled aria-label="Deaktiviert">
+          <input class="input" value="ungültig@" aria-invalid="true" aria-label="Ungültige E-Mail">
+          <div class="row gap-2" style="flex-wrap: nowrap"><input class="input" type="email" placeholder="E-Mail" aria-label="Newsletter-E-Mail"><button class="button" data-variant="outline">Abonnieren</button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INPUT GROUP -->
+    <section class="demo" id="input-group">
+      <div class="demo-head"><h2 class="h3">Input Group</h2><p class="muted text-sm">Eingabe mit Icons, Text, Buttons. <code class="inline-code">.input-group .input-group-addon</code></p></div>
+      <div class="demo-preview">
+        <div class="stack gap-4 w-sm">
+          <div class="input-group"><span class="input-group-addon"><i data-icon="search"></i></span><input class="input" placeholder="Suchen …" aria-label="Suchen"><span class="input-group-addon"><kbd class="kbd">⌘K</kbd></span></div>
+          <div class="input-group"><span class="input-group-addon">https://</span><input class="input" placeholder="beispiel.de" aria-label="Webadresse"><span class="input-group-addon"><i data-icon="info" data-tooltip="Ohne www eingeben"></i></span></div>
+          <div class="input-group"><span class="input-group-addon">€</span><input class="input tabular" value="1.250,00" aria-label="Betrag"><span class="input-group-addon">EUR</span></div>
+          <div class="input-group"><input class="input mono" id="api-key" value="sk-demo-3f9a…c21" readonly aria-label="API-Schlüssel"><span class="input-group-addon"><button class="button" data-variant="ghost" data-size="icon-sm" data-copy-target="api-key" aria-label="Kopieren"><i data-icon="copy"></i></button></span></div>
+          <div class="input-group"><textarea class="textarea" placeholder="Frag, such oder chatte …" aria-label="Nachricht"></textarea><div class="input-group-addon"><span class="row gap-1"><button class="button" data-variant="outline" data-size="icon-sm" aria-label="Anhängen" style="border-radius: 999px"><i data-icon="plus"></i></button><span class="text-xs muted">Auto</span></span><button class="button" data-size="icon-sm" style="border-radius: 999px" aria-label="Senden"><i data-icon="arrow-right"></i></button></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INPUT OTP -->
+    <section class="demo" id="input-otp">
+      <div class="demo-head"><h2 class="h3">Input OTP</h2><p class="muted text-sm">Einmalcode; springt weiter, Einfügen verteilt. <code class="inline-code">.otp .otp-group .otp-slot</code>, Ereignis <code class="inline-code">otp:complete</code></p></div>
+      <div class="demo-preview col" style="align-items: center">
+        <div class="otp" id="otp-demo" aria-label="Bestätigungscode">
+          <div class="otp-group"><input class="otp-slot"><input class="otp-slot"><input class="otp-slot"></div>
+          <div class="otp-separator" aria-hidden="true"><i data-icon="minus"></i></div>
+          <div class="otp-group"><input class="otp-slot"><input class="otp-slot"><input class="otp-slot"></div>
+        </div>
+        <p class="text-sm muted">Gib den sechsstelligen Code aus der App ein.</p>
+      </div>
+    </section>
+
+    <!-- ITEM -->
+    <section class="demo" id="item">
+      <div class="demo-head"><h2 class="h3">Item</h2><p class="muted text-sm">Listenzeile mit Medium, Inhalt und Aktionen. <code class="inline-code">.item .item-media .item-content .item-title .item-description .item-actions</code>, Varianten <code class="inline-code">outline muted</code></p></div>
+      <div class="demo-preview">
+        <div class="stack gap-4 w-md">
+          <div class="item" data-variant="outline">
+            <div class="item-content"><div class="item-title">Zwei-Faktor-Anmeldung</div><p class="item-description">Schützt das Kundenportal zusätzlich mit einem Code aus der Authenticator-App.</p></div>
+            <div class="item-actions"><button class="button" data-variant="outline" data-size="sm">Einrichten</button></div>
+          </div>
+          <a class="item" data-variant="outline" data-size="sm" href="#item">
+            <div class="item-media"><i data-icon="shield"></i></div>
+            <div class="item-content"><div class="item-title">Dein Profil ist verifiziert</div></div>
+            <div class="item-actions"><i data-icon="chevron-right"></i></div>
+          </a>
+          <div class="item-group">
+            <div class="item"><span class="item-media"><span class="avatar"><span class="avatar-fallback">LK</span></span></span><div class="item-content"><div class="item-title">Lena Kranz</div><p class="item-description">lena@nordlicht.studio</p></div><div class="item-actions"><button class="button" data-variant="outline" data-size="icon-sm" aria-label="Einladen" style="border-radius: 999px"><i data-icon="plus"></i></button></div></div>
+            <div class="item-separator"></div>
+            <div class="item"><span class="item-media"><span class="avatar"><span class="avatar-fallback">JS</span></span></span><div class="item-content"><div class="item-title">Jonas Schäfer</div><p class="item-description">jonas@nordlicht.studio</p></div><div class="item-actions"><button class="button" data-variant="outline" data-size="icon-sm" aria-label="Einladen" style="border-radius: 999px"><i data-icon="plus"></i></button></div></div>
+          </div>
+          <div class="item" data-variant="muted"><div class="item-media" data-variant="icon"><i data-icon="package"></i></div><div class="item-content"><div class="item-title">shadcn-artifacts <span class="badge" data-variant="outline">v1.0</span></div><p class="item-description">Single-File-HTML im shadcn-Stil.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KBD -->
+    <section class="demo" id="kbd">
+      <div class="demo-head"><h2 class="h3">Kbd</h2><p class="muted text-sm">Tastenkürzel anzeigen. <code class="inline-code">kbd.kbd .kbd-group</code></p></div>
+      <div class="demo-preview col" style="align-items: center">
+        <div class="kbd-group"><kbd class="kbd">⌘</kbd><kbd class="kbd">⇧</kbd><kbd class="kbd">⌥</kbd><kbd class="kbd">⌃</kbd></div>
+        <p class="text-sm muted">Suche öffnen mit <span class="kbd-group"><kbd class="kbd">Strg</kbd><span>+</span><kbd class="kbd">K</kbd></span></p>
+        <button class="button" data-variant="outline" data-size="sm">Senden <kbd class="kbd">⏎</kbd></button>
+      </div>
+    </section>
+
+    <!-- LABEL -->
+    <section class="demo" id="label">
+      <div class="demo-head"><h2 class="h3">Label</h2><p class="muted text-sm"><code class="inline-code">label.label</code> – nimmt Steuerelemente direkt auf oder zeigt per <code class="inline-code">for</code> darauf.</p></div>
+      <div class="demo-preview">
+        <label class="label"><input type="checkbox" class="checkbox">Bedingungen akzeptieren</label>
+        <div class="field" style="width: 14rem"><label class="label" for="label-demo">Firmenname</label><input class="input" id="label-demo" placeholder="Nordlicht Studio GmbH"></div>
+      </div>
+    </section>
+
+    <!-- MENUBAR -->
+    <section class="demo" id="menubar">
+      <div class="demo-head"><h2 class="h3">Menubar</h2><p class="muted text-sm">Menüleiste wie in Desktop-Apps; bei offenem Menü wechselt Hover das Menü, ←/→ springt. <code class="inline-code">.menubar .menubar-trigger</code></p></div>
+      <div class="demo-preview">
+        <div class="menubar" role="menubar">
+          <button class="menubar-trigger" popovertarget="mb-file">Datei</button>
+          <button class="menubar-trigger" popovertarget="mb-edit">Bearbeiten</button>
+          <button class="menubar-trigger" popovertarget="mb-view">Ansicht</button>
+          <button class="menubar-trigger" popovertarget="mb-profiles">Profile</button>
+        </div>
+        <div popover id="mb-file" class="menu" style="width: 14rem"><button class="menu-item">Neuer Tab<span class="menu-shortcut">⌘T</span></button><button class="menu-item">Neues Fenster<span class="menu-shortcut">⌘N</span></button><button class="menu-item" disabled>Neues privates Fenster</button><div class="menu-separator"></div><button class="menu-item">Teilen …</button><div class="menu-separator"></div><button class="menu-item">Drucken …<span class="menu-shortcut">⌘P</span></button></div>
+        <div popover id="mb-edit" class="menu" style="width: 14rem"><button class="menu-item">Rückgängig<span class="menu-shortcut">⌘Z</span></button><button class="menu-item">Wiederholen<span class="menu-shortcut">⇧⌘Z</span></button><div class="menu-separator"></div><button class="menu-item">Ausschneiden</button><button class="menu-item">Kopieren</button><button class="menu-item">Einfügen</button></div>
+        <div popover id="mb-view" class="menu" style="width: 14rem"><button class="menu-item" role="menuitemcheckbox" aria-checked="false">Lesezeichenleiste</button><button class="menu-item" role="menuitemcheckbox" aria-checked="true">Vollständige URLs</button><div class="menu-separator"></div><button class="menu-item" data-inset>Neu laden<span class="menu-shortcut">⌘R</span></button><button class="menu-item" data-inset>Vollbild</button></div>
+        <div popover id="mb-profiles" class="menu" style="width: 12rem"><div role="group"><button class="menu-item" role="menuitemradio" aria-checked="false">Andrea</button><button class="menu-item" role="menuitemradio" aria-checked="true">Benedikt</button><button class="menu-item" role="menuitemradio" aria-checked="false">Luisa</button></div><div class="menu-separator"></div><button class="menu-item" data-inset>Profile verwalten …</button></div>
+      </div>
+    </section>
+
+    <!-- NATIVE SELECT -->
+    <section class="demo" id="native-select">
+      <div class="demo-head"><h2 class="h3">Native Select</h2><p class="muted text-sm">Natives <code class="inline-code">select.select</code> mit shadcn-Optik – zugänglich und auf dem Handy mit der System-Auswahl. Aufklappende Liste im shadcn-Stil: Select; mit Suche: Combobox.</p></div>
+      <div class="demo-preview">
+        <select class="select" style="width: 14rem" aria-label="Zeitzone">
+          <optgroup label="Europa"><option selected>Europe/Berlin (MEZ)</option><option>Europe/London (GMT)</option><option>Europe/Zurich (MEZ)</option></optgroup>
+          <optgroup label="Amerika"><option>America/New_York (EST)</option><option>America/Los_Angeles (PST)</option></optgroup>
+        </select>
+        <select class="select" style="width: 10rem" aria-label="Deaktiviert" disabled><option>Deaktiviert</option></select>
+        <select class="select" style="width: 10rem" aria-label="Pflichtfeld" aria-invalid="true"><option>Bitte wählen</option></select>
+      </div>
+    </section>
+
+    <!-- NAVIGATION MENU -->
+    <section class="demo" id="navigation-menu">
+      <div class="demo-head"><h2 class="h3">Navigation Menu</h2><p class="muted text-sm">Website-Navigation mit Panels. <code class="inline-code">.nav-menu .nav-trigger .nav-link .nav-panel</code></p></div>
+      <div class="demo-preview" style="align-items: flex-start; min-height: 6rem">
+        <nav class="nav-menu" aria-label="Hauptnavigation">
+          <button class="nav-trigger" popovertarget="nav-start">Einstieg</button>
+          <button class="nav-trigger" popovertarget="nav-services">Leistungen</button>
+          <a class="nav-link" href="#navigation-menu">Doku</a>
+        </nav>
+        <div popover id="nav-start" class="popover nav-panel" data-offset="8">
+          <div class="nav-panel-grid">
+            <a href="#navigation-menu" class="nav-feature"><i data-icon="layers" class="icon-xl"></i><strong style="font-size: 1.125rem; margin-top: 1rem">shadcn-artifacts</strong><span>Komponenten im shadcn-Stil für Single-File-HTML.</span></a>
+            <a href="#navigation-menu"><strong>Einführung</strong><span>Was der Skill macht und wann er passt.</span></a>
+            <a href="#navigation-menu"><strong>Installation</strong><span>Über Claude Code oder npx skills.</span></a>
+            <a href="#navigation-menu"><strong>Typografie</strong><span>Überschriften, Absätze, Listen und Tabellen.</span></a>
+          </div>
+        </div>
+        <div popover id="nav-services" class="popover nav-panel" data-offset="8">
+          <div class="nav-panel-grid">
+            <a href="#navigation-menu"><strong>Websites</strong><span>Konzept, Design und Umsetzung mit Next.js.</span></a>
+            <a href="#navigation-menu"><strong>Apps</strong><span>iOS und Android mit Expo.</span></a>
+            <a href="#navigation-menu"><strong>Hosting</strong><span>Eigener Server in Deutschland, Docker und TLS.</span></a>
+            <a href="#navigation-menu"><strong>Wartung</strong><span>Updates, Backups und kleine Änderungen jeden Monat.</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGINATION -->
+    <section class="demo" id="pagination">
+      <div class="demo-head"><h2 class="h3">Pagination</h2><p class="muted text-sm"><code class="inline-code">nav.pagination</code> mit normalen Buttons; aktive Seite <code class="inline-code">aria-current="page"</code> + Variante <code class="inline-code">outline</code></p></div>
+      <div class="demo-preview">
+        <nav class="pagination" aria-label="Seiten">
+          <ul>
+            <li><a class="button" data-variant="ghost" href="#pagination"><i data-icon="chevron-left"></i>Zurück</a></li>
+            <li><a class="button" data-variant="ghost" data-size="icon" href="#pagination">1</a></li>
+            <li><a class="button" data-variant="outline" data-size="icon" href="#pagination" aria-current="page">2</a></li>
+            <li><a class="button" data-variant="ghost" data-size="icon" href="#pagination">3</a></li>
+            <li><span class="pagination-ellipsis" aria-hidden="true"><i data-icon="ellipsis"></i></span></li>
+            <li><a class="button" data-variant="ghost" href="#pagination">Weiter<i data-icon="chevron-right"></i></a></li>
+          </ul>
+        </nav>
+      </div>
+    </section>
+
+    <!-- POPOVER -->
+    <section class="demo" id="popover">
+      <div class="demo-head"><h2 class="h3">Popover</h2><p class="muted text-sm">Schwebender Inhalt am Auslöser, schließt bei Klick daneben und Esc. <code class="inline-code">div.popover[popover]</code>, Lage <code class="inline-code">data-side data-align</code></p></div>
+      <div class="demo-preview">
+        <button class="button" data-variant="outline" popovertarget="pop-dims">Maße öffnen</button>
+        <div popover id="pop-dims" class="popover" style="width: 20rem" data-align="center">
+          <div class="stack gap-4">
+            <div class="stack gap-1"><h4 class="font-medium" style="line-height: 1">Maße</h4><p class="text-sm muted">Abmessungen der Ebene festlegen.</p></div>
+            <div class="stack gap-2">
+              <div class="grid" style="grid-template-columns: 6rem 1fr; align-items: center; --gap: 0.5rem 1rem"><label class="label" for="pd-w">Breite</label><input class="input" id="pd-w" value="100%" style="height: 2rem"><label class="label" for="pd-mw">Max. Breite</label><input class="input" id="pd-mw" value="300px" style="height: 2rem"><label class="label" for="pd-h">Höhe</label><input class="input" id="pd-h" value="25px" style="height: 2rem"></div>
+            </div>
+          </div>
+        </div>
+        <button class="button" data-variant="outline" popovertarget="pop-right">Rechts daneben</button>
+        <div popover id="pop-right" class="popover" data-side="right" data-align="center" style="width: 14rem"><p class="text-sm">Öffnet rechts und weicht nach links aus, wenn der Platz fehlt.</p></div>
+      </div>
+    </section>
+
+    <!-- PROGRESS -->
+    <section class="demo" id="progress">
+      <div class="demo-head"><h2 class="h3">Progress</h2><p class="muted text-sm"><code class="inline-code">div.progress[role=progressbar]</code> mit <code class="inline-code">--value</code></p></div>
+      <div class="demo-preview">
+        <div class="stack gap-4 w-sm">
+          <div class="stack gap-2"><div class="row between text-sm"><span>Upload</span><span class="muted tabular" id="progress-label">13 %</span></div><div class="progress" id="progress-demo" role="progressbar" aria-valuenow="13" aria-valuemin="0" aria-valuemax="100" aria-label="Upload" style="--value: 13%"></div></div>
+          <div class="progress" role="progressbar" aria-valuenow="66" aria-label="Speicher" style="--value: 66%"></div>
+          <button class="button" data-variant="outline" data-size="sm" id="progress-run" style="align-self: flex-start">Upload simulieren</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- RADIO GROUP -->
+    <section class="demo" id="radio-group">
+      <div class="demo-head"><h2 class="h3">Radio Group</h2><p class="muted text-sm">Native Radios <code class="inline-code">input.radio</code> in <code class="inline-code">.radio-group</code>; als Karten über <code class="inline-code">label.field-card</code></p></div>
+      <div class="demo-preview start" style="justify-content: center">
+        <div class="radio-group" role="radiogroup" aria-label="Abstand">
+          <label class="label"><input type="radio" class="radio" name="density" value="default">Standard</label>
+          <label class="label"><input type="radio" class="radio" name="density" value="comfortable" checked>Bequem</label>
+          <label class="label"><input type="radio" class="radio" name="density" value="compact">Kompakt</label>
+        </div>
+        <div class="radio-group w-sm" role="radiogroup" aria-label="Tarif">
+          <label class="field-card"><input type="radio" class="radio" name="plan" checked style="margin-top: 0.125rem"><span class="stack gap-1"><span class="text-sm font-medium">Basis · 49 € / Monat</span><span class="text-sm muted">Hosting, Backups, Sicherheitsupdates.</span></span></label>
+          <label class="field-card"><input type="radio" class="radio" name="plan" style="margin-top: 0.125rem"><span class="stack gap-1"><span class="text-sm font-medium">Plus · 129 € / Monat</span><span class="text-sm muted">Zusätzlich zwei Stunden Änderungen pro Monat.</span></span></label>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESIZABLE -->
+    <section class="demo" id="resizable">
+      <div class="demo-head"><h2 class="h3">Resizable</h2><p class="muted text-sm">Größenverstellbare Bereiche, auch per Tastatur. <code class="inline-code">.resizable[data-direction] .resizable-panel .resizable-handle[data-with-handle]</code></p></div>
+      <div class="demo-preview">
+        <div class="resizable w-lg" style="min-height: 16rem">
+          <div class="resizable-panel" style="--size: 1"><div class="panel-fill">Eins</div></div>
+          <div class="resizable-handle" data-with-handle aria-label="Breite ändern"></div>
+          <div class="resizable-panel" style="--size: 1">
+            <div class="resizable" data-direction="vertical" style="border: 0; border-radius: 0; height: 100%; min-height: 16rem">
+              <div class="resizable-panel" style="--size: 1"><div class="panel-fill">Zwei</div></div>
+              <div class="resizable-handle" aria-label="Höhe ändern"></div>
+              <div class="resizable-panel" style="--size: 3"><div class="panel-fill">Drei</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCROLL AREA -->
+    <section class="demo" id="scroll-area">
+      <div class="demo-head"><h2 class="h3">Scroll Area</h2><p class="muted text-sm">Schmale Scrollbalken im Theme. <code class="inline-code">.scroll-area</code> mit fester Höhe bzw. Breite.</p></div>
+      <div class="demo-preview">
+        <div class="scroll-area" style="height: 18rem; width: 12rem; border: 1px solid var(--border)">
+          <div style="padding: 1rem">
+            <h4 class="text-sm font-medium" style="margin-bottom: 1rem; line-height: 1">Versionen</h4>
+            <div id="tag-list"></div>
+          </div>
+        </div>
+        <div class="scroll-area w-md" style="border: 1px solid var(--border)">
+          <div class="row" style="flex-wrap: nowrap; padding: 1rem; --gap: 1rem; width: max-content">
+            <figure class="art"><div class="aspect-ratio" style="background: var(--chart-1)"></div><figcaption>Foto von <strong>Ornella Binni</strong></figcaption></figure>
+            <figure class="art"><div class="aspect-ratio" style="background: var(--chart-2)"></div><figcaption>Foto von <strong>Tom Byrom</strong></figcaption></figure>
+            <figure class="art"><div class="aspect-ratio" style="background: var(--chart-3)"></div><figcaption>Foto von <strong>Vladimir Malyavko</strong></figcaption></figure>
+            <figure class="art"><div class="aspect-ratio" style="background: var(--chart-4)"></div><figcaption>Foto von <strong>Ana Kaput</strong></figcaption></figure>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SELECT -->
+    <section class="demo" id="select">
+      <div class="demo-head"><h2 class="h3">Select</h2><p class="muted text-sm">Aufklappende Liste wie bei shadcn: Trigger <code class="inline-code">button.select.select-trigger[popovertarget]</code>, Liste <code class="inline-code">div.menu[popover][role=listbox]</code> mit <code class="inline-code">.menu-item.select-item[data-value]</code>; Wert im <code class="inline-code">input[type=hidden]</code>, Ereignis <code class="inline-code">select:change</code></p></div>
+      <div class="demo-preview">
+        <div>
+          <input type="hidden" name="fruit">
+          <button class="select select-trigger" popovertarget="sel-fruit" style="width: 12rem" data-empty><span>Obst wählen</span></button>
+          <div popover id="sel-fruit" class="menu" role="listbox" aria-label="Obst">
+            <div class="menu-label muted">Obst</div>
+            <button class="menu-item select-item" role="option" data-value="apfel">Apfel</button>
+            <button class="menu-item select-item" role="option" data-value="banane">Banane</button>
+            <button class="menu-item select-item" role="option" data-value="heidelbeere">Heidelbeere</button>
+            <button class="menu-item select-item" role="option" data-value="traube">Traube</button>
+            <button class="menu-item select-item" role="option" data-value="ananas" disabled>Ananas</button>
+          </div>
+        </div>
+        <div>
+          <input type="hidden" name="timezone" value="cet">
+          <button class="select select-trigger" popovertarget="sel-tz" style="width: 16rem"><span>Mitteleuropäische Zeit (MEZ)</span></button>
+          <div popover id="sel-tz" class="menu" role="listbox" aria-label="Zeitzone">
+            <div class="menu-label muted">Europa</div>
+            <button class="menu-item select-item" role="option" data-value="gmt">Greenwich Mean Time (GMT)</button>
+            <button class="menu-item select-item" role="option" data-value="cet" aria-selected="true">Mitteleuropäische Zeit (MEZ)</button>
+            <button class="menu-item select-item" role="option" data-value="eet">Osteuropäische Zeit (OEZ)</button>
+            <div class="menu-separator"></div>
+            <div class="menu-label muted">Amerika</div>
+            <button class="menu-item select-item" role="option" data-value="est">Eastern Standard Time (EST)</button>
+            <button class="menu-item select-item" role="option" data-value="pst">Pacific Standard Time (PST)</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEPARATOR -->
+    <section class="demo" id="separator">
+      <div class="demo-head"><h2 class="h3">Separator</h2><p class="muted text-sm"><code class="inline-code">.separator</code>, senkrecht mit <code class="inline-code">data-orientation="vertical"</code></p></div>
+      <div class="demo-preview">
+        <div class="w-sm">
+          <div class="stack gap-1"><h4 class="text-sm font-medium" style="line-height: 1">shadcn-artifacts</h4><p class="text-sm muted">Komponenten für Single-File-HTML.</p></div>
+          <hr class="separator" style="margin-block: 1rem">
+          <div class="row text-sm" style="height: 1.25rem; --gap: 1rem; flex-wrap: nowrap"><span>Blog</span><div class="separator" data-orientation="vertical"></div><span>Doku</span><div class="separator" data-orientation="vertical"></div><span>Quelltext</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SHEET -->
+    <section class="demo" id="sheet">
+      <div class="demo-head"><h2 class="h3">Sheet</h2><p class="muted text-sm">Seitliches Panel. <code class="inline-code">&lt;dialog class="sheet" data-side="right|left|top|bottom"&gt;</code></p></div>
+      <div class="demo-preview">
+        <button class="button" data-variant="outline" data-open="sheet-right">Rechts</button>
+        <button class="button" data-variant="outline" data-open="sheet-left">Links</button>
+        <button class="button" data-variant="outline" data-open="sheet-top">Oben</button>
+        <button class="button" data-variant="outline" data-open="sheet-bottom">Unten</button>
+        <dialog id="sheet-right" class="sheet" data-side="right" aria-labelledby="sr-title">
+          <div class="sheet-header"><h2 class="sheet-title" id="sr-title">Profil bearbeiten</h2><p class="sheet-description">Änderungen am Profil. Mit „Speichern“ übernehmen.</p></div>
+          <div class="sheet-content">
+            <div class="field"><label class="label" for="sr-name">Name</label><input class="input" id="sr-name" value="Jana Becker"></div>
+            <div class="field"><label class="label" for="sr-user">Benutzername</label><input class="input" id="sr-user" value="@jbecker"></div>
+          </div>
+          <div class="sheet-footer"><button class="button" data-close data-toast="Profil gespeichert">Speichern</button><button class="button" data-variant="outline" data-close>Schließen</button></div>
+          <button type="button" class="dialog-close" data-close aria-label="Schließen"><i data-icon="x"></i></button>
+        </dialog>
+        <dialog id="sheet-left" class="sheet" data-side="left" aria-label="Navigation">
+          <div class="sheet-header"><h2 class="sheet-title">Navigation</h2></div>
+          <div class="sheet-content" style="gap: 0.25rem"><a class="button" data-variant="ghost" href="#sheet" style="justify-content: flex-start" data-close><i data-icon="house"></i>Start</a><a class="button" data-variant="ghost" href="#sheet" style="justify-content: flex-start" data-close><i data-icon="inbox"></i>Posteingang</a><a class="button" data-variant="ghost" href="#sheet" style="justify-content: flex-start" data-close><i data-icon="settings"></i>Einstellungen</a></div>
+          <button type="button" class="dialog-close" data-close aria-label="Schließen"><i data-icon="x"></i></button>
+        </dialog>
+        <dialog id="sheet-top" class="sheet" data-side="top" aria-label="Hinweis"><div class="sheet-header"><h2 class="sheet-title">Neue Version verfügbar</h2><p class="sheet-description">Version 1.1 bringt Paletten für Charts und einen Kalender mit Wochennummern.</p></div><div class="sheet-footer" style="flex-direction: row"><button class="button" data-size="sm" data-close>Aktualisieren</button><button class="button" data-variant="ghost" data-size="sm" data-close>Später</button></div></dialog>
+        <dialog id="sheet-bottom" class="sheet" data-side="bottom" aria-label="Cookies"><div class="sheet-header"><h2 class="sheet-title">Cookies</h2><p class="sheet-description">Wir verwenden nur technisch notwendige Cookies.</p></div><div class="sheet-footer" style="flex-direction: row"><button class="button" data-size="sm" data-close>Verstanden</button></div></dialog>
+      </div>
+    </section>
+
+    <!-- SIDEBAR -->
+    <section class="demo" id="sidebar">
+      <div class="demo-head"><h2 class="h3">Sidebar</h2><p class="muted text-sm">App-Rahmen mit einklappbarer Seitenleiste (<kbd class="kbd">⌘</kbd> <kbd class="kbd">B</kbd>); unter 768 px Containerbreite wird sie zum Overlay. <code class="inline-code">.sidebar-layout .sidebar .sidebar-menu-button .sidebar-inset [data-sidebar-toggle]</code></p></div>
+      <div class="demo-preview flush">
+        <div class="sidebar-layout" data-variant="inset" style="--sidebar-min-height: 0; --sidebar-height: 100%; height: 30rem; width: 100%">
+          <aside class="sidebar">
+            <div class="sidebar-header">
+              <ul class="sidebar-menu"><li class="sidebar-menu-item"><a class="sidebar-menu-button" data-size="lg" href="#sidebar"><span class="sidebar-brand"><i data-icon="rocket"></i></span><span class="stack" style="--gap: 0; line-height: 1.2"><span class="font-semibold">Nordlicht</span><span class="text-xs muted">Agentur</span></span></a></li></ul>
+            </div>
+            <div class="sidebar-content">
+              <div class="sidebar-group">
+                <div class="sidebar-group-label">Plattform</div>
+                <ul class="sidebar-menu">
+                  <li class="sidebar-menu-item"><a class="sidebar-menu-button" href="#sidebar" aria-current="page"><i data-icon="house"></i><span>Übersicht</span></a></li>
+                  <li class="sidebar-menu-item"><a class="sidebar-menu-button" href="#sidebar"><i data-icon="inbox"></i><span>Posteingang</span></a><span class="sidebar-menu-badge">12</span></li>
+                  <li class="sidebar-menu-item"><a class="sidebar-menu-button" href="#sidebar"><i data-icon="folder"></i><span>Projekte</span></a>
+                    <ul class="sidebar-menu-sub"><li><a href="#sidebar">Relaunch Sonnenhang</a></li><li><a href="#sidebar" aria-current="page">Kunden-App</a></li></ul>
+                  </li>
+                  <li class="sidebar-menu-item"><a class="sidebar-menu-button" href="#sidebar"><i data-icon="calendar"></i><span>Kalender</span></a></li>
+                </ul>
+              </div>
+              <div class="sidebar-group">
+                <div class="sidebar-group-label">Verwaltung</div>
+                <ul class="sidebar-menu">
+                  <li class="sidebar-menu-item"><a class="sidebar-menu-button" href="#sidebar"><i data-icon="users"></i><span>Team</span></a></li>
+                  <li class="sidebar-menu-item"><a class="sidebar-menu-button" href="#sidebar"><i data-icon="credit-card"></i><span>Abrechnung</span></a></li>
+                  <li class="sidebar-menu-item"><a class="sidebar-menu-button" href="#sidebar"><i data-icon="settings"></i><span>Einstellungen</span></a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="sidebar-footer"><ul class="sidebar-menu"><li class="sidebar-menu-item"><a class="sidebar-menu-button" data-size="lg" href="#sidebar"><span class="avatar" data-size="sm" style="width: 2rem; height: 2rem"><span class="avatar-fallback">JB</span></span><span class="stack" style="--gap: 0; line-height: 1.2"><span class="font-medium">Jana</span><span class="text-xs muted">jana@nordlicht.studio</span></span></a></li></ul></div>
+          </aside>
+          <div class="sidebar-inset">
+            <header class="sidebar-inset-header">
+              <button class="button" data-variant="ghost" data-size="icon-sm" data-sidebar-toggle aria-label="Seitenleiste umschalten"><i data-icon="panel-left"></i></button>
+              <div class="separator" data-orientation="vertical" style="height: 1rem; align-self: center"></div>
+              <ol class="breadcrumb"><li><a href="#sidebar">Projekte</a></li><li><span aria-current="page">Übersicht</span></li></ol>
+            </header>
+            <div class="stack gap-4" style="padding: 1rem; flex: 1">
+              <div class="grid" style="--min: 9rem"><div class="skeleton" style="aspect-ratio: 16 / 9; border-radius: var(--radius-xl)"></div><div class="skeleton" style="aspect-ratio: 16 / 9; border-radius: var(--radius-xl)"></div><div class="skeleton" style="aspect-ratio: 16 / 9; border-radius: var(--radius-xl)"></div></div>
+              <div class="skeleton" style="flex: 1; min-height: 8rem; border-radius: var(--radius-xl)"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKELETON -->
+    <section class="demo" id="skeleton">
+      <div class="demo-head"><h2 class="h3">Skeleton</h2><p class="muted text-sm">Platzhalter während des Ladens. <code class="inline-code">.skeleton</code> mit Größe per Inline-Stil.</p></div>
+      <div class="demo-preview">
+        <div class="row gap-4" style="flex-wrap: nowrap"><div class="skeleton" style="width: 3rem; height: 3rem; border-radius: 999px"></div><div class="stack gap-2"><div class="skeleton" style="height: 1rem; width: 15rem; max-width: 50vw"></div><div class="skeleton" style="height: 1rem; width: 12rem; max-width: 40vw"></div></div></div>
+        <div class="stack gap-3" style="width: 15rem"><div class="skeleton" style="height: 8rem; border-radius: var(--radius-xl)"></div><div class="skeleton" style="height: 1rem; width: 80%"></div><div class="skeleton" style="height: 1rem; width: 60%"></div></div>
+      </div>
+    </section>
+
+    <!-- SLIDER -->
+    <section class="demo" id="slider">
+      <div class="demo-head"><h2 class="h3">Slider</h2><p class="muted text-sm">Natives <code class="inline-code">input[type=range].slider</code>; Ausgabe über <code class="inline-code">data-output="id"</code> + <code class="inline-code">data-suffix</code></p></div>
+      <div class="demo-preview">
+        <div class="stack gap-6 w-sm">
+          <div class="stack gap-3"><div class="row between"><label class="label" for="sl-budget">Monatsbudget</label><span class="text-sm muted tabular" id="sl-budget-out"></span></div><input type="range" class="slider" id="sl-budget" min="0" max="5000" step="100" value="1800" data-output="sl-budget-out" data-suffix=" €"></div>
+          <div class="stack gap-3"><div class="row between"><label class="label" for="sl-temp">Temperatur</label><span class="text-sm muted tabular" id="sl-temp-out"></span></div><input type="range" class="slider" id="sl-temp" min="0" max="2" step="0.1" value="0.7" data-output="sl-temp-out"></div>
+          <input type="range" class="slider" value="30" disabled aria-label="Deaktiviert">
+        </div>
+      </div>
+    </section>
+
+    <!-- SONNER -->
+    <section class="demo" id="sonner">
+      <div class="demo-head"><h2 class="h3">Sonner (Toast)</h2><p class="muted text-sm"><code class="inline-code">toast("Titel", { description, type, action })</code>, <code class="inline-code">toast.success()</code>, <code class="inline-code">toast.promise()</code> oder deklarativ <code class="inline-code">data-toast</code></p></div>
+      <div class="demo-preview">
+        <button class="button" data-variant="outline" id="toast-default">Standard</button>
+        <button class="button" data-variant="outline" data-toast="Rechnung versendet" data-toast-type="success" data-toast-description="R-2026-0142 an kontakt@golfpark-sonnenhang.de">Erfolg</button>
+        <button class="button" data-variant="outline" data-toast="Deploy abgebrochen" data-toast-type="error" data-toast-description="Image konnte nicht aus der Registry geladen werden.">Fehler</button>
+        <button class="button" data-variant="outline" data-toast="Zertifikat läuft in 7 Tagen ab" data-toast-type="warning">Warnung</button>
+        <button class="button" data-variant="outline" data-toast="Neue Version verfügbar" data-toast-type="info">Info</button>
+        <button class="button" data-variant="outline" id="toast-promise">Promise</button>
+      </div>
+    </section>
+
+    <!-- SPINNER -->
+    <section class="demo" id="spinner">
+      <div class="demo-head"><h2 class="h3">Spinner</h2><p class="muted text-sm">Ladeanzeige: Icon <code class="inline-code">loader-circle</code> mit Klasse <code class="inline-code">.spinner</code></p></div>
+      <div class="demo-preview">
+        <i data-icon="loader-circle" class="spinner icon-lg" aria-label="Lädt"></i>
+        <button class="button" disabled data-size="sm"><i data-icon="loader-circle" class="spinner"></i>Lädt</button>
+        <button class="button" data-variant="outline" disabled data-size="sm"><i data-icon="loader-circle" class="spinner"></i>Bitte warten</button>
+        <span class="badge" data-variant="secondary"><i data-icon="loader-circle" class="spinner"></i>Synchronisiert</span>
+        <div class="item" data-variant="muted" style="width: 18rem"><div class="item-media"><i data-icon="loader-circle" class="spinner"></i></div><div class="item-content"><div class="item-title">Zahlung wird verarbeitet …</div></div><div class="item-actions"><span class="text-sm tabular">100,00 €</span></div></div>
+      </div>
+    </section>
+
+    <!-- SWITCH -->
+    <section class="demo" id="switch">
+      <div class="demo-head"><h2 class="h3">Switch</h2><p class="muted text-sm"><code class="inline-code">input[type=checkbox][role=switch].switch</code></p></div>
+      <div class="demo-preview">
+        <label class="label"><input type="checkbox" role="switch" class="switch">Flugmodus</label>
+        <label class="label"><input type="checkbox" role="switch" class="switch" checked>Automatische Backups</label>
+        <label class="label"><input type="checkbox" role="switch" class="switch" disabled>Deaktiviert</label>
+        <label class="field-card w-sm" style="justify-content: space-between; align-items: center"><span class="stack gap-1"><span class="text-sm font-medium">Marketing-Mails</span><span class="text-sm muted">Neue Funktionen und Angebote.</span></span><input type="checkbox" role="switch" class="switch"></label>
+      </div>
+    </section>
+
+    <!-- TABLE -->
+    <section class="demo" id="table">
+      <div class="demo-head"><h2 class="h3">Table</h2><p class="muted text-sm"><code class="inline-code">.table-wrap &gt; table.table</code>, Zahlen rechtsbündig mit <code class="inline-code">.num</code>, Summen im <code class="inline-code">tfoot</code></p></div>
+      <div class="table-wrap">
+        <table class="table">
+          <caption>Rechnungen der letzten 30 Tage</caption>
+          <thead><tr><th>Rechnung</th><th>Status</th><th>Zahlart</th><th class="num">Betrag</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium mono">R-0142</td><td>Bezahlt</td><td>Überweisung</td><td class="num">2.490,00 €</td></tr>
+            <tr><td class="font-medium mono">R-0143</td><td>Offen</td><td>Lastschrift</td><td class="num">860,00 €</td></tr>
+            <tr><td class="font-medium mono">R-0144</td><td>Bezahlt</td><td>Kreditkarte</td><td class="num">4.120,00 €</td></tr>
+            <tr><td class="font-medium mono">R-0145</td><td>Überfällig</td><td>Überweisung</td><td class="num">390,00 €</td></tr>
+          </tbody>
+          <tfoot><tr><td colspan="3">Summe</td><td class="num">7.860,00 €</td></tr></tfoot>
+        </table>
+      </div>
+    </section>
+
+    <!-- TABS -->
+    <section class="demo" id="tabs">
+      <div class="demo-head"><h2 class="h3">Tabs</h2><p class="muted text-sm"><code class="inline-code">.tabs .tabs-list .tabs-trigger[data-value] .tabs-content[data-value]</code>; Variante <code class="inline-code">data-variant="line"</code>; ←/→ wechseln.</p></div>
+      <div class="demo-preview start" style="justify-content: center">
+        <div class="tabs w-sm">
+          <div class="tabs-list w-full"><button class="tabs-trigger" data-value="account">Konto</button><button class="tabs-trigger" data-value="password">Passwort</button></div>
+          <div class="tabs-content" data-value="account">
+            <div class="card">
+              <div class="card-header"><div class="card-title">Konto</div><div class="card-description">Name und Benutzername ändern.</div></div>
+              <div class="card-content stack gap-4"><div class="field"><label class="label" for="t-name">Name</label><input class="input" id="t-name" value="Jana Becker"></div><div class="field"><label class="label" for="t-user">Benutzername</label><input class="input" id="t-user" value="@jbecker"></div></div>
+              <div class="card-footer"><button class="button" data-toast="Konto gespeichert">Speichern</button></div>
+            </div>
+          </div>
+          <div class="tabs-content" data-value="password">
+            <div class="card">
+              <div class="card-header"><div class="card-title">Passwort</div><div class="card-description">Nach dem Speichern wirst du abgemeldet.</div></div>
+              <div class="card-content stack gap-4"><div class="field"><label class="label" for="t-cur">Aktuelles Passwort</label><input class="input" id="t-cur" type="password"></div><div class="field"><label class="label" for="t-new">Neues Passwort</label><input class="input" id="t-new" type="password"></div></div>
+              <div class="card-footer"><button class="button">Passwort ändern</button></div>
+            </div>
+          </div>
+        </div>
+        <div class="tabs w-sm" data-variant="line">
+          <div class="tabs-list"><button class="tabs-trigger" data-value="overview">Übersicht</button><button class="tabs-trigger" data-value="analytics">Analyse</button><button class="tabs-trigger" data-value="reports">Berichte</button><button class="tabs-trigger" data-value="off" disabled>Archiv</button></div>
+          <div class="tabs-content" data-value="overview"><p class="text-sm muted" style="padding-top: 0.75rem">Drei aktive Projekte, zwei offene Rechnungen, nächster Termin am Donnerstag um 10 Uhr.</p></div>
+          <div class="tabs-content" data-value="analytics"><p class="text-sm muted" style="padding-top: 0.75rem">10.180 Sitzungen im Oktober, Absprungrate 38 %.</p></div>
+          <div class="tabs-content" data-value="reports"><p class="text-sm muted" style="padding-top: 0.75rem">Monatsbericht September liegt als PDF bereit.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TEXTAREA -->
+    <section class="demo" id="textarea">
+      <div class="demo-head"><h2 class="h3">Textarea</h2><p class="muted text-sm"><code class="inline-code">textarea.textarea</code> – wächst mit dem Inhalt (<code class="inline-code">field-sizing: content</code>).</p></div>
+      <div class="demo-preview">
+        <div class="stack gap-3 w-sm">
+          <label class="label" for="ta-msg">Nachricht</label>
+          <textarea class="textarea" id="ta-msg" placeholder="Was sollen wir an der Startseite ändern?"></textarea>
+          <p class="text-sm muted">Wir antworten innerhalb eines Werktags.</p>
+          <button class="button" data-toast="Nachricht gesendet">Senden</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOGGLE -->
+    <section class="demo" id="toggle">
+      <div class="demo-head"><h2 class="h3">Toggle</h2><p class="muted text-sm"><code class="inline-code">button.toggle[aria-pressed]</code>, Varianten <code class="inline-code">outline</code>, Größen <code class="inline-code">sm lg</code></p></div>
+      <div class="demo-preview">
+        <button class="toggle" aria-label="Fett"><i data-icon="bold"></i></button>
+        <button class="toggle" data-variant="outline" aria-label="Kursiv"><i data-icon="italic"></i></button>
+        <button class="toggle" data-variant="outline" aria-pressed="true"><i data-icon="underline"></i>Unterstrichen</button>
+        <button class="toggle" data-size="sm" aria-label="Favorit"><i data-icon="heart"></i></button>
+        <button class="toggle" data-size="lg" aria-label="Stern"><i data-icon="star"></i></button>
+        <button class="toggle" disabled aria-label="Deaktiviert"><i data-icon="bold"></i></button>
+      </div>
+    </section>
+
+    <!-- TOGGLE GROUP -->
+    <section class="demo" id="toggle-group">
+      <div class="demo-head"><h2 class="h3">Toggle Group</h2><p class="muted text-sm"><code class="inline-code">.toggle-group[data-type="single|multiple"]</code></p></div>
+      <div class="demo-preview">
+        <div class="toggle-group" data-type="multiple" role="group" aria-label="Textformat">
+          <button class="toggle" data-value="bold" aria-label="Fett" aria-pressed="true"><i data-icon="bold"></i></button>
+          <button class="toggle" data-value="italic" aria-label="Kursiv"><i data-icon="italic"></i></button>
+          <button class="toggle" data-value="underline" aria-label="Unterstrichen"><i data-icon="underline"></i></button>
+        </div>
+        <div class="toggle-group" data-type="single" data-variant="outline" role="group" aria-label="Ausrichtung">
+          <button class="toggle" data-variant="outline" data-value="left" aria-label="Links" aria-pressed="true"><i data-icon="align-left"></i></button>
+          <button class="toggle" data-variant="outline" data-value="center" aria-label="Zentriert"><i data-icon="align-center"></i></button>
+          <button class="toggle" data-variant="outline" data-value="right" aria-label="Rechts"><i data-icon="align-right"></i></button>
+        </div>
+        <div class="toggle-group" data-type="single" data-variant="outline" role="group" aria-label="Zeitraum">
+          <button class="toggle" data-variant="outline" data-size="sm" data-value="7">7 Tage</button>
+          <button class="toggle" data-variant="outline" data-size="sm" data-value="30" aria-pressed="true">30 Tage</button>
+          <button class="toggle" data-variant="outline" data-size="sm" data-value="90">90 Tage</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOOLTIP -->
+    <section class="demo" id="tooltip">
+      <div class="demo-head"><h2 class="h3">Tooltip</h2><p class="muted text-sm"><code class="inline-code">data-tooltip="Text"</code>, optional <code class="inline-code">data-tooltip-side</code>; erscheint bei Hover und Tastaturfokus.</p></div>
+      <div class="demo-preview">
+        <button class="button" data-variant="outline" data-tooltip="Zum Projekt hinzufügen">Hover</button>
+        <button class="button" data-variant="outline" data-size="icon" data-tooltip="Unten" data-tooltip-side="bottom" aria-label="Unten"><i data-icon="arrow-right" style="transform: rotate(90deg)"></i></button>
+        <button class="button" data-variant="outline" data-size="icon" data-tooltip="Links" data-tooltip-side="left" aria-label="Links"><i data-icon="arrow-left"></i></button>
+        <button class="button" data-variant="outline" data-size="icon" data-tooltip="Rechts" data-tooltip-side="right" aria-label="Rechts"><i data-icon="arrow-right"></i></button>
+      </div>
+    </section>
+
+    <!-- TYPOGRAPHY -->
+    <section class="demo" id="typography">
+      <div class="demo-head"><h2 class="h3">Typography</h2><p class="muted text-sm">Einzelklassen <code class="inline-code">.h1 .h2 .h3 .h4 .lead .large .small .muted .blockquote .list .inline-code</code> oder <code class="inline-code">.prose</code> für rohes HTML.</p></div>
+      <div class="demo-preview start" style="justify-content: center">
+        <article class="prose">
+          <h1>Die Steuer auf Witze</h1>
+          <p class="lead" style="color: var(--muted-foreground)">Es war einmal, in einem fernen Land, ein sehr fauler König, der den ganzen Tag auf seinem Thron saß.</p>
+          <h2>Der König plant</h2>
+          <p>Eines Tages hatte er eine Idee: Er würde <a href="#typography">eine Steuer auf Witze</a> erheben. „Damit“, sagte er, „ist das Königreich gerettet.“</p>
+          <blockquote>„Schließlich“, sagte er, „lacht doch jeder gern. Also sollte auch jeder dafür zahlen.“</blockquote>
+          <h3>Die Witzsteuer</h3>
+          <p>Die Höflinge waren entsetzt, aber sie wagten nicht zu widersprechen. Es gab drei Stufen:</p>
+          <ul><li>1. Stufe: kleine Wortspiele – 5 Goldmünzen</li><li>2. Stufe: Witze über die Familie – 10 Goldmünzen</li><li>3. Stufe: Anspielungen auf den König – 20 Goldmünzen</li></ul>
+          <table><thead><tr><th>Schatz des Königs</th><th>Glück der Leute</th></tr></thead><tbody><tr><td>Leer</td><td>Übersprudelnd</td></tr><tr><td>Bescheiden</td><td>Zufrieden</td></tr><tr><td>Voll</td><td>Ekstatisch</td></tr></tbody></table>
+          <p>Am Ende schaffte der König die Steuer ab – <code>jokeTax = 0</code> – und das Lachen kehrte zurück.</p>
+        </article>
+      </div>
+    </section>
+
+    <footer class="row between text-sm muted" style="padding-block: 2rem">
+      <span>Optik nach shadcn/ui (MIT), Icons Lucide (ISC), Schrift Geist (OFL).</span>
+      <a class="button" data-variant="ghost" data-size="sm" href="#top">Nach oben<i data-icon="arrow-right" style="transform: rotate(-90deg)"></i></a>
+    </footer>
+  </div>
+</main>
+
+<!-- shadcn:js -->
+<script>
+  // Inhaltsverzeichnis und Command-Palette aus den Abschnitten erzeugen
+  const sections = [...document.querySelectorAll("section.demo")];
+  document.getElementById("toc-links").innerHTML = sections.map((s) => `<a href="#${s.id}">${s.querySelector("h2").textContent}</a>`).join("");
+  const group = document.getElementById("palette-components");
+  group.insertAdjacentHTML("beforeend", sections.map((s) => `<button class="command-item" data-value="go:${s.id}">${shadcn.icon("chevron-right")}${s.querySelector("h2").textContent}</button>`).join(""));
+  shadcn.init(document.getElementById("palette"));
+  document.getElementById("palette-command").addEventListener("command:select", (e) => {
+    const v = e.detail.value;
+    if (v.startsWith("go:")) document.getElementById(v.slice(3)).scrollIntoView({ behavior: "smooth" });
+    if (v.startsWith("theme-")) shadcn.setTheme(v.slice(6));
+  });
+
+  // Scroll Area: Versionsliste
+  document.getElementById("tag-list").innerHTML = Array.from({ length: 40 }, (_, i) => `<div class="tag-row">v1.2.0-beta.${40 - i}</div>${i < 39 ? '<hr class="separator">' : ""}`).join("");
+
+  // Checkbox: gemischter Zustand
+  document.getElementById("cb-mixed").indeterminate = true;
+
+  // Formulare: im Artifact gibt es kein Ziel für ein echtes Absenden
+  document.querySelectorAll("form[data-demo-form]").forEach((f) => f.addEventListener("submit", (e) => {
+    e.preventDefault();
+    f.closest("dialog")?.close();
+    toast.success(f.dataset.toastMessage || "Gespeichert");
+  }));
+
+  // Drawer: Tagesziel
+  let goal = 350;
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-goal]");
+    if (!b) return;
+    goal = Math.min(600, Math.max(200, goal + +b.dataset.goal));
+    document.getElementById("goal-value").textContent = goal;
+  });
+
+  // Input OTP
+  document.getElementById("otp-demo").addEventListener("otp:complete", (e) => toast.success("Code bestätigt", { description: `Eingegeben: ${e.detail.value}` }));
+
+  // Sonner
+  document.getElementById("toast-default").addEventListener("click", () => toast("Termin angelegt", { description: "Freitag, 9. Oktober 2026 um 10:00 Uhr", action: { label: "Rückgängig", onClick: () => toast("Termin entfernt") } }));
+  document.getElementById("toast-promise").addEventListener("click", () => toast.promise(new Promise((r) => setTimeout(r, 1800)), { loading: "Backup läuft …", success: "Backup fertig: 1,2 GB gesichert", error: "Backup fehlgeschlagen" }));
+
+  // Progress
+  document.getElementById("progress-run").addEventListener("click", () => {
+    const bar = document.getElementById("progress-demo"), label = document.getElementById("progress-label");
+    let v = 0;
+    const tick = setInterval(() => {
+      v = Math.min(100, v + 7 + Math.round(Math.random() * 10));
+      bar.style.setProperty("--value", v + "%"); bar.setAttribute("aria-valuenow", v); label.textContent = v + " %";
+      if (v >= 100) { clearInterval(tick); toast.success("Upload abgeschlossen"); }
+    }, 180);
+  });
+</script>
+</body>
+</html>

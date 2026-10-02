@@ -16,6 +16,15 @@
       "skills": [
         "./skills/web-handout-pdf"
       ]
+    },
+    {
+      "name": "shadcn-artifacts",
+      "description": "Single-File-HTML und Claude-Artifacts im shadcn/ui-Stil: 57 Komponenten in Vanilla HTML/CSS/JS, hell und dunkel",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/shadcn-artifacts"
+      ]
     }
   ]
 }
