@@ -23,22 +23,34 @@ Single-file HTML in the shadcn/ui look. One stylesheet and one script (both inli
    ```
    It already has `<title>`, the Geist font link, the early theme script, the two markers `<!-- shadcn:css -->` / `<!-- shadcn:js -->` and a `.page` wrapper with the 16 px gutter.
 
-2. **Write the content** with the components. Look up markup in `references/components.md`; for a full working example of any component, grep the showcase: `grep -n 'id="data-table"' <skill-dir>/examples/components.src.html`. Icons: `<i data-icon="calendar"></i>` with any [Lucide](https://lucide.dev/icons) name.
+2. **Plan the page before writing markup** — read `references/design-guide.md`. Write down (for yourself) the page's one job, which blueprint fits (dashboard, settings, records, report), and for every input/date/overlay/chart which component the guide's decision tables pick. Then build top to bottom: header → summary → detail.
 
-3. **Build** (Node 18+, no `npm install`):
+3. **Write the content** with the components. Look up markup in `references/components.md`; for a full working example of any component, grep the showcase: `grep -n 'id="data-table"' <skill-dir>/examples/components.src.html`. Icons: `<i data-icon="calendar"></i>` with any [Lucide](https://lucide.dev/icons) name.
+
+4. **Build** (Node 18+, no `npm install`):
    ```bash
    node <skill-dir>/scripts/build.mjs page.src.html page.html                     # standalone file
    node <skill-dir>/scripts/build.mjs page.src.html page.html --target artifact   # for the Artifact tool
    ```
-   The build inlines only the CSS/JS sections the page uses (a small page is ~45 KB, the full showcase ~270 KB), replaces `<i data-icon>` with inline SVG (unknown names are fetched once from unpkg; `--offline` skips that) and, with `--target artifact`, strips doctype/html/head/body because the Artifact tool adds its own skeleton. `--all` includes every section.
+   The build inlines only the CSS/JS sections the page uses (a small page is ~45 KB, the full showcase ~280 KB), replaces `<i data-icon>` with inline SVG (unknown names are fetched once from unpkg; `--offline` skips that) and, with `--target artifact`, strips doctype/html/head/body because the Artifact tool adds its own skeleton. `--all` includes every section.
 
-4. **Check** in a browser: no console errors, light *and* dark (`data-theme` toggle), and ~390 px width without horizontal scroll.
+5. **Check** in a browser: no console errors, light *and* dark (`data-theme` toggle), and ~390 px width without horizontal scroll.
 
 ### Without a shell (claude.ai)
 
 Paste the full content of `assets/shadcn.css` in place of `<!-- shadcn:css -->` (inside `<style>`) and of `assets/shadcn.js` in place of `<!-- shadcn:js -->` (inside `<script>`). Write icons as inline SVG — the inner paths are in `assets/icons.json`:
 `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">…paths…</svg>`.
 Without this, `<i data-icon>` only renders the ten icons the script itself knows.
+
+## Design rules (details and decision tables: `references/design-guide.md`)
+
+- **One job per page**, stated in the header with a one-line description and the primary action on the right. Summary first (stat cards), then trend (chart), then records (table).
+- **Cards for objects, whitespace for grouping.** Never nest cards; one primary button per view; left-aligned by default.
+- **Spacing on the 4 px grid**: 8–12 px inside components, 16–24 px between groups, 32–48 px between sections — via `.stack`/`.row`/`.grid` gaps.
+- **Pick inputs by option count**: 2–5 visible → Radio/Toggle Group, 5–15 → Select, more or searchable → Combobox, on/off now → Switch, actions → Dropdown Menu (never a Select).
+- **Dates**: single → Date Picker; period → range picker with `data-months="2"` plus presets; far past → native date input.
+- **Charts**: type from the question (time → area/line, ranking → bar, composition → stacked bar or donut ≤ 5 slices, one number → stat card). Always in a card with title, period/unit and a one-sentence takeaway; numbers through `format`.
+- **Every data view has empty, loading and error states.** Real, plausible content in German formatting; never lorem ipsum, never emoji as icons.
 
 ## Conventions
 
@@ -77,7 +89,8 @@ shadcn-artifacts/
 ├── scripts/
 │   └── build.mjs               ← inlines sections + icons → single file (file | artifact)
 ├── references/
-│   └── components.md           ← markup for every component
+│   ├── components.md           ← markup for every component
+│   └── design-guide.md         ← composition, component choice, charts, forms, blueprints
 └── examples/
     ├── components.src.html     ← showcase source: all 57 components
     └── components.html         ← built showcase (open in a browser)
