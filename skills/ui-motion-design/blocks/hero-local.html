@@ -1,0 +1,24 @@
+<style>
+.b-hl { padding-block: clamp(40px, 6vw, 88px); }
+.b-hl .grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 5vw, 64px); align-items: center; }
+.b-hl .grid > * { min-width: 0; }
+.b-hl h1 { font-size: clamp(2.4rem, 1.5rem + 3.6vw, 4.4rem); line-height: 1.04; letter-spacing: -0.035em; font-weight: 750; margin: 14px 0 18px; }
+.b-hl .ctas { margin-top: 26px; }
+.b-trust { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
+.b-trust span { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: var(--card); border: 1px solid var(--hair); font-size: 14.5px; font-weight: 500; }
+.b-trust b { color: var(--accent-text); }
+.b-hl .photo { aspect-ratio: 4 / 5; min-height: 320px; }
+@media (max-width: 860px) { .b-hl .grid { grid-template-columns: 1fr; } .b-hl .photo { aspect-ratio: 4 / 3; } }
+</style>
+<section class="b-hl" id="top">
+  <div class="wrap grid">
+    <div>
+      <span class="kicker">[Leistung] in {{city}} und Umgebung</span>
+      <h1>[Was ihr macht, für wen, in {{city}}.]</h1>
+      <p class="lede">[Ein Satz, der Vertrauen schafft: Meisterbetrieb, Erfahrung, was Kunden konkret bekommen.]</p>
+      <div class="ctas"><a class="btn primary num" href="tel:{{phone}}">Anrufen: {{phoneDisplay}}</a><a class="btn" href="#kontakt">[Angebot anfragen]</a></div>
+      <div class="b-trust"><span><b>★ [4,9]</b> [Google, 120 Bewertungen]</span><span>[Meisterbetrieb]</span><span>[seit 1987]</span></div>
+    </div>
+    <div class="ph photo" role="img" aria-label="[Foto: Team oder echtes Projekt]">[Echtes Foto von Team oder Arbeit · keine Stockfotos]</div>
+  </div>
+</section>

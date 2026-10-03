@@ -1,0 +1,22 @@
+<style>
+.b-logos { padding-block: 28px 8px; text-align: center; }
+.b-logos p { font-size: 14px; color: var(--muted-foreground); margin-bottom: 16px; }
+.b-mq { display: flex; align-items: center; gap: 12px; }
+.b-mq .vp { overflow: clip; flex: 1; min-width: 0; mask: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
+.b-mq .track { display: flex; gap: 56px; width: max-content; animation: b-mq 40s linear infinite; font: 700 20px/1 var(--font-display); color: color-mix(in oklch, var(--foreground) 48%, transparent); }
+.b-mq.paused .track { animation-play-state: paused; }
+@keyframes b-mq { to { translate: -50% 0; } }
+.b-mq button { flex: none; min-height: 44px; min-width: 44px; border-radius: 999px; border: 1px solid var(--hair); background: var(--card); color: var(--muted-foreground); cursor: pointer; font: 600 14px/1 var(--font-sans); }
+@media (prefers-reduced-motion: reduce) { .b-mq .track { animation: none; flex-wrap: wrap; width: auto; justify-content: center; gap: 14px 40px; } .b-mq [aria-hidden="true"], .b-mq button { display: none; } }
+</style>
+<div class="b-logos wrap">
+  <p>[Vertraut von … / bekannt aus …]</p>
+  <div class="b-mq">
+    <div class="vp"><div class="track"><span>[Kunde A]</span><span>[Kunde B]</span><span>[Kunde C]</span><span>[Kunde D]</span><span>[Kunde E]</span><span>[Kunde F]</span>
+      <span aria-hidden="true">[Kunde A]</span><span aria-hidden="true">[Kunde B]</span><span aria-hidden="true">[Kunde C]</span><span aria-hidden="true">[Kunde D]</span><span aria-hidden="true">[Kunde E]</span><span aria-hidden="true">[Kunde F]</span></div></div>
+    <button type="button" data-b-mq aria-pressed="false" aria-label="Laufband anhalten">❙❙</button>
+  </div>
+</div>
+<script>
+document.querySelectorAll('[data-b-mq]').forEach((b) => b.addEventListener('click', () => { const p = b.closest('.b-mq').classList.toggle('paused'); b.setAttribute('aria-pressed', p); b.setAttribute('aria-label', p ? 'Laufband abspielen' : 'Laufband anhalten'); b.textContent = p ? '▶' : '❙❙'; }));
+</script>

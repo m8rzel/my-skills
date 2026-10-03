@@ -1,0 +1,17 @@
+<style>
+.b-svc { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 16px; }
+.b-svc article { padding: 24px; display: grid; gap: 10px; align-content: start; }
+.b-svc h3 { font-size: 20px; } .b-svc p { color: var(--muted-foreground); font-size: 16px; }
+.b-svc .price { font-weight: 700; font-size: 15px; } .b-svc .price span { font-weight: 500; color: var(--muted-foreground); }
+.b-svc a { font-weight: 600; text-decoration-color: color-mix(in oklch, var(--primary) 50%, transparent); text-underline-offset: 3px; display: inline-flex; min-height: 44px; align-items: center; }
+</style>
+<section class="block" id="leistungen">
+  <div class="wrap">
+    <div class="head reveal"><span class="kicker">Leistungen</span><h2>[Was wir für dich machen.]</h2><p class="lede">[Kurz: Spezialisierung und Einzugsgebiet.]</p></div>
+    <div class="b-svc">
+      <article class="card reveal"><h3>[Leistung 1]</h3><p>[Nutzen in Kundensprache.]</p><span class="price num">[ab 490 €] <span>[inkl. MwSt.]</span></span><a href="#kontakt">[Angebot anfragen]</a></article>
+      <article class="card reveal"><h3>[Leistung 2]</h3><p>[…]</p><span class="price num">[ab … €]</span><a href="#kontakt">[Angebot anfragen]</a></article>
+      <article class="card reveal"><h3>[Leistung 3]</h3><p>[…]</p><span class="price num">[ab … €]</span><a href="#kontakt">[Angebot anfragen]</a></article>
+    </div>
+  </div>
+</section>

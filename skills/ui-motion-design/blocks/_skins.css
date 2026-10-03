@@ -1,0 +1,43 @@
+/* blocks/_skins.css — style directions from data/styles.json as small overrides on <html data-skin="…">.
+   Tokens carry colour; skins carry shape, depth and type treatment. */
+
+/* Swiss Minimal / Calm Product: tight radii, hairlines, no glow */
+[data-skin="swiss-minimal"], [data-skin="calm-product"], [data-skin="data-dense"] { --radius: 0.375rem; }
+[data-skin="swiss-minimal"] .btn, [data-skin="calm-product"] .btn { border-radius: var(--radius-md); }
+[data-skin="swiss-minimal"] .btn.primary, [data-skin="calm-product"] .btn.primary { box-shadow: none; }
+[data-skin="swiss-minimal"] h1, [data-skin="swiss-minimal"] h2 { letter-spacing: -0.04em; }
+
+/* Soft Premium (default look): rounder, layered depth */
+[data-skin="soft-premium"] { --radius: 0.875rem; }
+[data-skin="soft-premium"] .card { box-shadow: var(--shadow-sm); }
+
+/* Trust Clean: bigger body text, calmer headings, squarer buttons */
+[data-skin="trust-clean"] body { font-size: 18px; }
+[data-skin="trust-clean"] .btn { border-radius: var(--radius-md); }
+[data-skin="trust-clean"] h1, [data-skin="trust-clean"] h2 { letter-spacing: -0.015em; font-weight: 650; }
+
+/* Warm Craft: rounded but grounded, display serif carries warmth */
+[data-skin="warm-craft"] .btn { border-radius: var(--radius-md); }
+[data-skin="warm-craft"] h1, [data-skin="warm-craft"] h2 { letter-spacing: -0.02em; font-weight: 600; }
+
+/* Editorial / Luxury Minimal: more air, thin rules, small caps labels */
+[data-skin="editorial"], [data-skin="luxury-minimal"] { --section: clamp(88px, 9vw + 24px, 168px); }
+[data-skin="editorial"] .kicker, [data-skin="luxury-minimal"] .kicker { text-transform: uppercase; letter-spacing: .14em; font-size: 12.5px; color: var(--muted-foreground); }
+[data-skin="luxury-minimal"] .btn { border-radius: 0; letter-spacing: .06em; text-transform: uppercase; font-size: 14px; }
+[data-skin="luxury-minimal"] .card, [data-skin="luxury-minimal"] .ph { border-radius: 0; }
+[data-skin="luxury-minimal"] h1, [data-skin="luxury-minimal"] h2 { font-weight: 500; letter-spacing: -0.01em; }
+
+/* Neubrutalism: ink borders, hard offset shadows, flat fills */
+[data-skin="neubrutalism"] { --hair: var(--foreground); }
+[data-skin="neubrutalism"] .card, [data-skin="neubrutalism"] .btn { border: 2px solid var(--foreground); box-shadow: 4px 4px 0 var(--foreground); border-radius: var(--radius-md); }
+[data-skin="neubrutalism"] .btn:active { translate: 4px 4px; box-shadow: 0 0 0 var(--foreground); scale: 1; }
+[data-skin="neubrutalism"] h1, [data-skin="neubrutalism"] h2 { font-weight: 800; text-transform: none; }
+
+/* Dark Glow: glow on primary, gradient hairlines (page is forced dark by compose.mjs) */
+[data-skin="dark-glow"] .btn.primary { box-shadow: 0 0 0 1px color-mix(in oklch, var(--primary) 60%, transparent), 0 10px 40px -8px var(--primary); }
+[data-skin="dark-glow"] .card { background: linear-gradient(color-mix(in oklch, var(--card) 92%, transparent), var(--card)) padding-box, linear-gradient(160deg, color-mix(in oklch, var(--primary) 40%, transparent), transparent 45%) border-box; border: 1px solid transparent; }
+
+/* Kinetic Type / Neubrutalism / Playful: louder headings */
+[data-skin="kinetic-type"] h1 { font-size: clamp(3.2rem, 1.4rem + 7.5vw, 8rem); line-height: .9; letter-spacing: -0.05em; }
+[data-skin="playful-vibrant"] .btn, [data-skin="claymorphism"] .btn { border-radius: 999px; }
+[data-skin="claymorphism"] .card { border-radius: 28px; box-shadow: inset 0 2px 0 color-mix(in oklch, white 60%, transparent), 0 14px 30px -12px color-mix(in oklch, var(--primary) 40%, transparent); }

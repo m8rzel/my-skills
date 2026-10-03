@@ -1,6 +1,6 @@
 ---
 name: ui-motion-design
-description: "Expert UI/UX and motion design toolkit for websites (landing, local business, agency, shop) and webapps (SaaS, dashboards, admin, AI/agent UIs, mobile). brief.mjs turns a product description into style, fonts, palette, page pattern or app shell and anti-patterns; tokens.mjs builds OKLCH tokens (shadcn light/dark); plus contrast (WCAG+APCA), spring conversion and Playwright UX/a11y/motion audits. Knowledge from Refactoring UI, Apple HIG, Material 3, NN/g, Baymard, GOV.UK, Vercel; teardowns of Linear, Stripe, Apple, Awwwards winners; 21st.dev component sourcing. Use when building or reviewing UI, design systems, animations or landing pages, or on 'mach das schöner', 'UI/UX', 'Motion Design', 'Animationen', 'Design-Review', 'welcher Stil', 'wie Stripe/Apple/Linear', 'Landingpage', 'Dashboard', 'AI-Chat-UI'."
+description: "Expert UI/UX and motion design toolkit for websites (landing, local business, agency, shop, product launch) and webapps (SaaS, dashboards, admin, AI/agent UIs, mobile). brief.mjs turns a product description into style, fonts, palette and page pattern; compose.mjs builds a complete page scaffold from 19 section blocks; tokens.mjs makes OKLCH tokens; shots.mjs renders contact sheets, audit.mjs checks UX/a11y/motion, extract.mjs reads the design DNA of an existing site for redesigns. Knowledge from Refactoring UI, Apple HIG, Material 3, NN/g, Baymard, GOV.UK, Vercel; teardowns of Linear, Stripe, Apple, Awwwards; 21st.dev sourcing; German copywriting. Use when building, reviewing or redesigning UI, or on 'mach das schöner', 'UI/UX', 'Animationen', 'Landingpage', 'Relaunch', 'Design-Review', 'wie Stripe/Apple', 'Dashboard'."
 ---
 
 # ui-motion-design
@@ -43,8 +43,19 @@ It matches ~25 product types (German + English keywords, incl. Handwerk, Praxis,
 | Animations, micro-interactions, "make it feel smooth" | **C. Motion** |
 | A "wow" landing page or scroll storytelling, "like Apple/Stripe", "krasse Animationen", components from 21st.dev | **D. Signature effects** |
 | A critique, "what's wrong with this page", or a quality gate before launch | **E. Review & audit** |
+| A **redesign** of an existing site ("mach unsere Seite neu", client relaunch) | **F. Redesign** |
 
-Most real tasks combine several workflows. A new landing page runs 0 → A → B → D → E; a new app screen 0 → A → B → C → E.
+Most real tasks combine several workflows. A new landing page runs 0 → **compose** → fill content → D → E; a new app screen 0 → A → B → C → E; a relaunch F → 0 → compose → E.
+
+### Fast path for websites: compose a scaffold
+
+```bash
+node <skill-dir>/scripts/compose.mjs "website für eine schreinerei in offenburg" --name "Holzwerk Seitz" --city Offenburg --phone "+49 781 123456" --out ./site
+node <skill-dir>/scripts/compose.mjs --pattern saas-landing --name "Belegfix" --brand "#5b5bd6" --out ./site --artifact
+node <skill-dir>/scripts/compose.mjs --list        # 19 blocks + recipes per pattern
+```
+
+It runs the brief, generates tokens with the chosen fonts, and assembles the pattern's blocks from `blocks/` (nav, hero-split, hero-center, hero-local, logos, problem-outcome, bento, steps, story-pinned, services, compare, testimonial, stats, pricing, faq, contact-local, cta-band, footer, mobile-bar) into one audit-clean HTML file, styled through a **skin** (`blocks/_skins.css`, one per style direction). Every `[bracketed]` text is a placeholder — the script counts them. **Then replace every placeholder with real content** (`references/copywriting.md`), swap `.ph` placeholders for real visuals, add the page's one signature effect, and verify with `shots.mjs` + `audit.mjs`. `--artifact` also writes a fragment for the Artifact tool. The scaffold is a starting point, not the design: change layout, type and sections wherever the subject asks for it.
 
 ---
 
@@ -174,7 +185,27 @@ node <skill-dir>/scripts/audit.mjs https://example.com --out ./ux-audit
 - motion hygiene: `transition: all`, layout-property animation, long durations on controls, infinite loops, `will-change` overuse
 - **reduced motion, verified by reloading with `prefers-reduced-motion: reduce`**
 
-The script writes `report.md`, `report.json` and full-page screenshots. Then work through `references/review-checklist.md` by hand, and report the top 3–5 findings with severity and a concrete fix (see the template at the end of that file).
+The script writes `report.md`, `report.json` and full-page screenshots.
+
+**Look at it, every time** — one contact sheet across phone/desktop × light/dark (× reduced motion):
+
+```bash
+node <skill-dir>/scripts/shots.mjs ./index.html --out ./shots [--full] [--reduced] [--section "#preise"]
+```
+
+It flags horizontal overflow and JS errors per cell; `--full` captures whole pages in their resting state. Then work through `references/review-checklist.md` by hand, and report the top 3–5 findings with severity and a concrete fix (see the template at the end of that file).
+
+### F. Redesign an existing site
+
+```bash
+node <skill-dir>/scripts/extract.mjs https://kunde.de --out ./dna      # design DNA: colours by role, brand, fonts, type scale, radii, shadows, spacing, motion, findings
+node <skill-dir>/scripts/audit.mjs https://kunde.de --out ./ux-audit   # what's broken today
+node <skill-dir>/scripts/shots.mjs https://kunde.de --out ./before --full
+```
+
+1. Read `dna/design-dna.md`: keep what carries the brand (colour, logo, maybe the heading face), fix what the findings list (too many fonts/radii/shadows, irregular spacing, low-contrast text, no token system).
+2. Rebuild the system with the suggested `tokens.mjs` command, then brief + compose for the new structure.
+3. Present before/after with two contact sheets (`shots.mjs` on old and new) plus the audit delta (errors/warnings before → after) — that's the pitch for the client.
 
 ---
 
@@ -186,11 +217,15 @@ ui-motion-design/
 ├── package.json                  ← only needed for audit.mjs (Playwright)
 ├── scripts/
 │   ├── brief.mjs                 ← product description → design brief (MASTER.md + page overrides) [+ tokens]
+│   ├── compose.mjs               ← brief + tokens + blocks → complete page scaffold (+ artifact fragment)
+│   ├── shots.mjs                 ← contact sheet: viewports × themes (× reduced motion), overflow + JS errors
+│   ├── extract.mjs               ← design DNA of an existing URL → findings + tokens.mjs suggestion
 │   ├── tokens.mjs                ← brand colour → tokens (css, tailwind, ts, json) + style tile
 │   ├── contrast.mjs              ← WCAG + APCA for pairs or whole token files (CI exit code)
 │   ├── easing.mjs                ← springs → linear()/Motion/Reanimated/GSAP, presets, playground
 │   ├── audit.mjs                 ← Playwright UX/a11y/motion audit → report.md
 │   └── lib/color.mjs, lib/spring.mjs
+├── blocks/                       ← 19 section blocks (HTML + scoped CSS/JS) + _base.css + _skins.css, used by compose.mjs
 ├── data/                         ← curated JSON behind brief.mjs (edit to tune recommendations)
 │   ├── products.json             ← ~25 product types → style, fonts, brand seed, pattern/shell, must/avoid, components
 │   ├── styles.json               ← 20 style directions (regenerate style-catalog.md: brief.mjs --catalog)
@@ -203,6 +238,7 @@ ui-motion-design/
 │   ├── website-playbook.md       ← sections, page types, conversion, SEO/CWV, German legal UX, QA
 │   ├── webapp-playbook.md        ← shells, IA, speed, density, keyboard, safety, onboarding, billing/team, QA
 │   ├── style-catalog.md          ← generated from data/styles.json
+│   ├── copywriting.md            ← German-first voice, headline/CTA formulas, microcopy library, legal copy, copy QA
 │   ├── component-sourcing.md     ← 21st.dev + shadcn animation libs: install, licenses, vetting, trends
 │   ├── ux-principles.md          ← baseline: job-first, hierarchy, layout, type, colour, states, a11y, product types
 │   ├── ui-craft.md               ← expert visual craft with numbers (Refactoring UI, HIG, M3, Radix, Vercel, Butterick)
@@ -222,6 +258,6 @@ ui-motion-design/
     └── signature-effects.html    ← vanilla wow effects, live
 ```
 
-Scripts need Node 18+ and have no dependencies, except `audit.mjs`, which needs Playwright.
+Scripts need Node 18+ and have no dependencies, except `audit.mjs`, `shots.mjs` and `extract.mjs`, which need Playwright (`npm install` once in the skill folder).
 
 Credits: the brief/design-system-generator idea and the priority-ordered rule categories were inspired by [ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) (MIT). Data and code here are written from scratch.

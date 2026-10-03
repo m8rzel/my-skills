@@ -1,0 +1,16 @@
+<style>
+.b-po { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 16px; }
+.b-po article { padding: 24px; display: grid; gap: 8px; }
+.b-po s { color: var(--muted-foreground); text-decoration-color: color-mix(in oklab, var(--destructive) 60%, transparent); }
+.b-po p { font-weight: 600; font-size: 18px; }
+</style>
+<section class="block">
+  <div class="wrap">
+    <div class="head reveal"><span class="kicker">[Warum {{name}}]</span><h2>[Das Problem in einem Satz. Die Lösung im nächsten.]</h2><p class="lede">[Drei Dinge, die eure Kunden heute nerven, und was sich ändert.]</p></div>
+    <div class="b-po">
+      <article class="card reveal"><s>[Schmerz 1 in Kundensprache]</s><p>[Ergebnis 1 mit Zahl]</p></article>
+      <article class="card reveal"><s>[Schmerz 2]</s><p>[Ergebnis 2]</p></article>
+      <article class="card reveal"><s>[Schmerz 3]</s><p>[Ergebnis 3]</p></article>
+    </div>
+  </div>
+</section>

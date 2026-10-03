@@ -1,0 +1,29 @@
+<style>
+.b-hero { padding-block: clamp(48px, 7vw, 104px); position: relative; overflow: clip; }
+.b-hero::before { content: ""; position: absolute; inset: auto -10% -45% 35%; height: 85%; background: radial-gradient(closest-side, color-mix(in oklch, var(--primary) 14%, transparent), transparent); pointer-events: none; }
+.b-hero .grid { position: relative; display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
+.b-hero .grid > * { min-width: 0; }
+.b-hero h1 { font-size: clamp(2.6rem, 1.5rem + 4.6vw, 5.2rem); line-height: 1; letter-spacing: -0.045em; font-weight: 800; margin: 16px 0 20px; }
+.b-hero h1 em { font-style: normal; color: var(--accent-text); }
+.b-hero .ctas { margin-top: 28px; }
+.b-proof { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--hair); }
+.b-proof div { display: grid; } .b-proof b { font: 700 21px/1.2 var(--font-display); } .b-proof span { font-size: 14px; color: var(--muted-foreground); }
+.b-hero .visual { aspect-ratio: 4 / 3.4; min-height: 280px; }
+@media (max-width: 900px) { .b-hero .grid { grid-template-columns: 1fr; } }
+</style>
+<section class="b-hero" id="top">
+  <div class="wrap grid">
+    <div>
+      <span class="kicker">[Kategorie · für wen]</span>
+      <h1>[Ergebnis für Zielgruppe,] <em>[max. 8 Wörter]</em></h1>
+      <p class="lede">[Ein Satz: wie {{name}} das schafft, plus ein Beweis. Konkrete Zahl statt Adjektiv.]</p>
+      <div class="ctas"><a class="btn primary" href="#kontakt">{{cta}}</a><a class="btn ghost" href="#ablauf">[So funktioniert's]</a></div>
+      <div class="b-proof">
+        <div><b class="num">[4,9 ★]</b><span>[aus 180 Bewertungen]</span></div>
+        <div><b class="num">[seit 1998]</b><span>[Erfahrung]</span></div>
+        <div><b class="num">[24 h]</b><span>[Antwortzeit]</span></div>
+      </div>
+    </div>
+    <div class="ph visual" role="img" aria-label="[Beschreibung des Produkt- oder Projektbilds]">[Produkt-UI, Gerät oder echtes Foto · AVIF, max. 200 KB, fetchpriority="high"]</div>
+  </div>
+</section>

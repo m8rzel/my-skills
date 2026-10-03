@@ -335,3 +335,46 @@ ScrollTrigger.create({ trigger: '.seq', start: 'top top', end: '+=300%', pin: tr
 - Scrub Lottie with scroll or gesture progress via `goToAndStop(progress * totalFrames, true)`.
 - Lazy-load the runtime and pause off-screen.
 - Reduced motion: final frame.
+
+## Product rendered in CSS (no 3D runtime)
+
+*Learned building `examples/product-launch.html`.*
+
+- **Worth it:** hardware launches and concepts before real photos exist. Simple objects work: pucks, cards, phones, speakers.
+- **Cost:** ~2 KB CSS, zero JS, no LCP risk.
+
+**Technique:** stack `div`s, each in an `aspect-ratio: 1` box:
+
+| Layer | How |
+|---|---|
+| glow | radial gradient |
+| body | fabric = tiny dot `radial-gradient` tile + a big highlight gradient + inset shadows |
+| LED ring | `conic-gradient` masked to a thin annulus |
+| cap | darker disc with an inner highlight |
+| details | mic holes, logo |
+
+**States:** a `data-state` attribute (`idle | listen | think | speak`) swaps the ring gradient and its animation. Spin `--a` through `@property --a { syntax: "<angle>" }` so the conic angle animates smoothly.
+
+```css
+.ring { inset: 22%; border-radius: 50%; background: conic-gradient(from var(--a), var(--ember), color-mix(in oklab, var(--ember) 20%, var(--ring-off)) 40%, var(--ember));
+        mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 calc(100% - 5px)); animation: spin 2.4s linear infinite; }
+@property --a { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+@keyframes spin { to { --a: 360deg; } }
+```
+
+**Guardrails**
+- Under reduced motion, keep the state colours and drop the spin.
+- `aria-hidden` on the object; describe the product in text.
+
+## State-driven pinned story
+
+- A sticky visual on the left, 3–5 steps on the right.
+- An `IntersectionObserver` with `rootMargin: '-45% 0px -45% 0px'` marks the step crossing the middle of the viewport. That step writes `data-state` onto the visual.
+- Works in every browser, needs no scroll-jacking, and every step is readable without the effect.
+- Block: `blocks/story-pinned.html`.
+
+**Don't dim inactive steps with opacity**: it fails contrast (the audit catches it). Mark the active step with a coloured border and a full-contrast heading instead.
+
+## Gotcha: mixing colours across hues
+
+`color-mix(in oklch, amber, blue-grey)` interpolates the **hue** and passes through red or purple. When mixing a brand colour toward a neutral or a different-hue surface, use `in oklab`.

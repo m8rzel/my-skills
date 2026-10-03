@@ -1,0 +1,20 @@
+<style>
+.b-faq { max-width: 780px; }
+.b-faq details { border-bottom: 1px solid var(--hair); }
+.b-faq summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; gap: 16px; align-items: center; min-height: 64px; font: 600 18px/1.35 var(--font-sans); }
+.b-faq summary::-webkit-details-marker { display: none; }
+.b-faq summary::after { content: "+"; font-size: 24px; font-weight: 400; color: var(--muted-foreground); transition: rotate var(--duration-base) var(--ease-standard); flex: none; }
+.b-faq details[open] summary::after { rotate: 45deg; }
+.b-faq p { margin: 0 0 20px; color: var(--muted-foreground); max-width: 64ch; }
+</style>
+<section class="block tint" id="faq">
+  <div class="wrap">
+    <div class="head reveal"><span class="kicker">FAQ</span><h2>Häufige Fragen</h2></div>
+    <div class="b-faq">
+      <details><summary>[Einwand 1: Was kostet das?]</summary><p>[Ehrliche, konkrete Antwort.]</p></details>
+      <details><summary>[Einwand 2: Wie lange dauert es?]</summary><p>[…]</p></details>
+      <details><summary>[Einwand 3: Datenschutz / Kündigung / Garantie]</summary><p>[…]</p></details>
+      <details><summary>[Einwand 4]</summary><p>[…]</p></details>
+    </div>
+  </div>
+</section>

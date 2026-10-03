@@ -1,0 +1,26 @@
+<style>
+.b-cmp { position: relative; aspect-ratio: 16 / 10; border-radius: var(--radius-xl); overflow: hidden; --p: 50%; max-width: 980px; margin-inline: auto; }
+.b-cmp .side { position: absolute; inset: 0; border-radius: 0; border: 0; }
+.b-cmp .after { clip-path: inset(0 0 0 var(--p)); }
+.b-cmp .before { background: repeating-linear-gradient(45deg, color-mix(in oklch, var(--foreground) 7%, transparent) 0 12px, transparent 12px 24px), var(--muted); }
+.b-cmp .line { position: absolute; top: 0; bottom: 0; left: var(--p); width: 2px; background: var(--background); translate: -1px 0; pointer-events: none; }
+.b-cmp .line::after { content: "⟷"; position: absolute; top: 50%; left: 50%; translate: -50% -50%; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--background); color: var(--foreground); box-shadow: var(--shadow-md); }
+.b-cmp input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: ew-resize; margin: 0; }
+.b-cmp input:focus-visible ~ .line::after { outline: 2px solid var(--ring); outline-offset: 2px; }
+.b-cmp .tag { position: absolute; top: 14px; padding: 4px 10px; border-radius: 999px; background: color-mix(in oklch, var(--background) 85%, transparent); font-size: 13px; font-weight: 600; pointer-events: none; }
+.b-cmp .tag.l { left: 14px; } .b-cmp .tag.r { right: 14px; }
+</style>
+<section class="block tint" id="projekte">
+  <div class="wrap">
+    <div class="head center reveal"><span class="kicker">[Projekte]</span><h2>[Vorher und nachher.]</h2><p class="lede">[Ein echtes Projekt mit Ort und Umfang.]</p></div>
+    <div class="b-cmp" data-b-cmp>
+      <div class="ph side before">[Vorher-Foto]</div>
+      <div class="ph side after">[Nachher-Foto]</div>
+      <input type="range" min="0" max="100" value="50" aria-label="Vorher-Nachher-Vergleich: Regler nach links oder rechts schieben">
+      <span class="line" aria-hidden="true"></span><span class="tag l">Vorher</span><span class="tag r">Nachher</span>
+    </div>
+  </div>
+</section>
+<script>
+document.querySelectorAll('[data-b-cmp]').forEach((c) => { const i = c.querySelector('input'); const set = () => c.style.setProperty('--p', i.value + '%'); i.addEventListener('input', set); set(); });
+</script>

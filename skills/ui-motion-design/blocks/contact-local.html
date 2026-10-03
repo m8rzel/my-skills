@@ -1,0 +1,51 @@
+<style>
+.b-contact .grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(28px, 5vw, 64px); align-items: start; }
+.b-contact .grid > * { min-width: 0; }
+.b-form { padding: clamp(22px, 3vw, 32px); display: grid; gap: 16px; }
+.b-form label { font-weight: 600; font-size: 15px; display: block; margin-bottom: 6px; }
+.b-form input, .b-form textarea { width: 100%; min-height: 48px; padding: 12px 14px; border-radius: var(--radius-md); border: 1px solid var(--input); background: var(--background); color: var(--foreground); font: 16px/1.5 var(--font-sans); }
+.b-form textarea { min-height: 120px; resize: vertical; }
+.b-form [aria-invalid="true"] { border-color: var(--destructive); }
+.b-form .err { color: color-mix(in oklab, var(--destructive) 75%, var(--foreground)); font-size: 14px; margin-top: 6px; }
+.b-form .fine { font-size: 14px; color: var(--muted-foreground); }
+.b-info { display: grid; gap: 20px; }
+.b-info dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 8px 18px; font-size: 16px; }
+.b-info dt { color: var(--muted-foreground); }
+.b-info dd { margin: 0; }
+.b-map { aspect-ratio: 4 / 3; gap: 12px; }
+@media (max-width: 860px) { .b-contact .grid { grid-template-columns: 1fr; } }
+</style>
+<section class="block b-contact" id="kontakt">
+  <div class="wrap">
+    <div class="head reveal"><span class="kicker">Kontakt</span><h2>[Sprechen wir über dein Projekt.]</h2><p class="lede">[Antwort-Versprechen, z. B. „Rückmeldung innerhalb von 24 Stunden".]</p></div>
+    <div class="grid">
+      <form class="card b-form" id="b-form" novalidate>
+        <div data-body style="display:grid;gap:16px">
+          <div><label for="b-name">Name</label><input id="b-name" name="name" autocomplete="name" required></div>
+          <div><label for="b-mail">E-Mail oder Telefon</label><input id="b-mail" name="contact" autocomplete="email" required aria-describedby="b-mail-err"><div class="err" id="b-mail-err" hidden></div></div>
+          <div><label for="b-msg">Worum geht es?</label><textarea id="b-msg" name="message"></textarea></div>
+          <button class="btn primary" type="submit">[Anfrage senden]</button>
+          <p class="fine">[Mit dem Absenden stimmst du der Verarbeitung gemäß Datenschutzerklärung zu.]</p>
+        </div>
+        <div data-ok hidden tabindex="-1" style="display:grid;gap:8px;text-align:center;padding:20px 8px"><b style="font:700 22px/1.2 var(--font-display)">Danke, wir melden uns.</b><span class="muted">[Was als Nächstes passiert und wann.]</span></div>
+      </form>
+      <div class="b-info">
+        <dl>
+          <dt>Telefon</dt><dd><a class="num" href="tel:{{phone}}">{{phoneDisplay}}</a></dd>
+          <dt>Adresse</dt><dd>[Straße Nr., PLZ {{city}}]</dd>
+          <dt>Öffnungszeiten</dt><dd class="num">[Mo–Fr 7:30–17:00]</dd>
+        </dl>
+        <div class="ph b-map"><span>[Karte: erst nach Klick laden (Datenschutz)]</span><button class="btn" type="button" data-b-map>Karte anzeigen</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+(() => { const f = document.getElementById('b-form'); if (!f) return; const c = f.querySelector('#b-mail'), err = f.querySelector('#b-mail-err');
+  const check = () => { const v = c.value.trim(); const msg = !v ? 'Gib eine E-Mail-Adresse oder Telefonnummer ein.' : (/@/.test(v) ? !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) : !/^[+\d][\d\s/()-]{5,}$/.test(v)) ? 'Gib eine gültige E-Mail-Adresse oder Telefonnummer ein.' : '';
+    err.textContent = msg; err.hidden = !msg; c.setAttribute('aria-invalid', msg ? 'true' : 'false'); return !msg; };
+  c.addEventListener('blur', () => c.value && check());
+  f.addEventListener('submit', (e) => { e.preventDefault(); if (!check()) { c.focus(); return; } f.querySelector('[data-body]').hidden = true; const ok = f.querySelector('[data-ok]'); ok.hidden = false; ok.focus(); });
+  document.querySelectorAll('[data-b-map]').forEach((b) => b.addEventListener('click', () => { b.closest('.b-map').firstElementChild.textContent = '[Hier das Karten-Embed einsetzen, nachdem die Einwilligung erteilt wurde.]'; b.remove(); }));
+})();
+</script>

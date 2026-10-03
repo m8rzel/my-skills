@@ -1,0 +1,32 @@
+<style>
+.b-bill { display: inline-flex; padding: 4px; border-radius: 999px; background: var(--muted); margin: 0 auto 36px; }
+.b-bill button { min-height: 44px; padding: 0 18px; border-radius: 999px; border: 0; background: none; font: 600 15px/1 var(--font-sans); color: var(--muted-foreground); cursor: pointer; }
+.b-bill button[aria-pressed="true"] { background: var(--card); color: var(--foreground); box-shadow: var(--shadow-sm); }
+.b-plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr)); gap: 16px; text-align: left; }
+.b-plans .plan { padding: 28px; display: flex; flex-direction: column; gap: 16px; position: relative; }
+.b-plans .rec { border: 2px solid var(--primary); box-shadow: var(--shadow-lg); }
+.b-plans .badge { position: absolute; top: -12px; left: 28px; background: var(--primary); color: var(--primary-foreground); font-size: 13px; font-weight: 600; padding: 4px 10px; border-radius: 999px; }
+.b-plans h3 { font-size: 20px; }
+.b-plans .price { font: 700 44px/1 var(--font-display); letter-spacing: -0.04em; } .b-plans .price small { font: 500 15px var(--font-sans); color: var(--muted-foreground); letter-spacing: 0; }
+.b-plans ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; font-size: 16px; }
+.b-plans li { display: flex; gap: 10px; } .b-plans li::before { content: "✓"; color: var(--accent-text); font-weight: 700; }
+.b-plans .btn { margin-top: auto; }
+</style>
+<section class="block" id="preise">
+  <div class="wrap" style="text-align:center">
+    <div class="head center reveal"><span class="kicker">Preise</span><h2>[Fair. Transparent.]</h2><p class="lede">[Risiko-Reduzierer: kostenlos testen, monatlich kündbar …]</p></div>
+    <div class="b-bill" role="group" aria-label="Abrechnungszeitraum"><button type="button" aria-pressed="false" data-b-bill="m">Monatlich</button><button type="button" aria-pressed="true" data-b-bill="y">Jährlich [−20 %]</button></div>
+    <div class="b-plans">
+      <article class="card plan reveal"><h3>[Start]</h3><p class="muted">[Für wen]</p><div class="price num"><span data-m="[0 €]" data-y="[0 €]">[0 €]</span> <small>/ Monat</small></div><ul><li>[Leistung]</li><li>[Leistung]</li><li>[Leistung]</li></ul><a class="btn" href="#kontakt">[Kostenlos starten]</a></article>
+      <article class="card plan rec reveal"><span class="badge">Empfohlen</span><h3>[Pro]</h3><p class="muted">[Für wen]</p><div class="price num"><span data-m="[15 €]" data-y="[12 €]">[12 €]</span> <small>/ Monat</small></div><ul><li>[Alles aus Start]</li><li>[Leistung]</li><li>[Leistung]</li><li>[Leistung]</li></ul><a class="btn primary" href="#kontakt">{{cta}}</a></article>
+      <article class="card plan reveal"><h3>[Team]</h3><p class="muted">[Für wen]</p><div class="price num"><span data-m="[39 €]" data-y="[31 €]">[31 €]</span> <small>/ Monat</small></div><ul><li>[Alles aus Pro]</li><li>[Leistung]</li><li>[Leistung]</li></ul><a class="btn" href="#kontakt">[Team testen]</a></article>
+    </div>
+    <p class="muted" style="margin-top:20px;font-size:14px">[Preise zzgl. USt. / Kleinunternehmer: gem. §19 UStG keine USt.]</p>
+  </div>
+</section>
+<script>
+document.querySelectorAll('[data-b-bill]').forEach((b) => b.addEventListener('click', () => {
+  document.querySelectorAll('[data-b-bill]').forEach((x) => x.setAttribute('aria-pressed', x === b));
+  document.querySelectorAll('.b-plans .price span[data-m]').forEach((s) => { s.textContent = s.dataset[b.dataset.bBill]; if (!matchMedia('(prefers-reduced-motion: reduce)').matches) s.animate([{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }], { duration: 200, easing: 'cubic-bezier(0.16,1,0.3,1)' }); });
+}));
+</script>

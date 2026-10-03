@@ -1,0 +1,23 @@
+<style>
+.b-nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 40; background: color-mix(in oklch, var(--background) 86%, transparent); backdrop-filter: blur(14px) saturate(1.4); border-bottom: 1px solid var(--hair); }
+@media (prefers-reduced-transparency: reduce) { .b-nav { background: var(--background); backdrop-filter: none; } }
+.b-nav .wrap { display: flex; align-items: center; gap: 20px; min-height: 64px; }
+.b-logo { display: inline-flex; align-items: center; gap: 10px; font: 700 20px/1 var(--font-display); letter-spacing: -0.02em; text-decoration: none; min-height: 44px; }
+.b-logo i { width: 22px; height: 22px; border-radius: 7px; background: linear-gradient(135deg in oklch, var(--brand-400), var(--brand-700)); }
+.b-nav nav { display: flex; gap: 2px; margin-left: 8px; }
+.b-nav nav a { text-decoration: none; color: var(--muted-foreground); font-weight: 500; font-size: 15px; padding: 10px 12px; border-radius: 8px; }
+.b-nav nav a:hover { color: var(--foreground); background: var(--accent); }
+.b-nav .end { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+.b-nav .btn { min-height: 44px; font-size: 15px; padding: 0 18px; }
+.b-nav .tel { font-weight: 600; text-decoration: none; font-size: 15px; display: inline-flex; align-items: center; min-height: 44px; }
+@media (max-width: 860px) { .b-nav nav, .b-nav .tel { display: none; } }
+</style>
+<a class="btn skip" href="#main">Zum Inhalt springen</a>
+<header class="b-nav">
+  <div class="wrap">
+    <a class="b-logo" href="#top" aria-label="{{name}}, zum Seitenanfang"><i aria-hidden="true"></i>{{name}}</a>
+    <nav aria-label="Hauptnavigation"><a href="#leistungen">[Leistungen]</a><a href="#ablauf">[Ablauf]</a><a href="#preise">[Preise]</a><a href="#faq">FAQ</a></nav>
+    <div class="end"><a class="tel num" href="tel:{{phone}}">{{phoneDisplay}}</a><a class="btn primary" href="#kontakt">{{cta}}</a></div>
+  </div>
+</header>
+<main id="main">

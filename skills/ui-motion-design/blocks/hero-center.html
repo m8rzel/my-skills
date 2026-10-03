@@ -1,0 +1,18 @@
+<style>
+.b-hc { padding-block: clamp(64px, 9vw, 140px) clamp(40px, 5vw, 72px); text-align: center; position: relative; overflow: clip; }
+.b-hc::before { content: ""; position: absolute; inset: -30% 10% auto; height: 70%; background: radial-gradient(closest-side, color-mix(in oklch, var(--primary) 16%, transparent), transparent); pointer-events: none; }
+.b-hc .inner { position: relative; display: grid; justify-items: center; gap: 22px; }
+.b-hc h1 { font-size: clamp(2.8rem, 1.4rem + 6vw, 6.4rem); line-height: .98; letter-spacing: -0.05em; font-weight: 800; max-width: 16ch; }
+.b-hc h1 em { font-style: italic; font-weight: 500; color: var(--accent-text); }
+.b-hc .lede { margin-inline: auto; }
+.b-hc .visual { margin-top: clamp(32px, 5vw, 64px); width: 100%; aspect-ratio: 16 / 9; min-height: 240px; }
+</style>
+<section class="b-hc" id="top">
+  <div class="wrap inner">
+    <span class="kicker">[Eyebrow: Neu · was es ist]</span>
+    <h1>[Statement über das,] <em>[was sich ändert]</em></h1>
+    <p class="lede">[Ein Satz Nutzen + für wen. Kein „Willkommen auf unserer Website".]</p>
+    <div class="ctas" style="justify-content:center"><a class="btn primary" href="#kontakt">{{cta}}</a><a class="btn ghost" href="#leistungen">[Mehr sehen]</a></div>
+    <div class="ph visual" role="img" aria-label="[Beschreibung des Hero-Visuals]">[Hero-Visual: Produkt-UI, Video-Poster oder Arbeit · 16:9]</div>
+  </div>
+</section>

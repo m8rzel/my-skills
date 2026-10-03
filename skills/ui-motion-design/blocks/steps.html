@@ -1,0 +1,16 @@
+<style>
+.b-steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 32px; counter-reset: s; }
+.b-steps li { border-top: 2px solid var(--hair); padding-top: 20px; display: grid; gap: 8px; }
+.b-steps li::before { counter-increment: s; content: counter(s, decimal-leading-zero); font: 600 14px/1 var(--font-mono); color: var(--accent-text); }
+.b-steps h3 { font-size: 21px; } .b-steps p { color: var(--muted-foreground); } .b-steps small { font-weight: 600; font-size: 14px; }
+</style>
+<section class="block" id="ablauf">
+  <div class="wrap">
+    <div class="head reveal"><span class="kicker">[Ablauf]</span><h2>[In drei Schritten zu … ]</h2></div>
+    <ol class="b-steps">
+      <li class="reveal"><h3>[Schritt 1: Verb]</h3><p>[Was passiert, was der Kunde tun muss.]</p><small>[ca. 5 Minuten]</small></li>
+      <li class="reveal"><h3>[Schritt 2]</h3><p>[…]</p><small>[Dauer]</small></li>
+      <li class="reveal"><h3>[Schritt 3]</h3><p>[…]</p><small>[Dauer]</small></li>
+    </ol>
+  </div>
+</section>
