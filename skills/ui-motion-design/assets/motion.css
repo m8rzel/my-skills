@@ -1,0 +1,182 @@
+/* motion.css — drop-in motion primitives (ui-motion-design skill)
+   Everything sits in @layer motion, so your own tokens/styles always win.
+   Movement collapses to a short fade under prefers-reduced-motion.
+
+   Classes
+   .m-enter[-up|-down|-scale]   enter animation when the element appears (insert, display:none → block)
+   .m-popover                   for [popover] elements: fade + scale from the trigger side, animated exit
+   .m-dialog / .m-sheet[-right] for <dialog>: centered dialog or bottom/right sheet with backdrop fade
+   .m-press / .m-lift           press feedback / hover lift (hover only on devices that hover)
+   .m-stagger                   children enter one after another (set --i on children, or up to 12 via nth-child)
+   .m-reveal                    scroll-driven reveal (CSS only, no-op where unsupported)
+   .m-collapse                  animate height 0 ↔ auto: toggle [data-open] on the wrapper; content in one child
+   .m-skeleton / .m-spin        loading shimmer / spinner
+*/
+
+@layer motion {
+  :root {
+    --duration-instant: 100ms;
+    --duration-fast: 150ms;
+    --duration-base: 200ms;
+    --duration-moderate: 300ms;
+    --duration-slow: 400ms;
+    --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+    --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    --ease-emphasized: cubic-bezier(0.3, 0, 0, 1);
+    --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1); /* iOS-sheet curve */
+    /* spring "smooth" (visualDuration 0.4s, no bounce) */
+    --spring-smooth: linear(0, 0.004 1%, 0.0188 2.25%, 0.0423 3.5%, 0.0789 5%, 0.1146 6.25%, 0.1615 7.75%, 0.3628 13.75%, 0.4657 17%, 0.5581 20.25%, 0.5967 21.75%, 0.6385 23.5%, 0.7069 26.75%, 0.7391 28.5%, 0.7682 30.25%, 0.8179 33.75%, 0.8604 37.5%, 0.8993 42%, 0.9293 46.75%, 0.9534 52.25%, 0.9712 58.5%, 0.9834 65.5%, 0.9914 73.75%, 0.996 83.25%, 1);
+    --spring-smooth-duration: 706ms;
+
+    /* distances — reduced motion sets these to "none" */
+    --m-distance: 8px;
+    --m-scale: 0.96;
+    --m-stagger: 40ms;
+  }
+
+  /* ---------- enter on appear ---------- */
+  .m-enter, .m-enter-up, .m-enter-down, .m-enter-scale {
+    transition:
+      opacity var(--duration-moderate) var(--ease-out),
+      translate var(--duration-moderate) var(--ease-out),
+      scale var(--duration-moderate) var(--ease-out),
+      display var(--duration-moderate) allow-discrete;
+  }
+  @starting-style {
+    .m-enter { opacity: 0; }
+    .m-enter-up { opacity: 0; translate: 0 var(--m-distance); }
+    .m-enter-down { opacity: 0; translate: 0 calc(var(--m-distance) * -1); }
+    .m-enter-scale { opacity: 0; scale: var(--m-scale); }
+  }
+
+  /* ---------- popover (dropdown, menu, tooltip card) ---------- */
+  .m-popover {
+    transform-origin: var(--m-origin, top center);
+    transition:
+      opacity var(--duration-base) var(--ease-out),
+      scale var(--duration-base) var(--ease-out),
+      overlay var(--duration-base) allow-discrete,
+      display var(--duration-base) allow-discrete;
+    opacity: 0;
+    scale: var(--m-scale);
+  }
+  .m-popover:popover-open { opacity: 1; scale: 1; }
+  @starting-style { .m-popover:popover-open { opacity: 0; scale: var(--m-scale); } }
+  /* exit is shorter than enter (same ease-out: ease-in on small surfaces feels laggy) */
+  .m-popover:not(:popover-open) { transition-duration: var(--duration-fast); }
+
+  /* ---------- dialog + sheets ---------- */
+  .m-dialog, .m-sheet, .m-sheet-right {
+    transition:
+      opacity var(--duration-moderate) var(--ease-out),
+      translate var(--duration-moderate) var(--ease-out),
+      scale var(--duration-moderate) var(--ease-out),
+      overlay var(--duration-moderate) allow-discrete,
+      display var(--duration-moderate) allow-discrete;
+  }
+  .m-dialog { opacity: 0; scale: var(--m-scale); }
+  .m-dialog[open] { opacity: 1; scale: 1; }
+  @starting-style { .m-dialog[open] { opacity: 0; scale: var(--m-scale); } }
+
+  .m-sheet, .m-sheet-right { transition-duration: 450ms; transition-timing-function: var(--ease-drawer); }
+  .m-sheet { margin: auto auto 0; width: 100%; max-width: 640px; translate: 0 100%; border-radius: 16px 16px 0 0; }
+  .m-sheet[open] { translate: 0 0; }
+  @starting-style { .m-sheet[open] { translate: 0 100%; } }
+
+  .m-sheet-right { margin: 0 0 0 auto; height: 100dvh; max-height: none; translate: 100% 0; }
+  .m-sheet-right[open] { translate: 0 0; }
+  @starting-style { .m-sheet-right[open] { translate: 100% 0; } }
+
+  .m-dialog:not([open]), .m-sheet:not([open]), .m-sheet-right:not([open]) {
+    transition-duration: var(--duration-base);
+  }
+
+  :is(.m-dialog, .m-sheet, .m-sheet-right)::backdrop {
+    background: oklch(0 0 0 / 0);
+    transition:
+      background var(--duration-moderate) var(--ease-standard),
+      overlay var(--duration-moderate) allow-discrete,
+      display var(--duration-moderate) allow-discrete;
+  }
+  :is(.m-dialog, .m-sheet, .m-sheet-right)[open]::backdrop { background: oklch(0 0 0 / 0.45); }
+  @starting-style { :is(.m-dialog, .m-sheet, .m-sheet-right)[open]::backdrop { background: oklch(0 0 0 / 0); } }
+
+  /* ---------- feedback ---------- */
+  .m-press { transition: scale var(--duration-instant) var(--ease-standard); }
+  .m-press:active:not(:disabled) { scale: 0.97; }
+
+  .m-lift {
+    transition:
+      translate var(--duration-base) var(--ease-out),
+      box-shadow var(--duration-base) var(--ease-out);
+  }
+  @media (hover: hover) {
+    .m-lift:hover { translate: 0 -2px; box-shadow: var(--shadow-lg, 0 12px 24px oklch(0 0 0 / 0.12)); }
+  }
+
+  /* ---------- stagger ---------- */
+  .m-stagger > * {
+    animation: m-up var(--duration-slow) var(--ease-out) both;
+    animation-delay: calc(var(--i, 0) * var(--m-stagger));
+  }
+  .m-stagger > :nth-child(2) { --i: 1; } .m-stagger > :nth-child(3) { --i: 2; } .m-stagger > :nth-child(4) { --i: 3; }
+  .m-stagger > :nth-child(5) { --i: 4; } .m-stagger > :nth-child(6) { --i: 5; } .m-stagger > :nth-child(7) { --i: 6; }
+  .m-stagger > :nth-child(8) { --i: 7; } .m-stagger > :nth-child(9) { --i: 8; } .m-stagger > :nth-child(10) { --i: 9; }
+  .m-stagger > :nth-child(11) { --i: 10; } .m-stagger > :nth-child(n + 12) { --i: 11; } /* cap: never stagger > ~450ms total */
+
+  @keyframes m-up { from { opacity: 0; translate: 0 var(--m-distance); } }
+  @keyframes m-fade { from { opacity: 0; } }
+
+  /* ---------- scroll reveal (progressive enhancement) ---------- */
+  @supports (animation-timeline: view()) {
+    .m-reveal {
+      animation: m-up linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+  }
+
+  /* ---------- height auto ---------- */
+  .m-collapse {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--duration-moderate) var(--ease-standard);
+  }
+  .m-collapse > * { overflow: hidden; min-height: 0; }
+  .m-collapse[data-open], .m-collapse.open { grid-template-rows: 1fr; }
+
+  /* <details> with smooth open/close where supported (Chrome 131+) */
+  @supports (interpolate-size: allow-keywords) {
+    :root { interpolate-size: allow-keywords; }
+    details.m-details::details-content {
+      block-size: 0; overflow: clip;
+      transition: block-size var(--duration-moderate) var(--ease-standard), content-visibility var(--duration-moderate) allow-discrete;
+    }
+    details.m-details[open]::details-content { block-size: auto; }
+  }
+
+  /* ---------- loading ---------- */
+  .m-skeleton {
+    background: linear-gradient(90deg, var(--muted, #eee) 25%, color-mix(in oklch, var(--muted, #eee), white 45%) 37%, var(--muted, #eee) 63%);
+    background-size: 400% 100%;
+    animation: m-shimmer 1.4s ease infinite;
+    border-radius: var(--radius-md, 6px);
+  }
+  @keyframes m-shimmer { from { background-position: 100% 50%; } to { background-position: 0 50%; } }
+
+  .m-spin { animation: m-rotate 0.8s linear infinite; }
+  @keyframes m-rotate { to { rotate: 1turn; } }
+
+  /* ---------- reduced motion: keep meaning, drop movement ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    :root { --m-distance: 0px; --m-scale: 1; --m-stagger: 0ms; }
+    .m-reveal { animation: none; }
+    .m-skeleton { animation-duration: 3s; }
+    .m-lift:hover { translate: none; }
+    .m-sheet, .m-sheet-right { transition-property: opacity, overlay, display; opacity: 0; translate: none; }
+    .m-sheet[open], .m-sheet-right[open] { opacity: 1; }
+    @starting-style { .m-sheet[open], .m-sheet-right[open] { opacity: 0; } }
+  }
+}

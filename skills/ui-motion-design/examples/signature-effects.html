@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Signature Effects</title>
+<link rel="stylesheet" href="../assets/motion.css">
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: oklch(14% 0.02 285); --fg: oklch(97% 0.005 285); --muted: oklch(70% 0.02 285);
+    --card: oklch(18% 0.025 285); --border: oklch(28% 0.03 285); --primary: oklch(72% 0.17 300);
+    /* gradient palette — swap for the client's brand */
+    --g1: oklch(45% 0.2 290); --g2: oklch(68% 0.19 330); --g3: oklch(78% 0.13 200); --g4: oklch(25% 0.08 280);
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1); --ease-emphasized: cubic-bezier(0.3, 0, 0, 1);
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--bg); }
+  body { margin: 0; color: var(--fg); font: 17px/1.6 ui-sans-serif, system-ui, sans-serif; overflow-x: clip; }
+  a { color: inherit; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+  .eyebrow { font: 500 13px/1 ui-monospace, monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  section { padding: 120px 0; }
+  h2 { font-size: clamp(2rem, 1.4rem + 3vw, 3.5rem); line-height: 1.02; letter-spacing: -0.035em; margin: 12px 0 16px; }
+  .lede { color: var(--muted); max-width: 56ch; margin: 0; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 22px; border-radius: 999px; border: 1px solid var(--border); background: oklch(100% 0 0 / .04); color: var(--fg); font: 500 16px/1 inherit; cursor: pointer; text-decoration: none; }
+  .btn.primary { background: var(--fg); color: var(--bg); border-color: transparent; }
+  .btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+
+  /* ---------- 1. hero: mesh gradient + split text ---------- */
+  .hero { position: relative; min-height: 100svh; display: grid; align-items: end; padding: 0 0 72px; overflow: clip; isolation: isolate; }
+  .hero__bg { position: absolute; inset: 0; z-index: -1;
+    background: radial-gradient(60% 60% at 20% 30%, var(--g1), transparent 70%), radial-gradient(50% 50% at 80% 20%, var(--g2), transparent 70%),
+                radial-gradient(60% 60% at 70% 80%, var(--g3), transparent 70%), var(--g4); }
+  .hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; opacity: 0; transition: opacity 1.2s var(--ease-out); }
+  .hero canvas.ready { opacity: 1; }
+  .hero::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, var(--bg), transparent 55%); }
+  .hero h1 { font-size: clamp(3rem, 1.5rem + 7vw, 7.5rem); line-height: .92; letter-spacing: -0.05em; margin: 16px 0 28px; font-weight: 650; }
+  .line { display: block; overflow: clip; padding-bottom: .06em; }
+  .line > span { display: inline-block; animation: rise 1s var(--ease-out) both; animation-delay: calc(60ms + var(--i) * 80ms); }
+  @keyframes rise { from { translate: 0 105%; } }
+  .hero .lede { animation: m-fade .8s var(--ease-out) .6s both; }
+  .hero .actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 32px; animation: m-fade .8s var(--ease-out) .75s both; }
+  .stats { display: flex; gap: 48px; flex-wrap: wrap; margin-top: 56px; }
+  .stat b { display: block; font: 600 clamp(1.75rem, 1.3rem + 1.6vw, 2.5rem)/1 ui-monospace, monospace; letter-spacing: -0.02em; }
+  .stat span { color: var(--muted); font-size: 14px; }
+
+  /* magnetic: the inner label moves, the hit area stays */
+  .magnetic { position: relative; }
+  .magnetic > span { display: inline-block; transition: translate .5s cubic-bezier(.2,1.4,.4,1); }
+
+  /* ---------- 2. marquee ---------- */
+  .marquee { display: flex; align-items: center; gap: 16px; border-block: 1px solid var(--border); padding: 20px 0; }
+  .marquee__viewport { overflow: clip; flex: 1; min-width: 0; mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+  .marquee__track { display: flex; gap: 56px; width: max-content; animation: marquee 40s linear infinite; font: 600 clamp(1.25rem, 1rem + 1vw, 1.75rem)/1 inherit; color: var(--muted); }
+  .marquee__track span { white-space: nowrap; }
+  .marquee.paused .marquee__track { animation-play-state: paused; }
+  @keyframes marquee { to { translate: -50% 0; } }
+  .marquee__btn { margin-right: 16px; flex: none; min-height: 44px; padding: 0 14px; font-size: 14px; }
+
+  /* ---------- 3. glow cards ---------- */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 16px; margin-top: 48px; }
+  .glow { position: relative; border-radius: 18px; background: var(--card); padding: 28px; border: 1px solid var(--border); min-height: 200px; }
+  .glow::before { content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1px; pointer-events: none;
+    background: radial-gradient(360px circle at var(--x, 50%) var(--y, 50%), color-mix(in oklch, var(--primary), white 25%), transparent 45%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+    opacity: 0; transition: opacity 200ms ease; }
+  .glow::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+    background: radial-gradient(500px circle at var(--x, 50%) var(--y, 50%), oklch(100% 0 0 / .06), transparent 40%); opacity: 0; transition: opacity 200ms ease; }
+  @media (hover: hover) and (pointer: fine) { .cards:hover .glow::before, .cards:hover .glow::after { opacity: 1; } }
+  .glow h3 { margin: 0 0 8px; font-size: 20px; letter-spacing: -0.01em; } .glow p { margin: 0; color: var(--muted); font-size: 15px; }
+
+  /* ---------- 4. clip reveal ---------- */
+  .shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 16px; margin-top: 48px; }
+  .shot { aspect-ratio: 4 / 5; border-radius: 18px; overflow: clip; }
+  .shot > div { width: 100%; height: 100%; }
+  .shot:nth-child(1) > div { background: radial-gradient(circle at 30% 30%, var(--g2), var(--g1) 60%, var(--g4)); }
+  .shot:nth-child(2) > div { background: conic-gradient(from 200deg at 60% 40%, var(--g3), var(--g1), var(--g2), var(--g3)); }
+  .shot:nth-child(3) > div { background: linear-gradient(160deg, var(--g4), var(--g1) 40%, var(--g3)); }
+  @supports (animation-timeline: view()) {
+    .shot { animation: unclip linear both; animation-timeline: view(); animation-range: entry 0% cover 40%; }
+    .shot > div { animation: settle linear both; animation-timeline: view(); animation-range: entry 0% cover 50%; }
+  }
+  @keyframes unclip { from { clip-path: inset(100% 0 0 0 round 18px); } to { clip-path: inset(0 0 0 0 round 18px); } }
+  @keyframes settle { from { scale: 1.3; } to { scale: 1; } }
+
+  /* ---------- 5. sticky zoom ---------- */
+  .zoom-stage { display: grid; place-items: center; padding: 0 16px; }
+  .zoom-media { width: min(100%, 1120px); aspect-ratio: 16 / 9; border-radius: 28px; overflow: clip; display: grid; place-items: center; text-align: center;
+    background: radial-gradient(70% 90% at 50% 0%, var(--g2), transparent 60%), radial-gradient(80% 80% at 50% 100%, var(--g3), transparent 60%), var(--g1); }
+  .zoom-media p { font: 650 clamp(1.5rem, 1rem + 3vw, 3.5rem)/1 inherit; letter-spacing: -0.03em; margin: 0; padding: 16px; }
+  @supports (animation-timeline: view()) {
+    .zoom-wrap { height: 260vh; view-timeline: --zoom block; }
+    .zoom-stage { position: sticky; top: 0; height: 100svh; overflow: clip; }
+    .zoom-media { animation: zoom linear both; animation-timeline: --zoom; animation-range: contain 0% contain 70%; }
+  }
+  @keyframes zoom { from { scale: .55; border-radius: 48px; } to { scale: 1.12; border-radius: 0; } }
+
+  /* ---------- 6. pinned horizontal ---------- */
+  .h-track { display: flex; gap: 20px; padding: 0 16px; overflow-x: auto; scroll-snap-type: x mandatory; }
+  .h-card { flex: none; width: min(78vw, 420px); aspect-ratio: 3 / 4; border-radius: 20px; padding: 28px; background: var(--card); border: 1px solid var(--border); scroll-snap-align: start; display: flex; flex-direction: column; justify-content: space-between; }
+  .h-card b { font: 600 64px/1 ui-monospace, monospace; color: var(--primary); }
+  .h-card h3 { margin: 0 0 6px; font-size: 22px; } .h-card p { margin: 0; color: var(--muted); font-size: 15px; }
+  @supports (animation-timeline: view()) {
+    @media (min-width: 768px) {
+      .h-wrap { height: 320vh; view-timeline: --h block; }
+      .h-stage { position: sticky; top: 0; height: 100svh; overflow: clip; display: flex; flex-direction: column; justify-content: center; gap: 32px; }
+      .h-track { overflow: visible; width: max-content; animation: hmove linear both; animation-timeline: --h; animation-range: contain 0% contain 100%; }
+    }
+  }
+  @keyframes hmove { to { translate: calc(-100% + 100vw) 0; } }
+
+  /* ---------- 7. velocity skew ---------- */
+  .big { font: 700 clamp(3rem, 1rem + 9vw, 9rem)/.9 inherit; letter-spacing: -0.05em; white-space: nowrap; margin: 0; transform: skewY(var(--skew, 0deg)); will-change: auto; }
+  .big.outline { color: transparent; -webkit-text-stroke: 1px var(--muted); }
+
+  footer { padding: 80px 0 120px; color: var(--muted); font-size: 14px; }
+
+  /* ---------- reduced motion ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    .line > span, .hero .lede, .hero .actions { animation: none; }
+    .marquee__track { animation: none; flex-wrap: wrap; width: auto; gap: 16px 40px; }
+    .marquee__track [aria-hidden] , .marquee__btn { display: none; }
+    .shot, .shot > div, .zoom-media, .h-track { animation: none !important; }
+    .zoom-wrap, .h-wrap { height: auto !important; }
+    .zoom-stage, .h-stage { position: static !important; height: auto !important; }
+    .h-track { overflow-x: auto !important; width: auto !important; }
+    .magnetic > span { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero__bg" aria-hidden="true"></div>
+  <canvas id="gradient" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <p class="eyebrow">Signature effects · Demo</p>
+    <h1 aria-label="Software, die sich anfühlt wie Magie.">
+      <span class="line" aria-hidden="true"><span style="--i:0">Software, die</span></span>
+      <span class="line" aria-hidden="true"><span style="--i:1">sich anfühlt</span></span>
+      <span class="line" aria-hidden="true"><span style="--i:2">wie Magie.</span></span>
+    </h1>
+    <p class="lede">WebGL-Mesh-Gradient mit Farben aus CSS-Variablen, Split-Text-Reveal, magnetischer Button und Zahlen, die sich entschlüsseln. Alles ohne Library.</p>
+    <div class="actions">
+      <a class="btn primary magnetic" href="#cards"><span>Projekt starten →</span></a>
+      <a class="btn" href="#zoom">Mehr sehen</a>
+    </div>
+    <div class="stats">
+      <div class="stat"><b data-scramble="99,98 %">99,98 %</b><span>Uptime (Beispiel)</span></div>
+      <div class="stat"><b data-scramble="&lt; 80 ms">&lt; 80 ms</b><span>Antwortzeit (Beispiel)</span></div>
+      <div class="stat"><b data-scramble="24/7">24/7</b><span>Support (Beispiel)</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="marquee" id="marquee">
+  <div class="marquee__viewport">
+    <div class="marquee__track">
+      <span>Next.js</span><span>React Native</span><span>Design Systems</span><span>KI-Agenten</span><span>Motion</span><span>WebGL</span><span>Headless CMS</span>
+      <span aria-hidden="true">Next.js</span><span aria-hidden="true">React Native</span><span aria-hidden="true">Design Systems</span><span aria-hidden="true">KI-Agenten</span><span aria-hidden="true">Motion</span><span aria-hidden="true">WebGL</span><span aria-hidden="true">Headless CMS</span>
+    </div>
+  </div>
+  <button class="btn marquee__btn" id="marquee-btn" aria-pressed="false">Pause</button>
+</div>
+
+<section id="cards"><div class="wrap">
+  <p class="eyebrow">Cursor glow</p>
+  <h2>Karten, die auf den Cursor reagieren</h2>
+  <p class="lede">Ein Pointer-Listener auf dem Grid setzt <code>--x/--y</code> pro Karte; der Rand leuchtet per Maske. Nur bei Maus/Trackpad aktiv.</p>
+  <div class="cards" id="glow-grid">
+    <article class="glow"><h3>Design-Tokens</h3><p>OKLCH-Paletten mit garantiertem Kontrast, hell und dunkel.</p></article>
+    <article class="glow"><h3>Motion-System</h3><p>Dauern, Kurven und Springs als Tokens — CSS, Motion und Reanimated.</p></article>
+    <article class="glow"><h3>Audits</h3><p>Kontrast, Touch-Targets, Fokus und Reduced Motion automatisch geprüft.</p></article>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <p class="eyebrow">Clip-path reveal</p>
+  <h2>Bilder öffnen sich beim Scrollen</h2>
+  <p class="lede">CSS scroll-driven animation: Clip-Path von unten, Inhalt skaliert von 1,3 auf 1. Ohne Unterstützung sind die Bilder einfach da.</p>
+  <div class="shots"><div class="shot"><div></div></div><div class="shot"><div></div></div><div class="shot"><div></div></div></div>
+</div></section>
+
+<div class="zoom-wrap" id="zoom">
+  <div class="zoom-stage"><div class="zoom-media"><p>Zoom ins Produkt.</p></div></div>
+</div>
+
+<section style="padding-bottom:0"><div class="wrap">
+  <p class="eyebrow">Pinned horizontal</p>
+  <h2>Ablauf in vier Schritten</h2>
+</div></section>
+<div class="h-wrap">
+  <div class="h-stage">
+    <div class="h-track">
+      <article class="h-card"><b>01</b><div><h3>Discovery</h3><p>Ziele, Nutzer, Inhalte — in einem Workshop.</p></div></article>
+      <article class="h-card"><b>02</b><div><h3>Design</h3><p>Tokens, Komponenten, klickbarer Prototyp.</p></div></article>
+      <article class="h-card"><b>03</b><div><h3>Build</h3><p>Next.js, CMS, Motion — mit Audits in der CI.</p></div></article>
+      <article class="h-card"><b>04</b><div><h3>Launch</h3><p>Monitoring, SEO, Übergabe ans Team.</p></div></article>
+    </div>
+  </div>
+</div>
+
+<section><div class="wrap" style="overflow:clip">
+  <p class="eyebrow">Scroll velocity</p>
+  <p class="big skew" aria-hidden="true">Schnell scrollen.</p>
+  <p class="big outline skew" aria-hidden="true">Schnell scrollen.</p>
+  <p class="lede" style="margin-top:24px">Skew folgt der Scrollgeschwindigkeit (gedämpft, max. 6°). Bei Reduced Motion aus.</p>
+</div></section>
+
+<footer><div class="wrap">ui-motion-design · examples/signature-effects.html · Alle Zahlen sind Beispielwerte.</div></footer>
+
+<script>
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+/* ---------- mesh gradient (own shader; colours from CSS vars) ---------- */
+(function gradient() {
+  const canvas = document.getElementById('gradient');
+  const gl = canvas.getContext('webgl', { antialias: false, premultipliedAlpha: false });
+  if (!gl) return; // CSS background stays
+  const toRGB = (c) => { const x = document.createElement('canvas').getContext('2d'); x.fillStyle = c; x.fillRect(0, 0, 1, 1); return [...x.getImageData(0, 0, 1, 1).data].slice(0, 3).map((v) => v / 255); };
+  const cs = getComputedStyle(document.documentElement);
+  const cols = ['--g1', '--g2', '--g3', '--g4'].map((v) => toRGB(cs.getPropertyValue(v).trim()));
+  const vs = 'attribute vec2 p;varying vec2 uv;void main(){uv=p*.5+.5;gl_Position=vec4(p,0.,1.);}';
+  const fs = `precision highp float;varying vec2 uv;uniform float t;uniform vec2 res;uniform vec3 c1,c2,c3,c4;
+  vec2 h(vec2 p){p=vec2(dot(p,vec2(127.1,311.7)),dot(p,vec2(269.5,183.3)));return -1.+2.*fract(sin(p)*43758.5453);}
+  float n(vec2 p){vec2 i=floor(p),f=fract(p),u=f*f*(3.-2.*f);
+    return mix(mix(dot(h(i),f),dot(h(i+vec2(1,0)),f-vec2(1,0)),u.x),mix(dot(h(i+vec2(0,1)),f-vec2(0,1)),dot(h(i+vec2(1,1)),f-vec2(1,1)),u.x),u.y);}
+  void main(){vec2 p=uv;p.x*=res.x/res.y;float s=t*.05;
+    vec2 q=vec2(n(p*1.2+s),n(p*1.2-s+4.));vec2 r=vec2(n(p*1.6+q*1.5+s*.7+1.7),n(p*1.6+q*1.5-s*.5+9.2));
+    float a=smoothstep(-.6,.6,r.x),b=smoothstep(-.6,.6,r.y);
+    vec3 col=mix(mix(c1,c2,a),mix(c3,c4,a),b);col=mix(col,c4,smoothstep(.2,1.,1.-uv.y)*.35);
+    col+=(fract(sin(dot(gl_FragCoord.xy,vec2(12.9898,78.233)))*43758.5453)-.5)/255.;gl_FragColor=vec4(col,1.);}`;
+  const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; };
+  const prog = gl.createProgram(); gl.attachShader(prog, sh(gl.VERTEX_SHADER, vs)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return;
+  gl.useProgram(prog);
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+  const loc = gl.getAttribLocation(prog, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  const u = (n) => gl.getUniformLocation(prog, n);
+  ['c1', 'c2', 'c3', 'c4'].forEach((k, i) => gl.uniform3fv(u(k), cols[i]));
+  const dpr = Math.min(devicePixelRatio, 1.5);
+  const size = () => { canvas.width = canvas.clientWidth * dpr; canvas.height = canvas.clientHeight * dpr; gl.viewport(0, 0, canvas.width, canvas.height); gl.uniform2f(u('res'), canvas.width, canvas.height); };
+  size(); addEventListener('resize', size);
+  let visible = true, raf = 0; const t0 = performance.now();
+  const frame = (now) => { gl.uniform1f(u('t'), (now - t0) / 1000 + 20); gl.drawArrays(gl.TRIANGLES, 0, 3); if (!reduce && visible && !document.hidden) raf = requestAnimationFrame(frame); };
+  const start = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(frame); };
+  new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) start(); }).observe(canvas);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) start(); });
+  start(); requestAnimationFrame(() => canvas.classList.add('ready'));
+})();
+
+/* ---------- text scramble ---------- */
+if (!reduce) {
+  const glyphs = '!<>-_\\/[]{}=+*^?#0123456789';
+  document.querySelectorAll('[data-scramble]').forEach((el, k) => {
+    const final = el.dataset.scramble; el.setAttribute('aria-label', final);
+    let frame = 0; const total = 28 + k * 6;
+    const tick = () => {
+      el.textContent = [...final].map((ch, i) => (ch === ' ' || frame / total > i / final.length) ? ch : glyphs[(Math.random() * glyphs.length) | 0]).join('');
+      if (++frame <= total) setTimeout(() => requestAnimationFrame(tick), 30); else el.textContent = final;
+    };
+    setTimeout(tick, 700);
+  });
+}
+
+/* ---------- magnetic button (inner label moves, hit area stays) ---------- */
+if (finePointer && !reduce) document.querySelectorAll('.magnetic').forEach((btn) => {
+  const label = btn.firstElementChild;
+  btn.addEventListener('pointermove', (e) => { const r = btn.getBoundingClientRect(); label.style.translate = `${(e.clientX - r.left - r.width / 2) * .3}px ${(e.clientY - r.top - r.height / 2) * .4}px`; });
+  btn.addEventListener('pointerleave', () => { label.style.translate = '0 0'; });
+});
+
+/* ---------- marquee pause ---------- */
+document.getElementById('marquee-btn').onclick = (e) => {
+  const m = document.getElementById('marquee'); const p = m.classList.toggle('paused');
+  e.currentTarget.textContent = p ? 'Abspielen' : 'Pause'; e.currentTarget.setAttribute('aria-pressed', p);
+};
+
+/* ---------- glow cards ---------- */
+if (finePointer) {
+  const grid = document.getElementById('glow-grid'); let last = null, queued = false;
+  grid.addEventListener('pointermove', (e) => {
+    last = e; if (queued) return; queued = true;
+    requestAnimationFrame(() => { queued = false; grid.querySelectorAll('.glow').forEach((c) => { const r = c.getBoundingClientRect(); c.style.setProperty('--x', `${last.clientX - r.left}px`); c.style.setProperty('--y', `${last.clientY - r.top}px`); }); });
+  });
+}
+
+/* ---------- scroll velocity skew (lerped, clamped) ---------- */
+if (!reduce) {
+  const els = document.querySelectorAll('.skew'); let last = scrollY, v = 0, running = false;
+  const loop = () => {
+    const d = scrollY - last; last = scrollY; v += (d - v) * 0.12;
+    const s = Math.max(-6, Math.min(6, v * 0.15));
+    els.forEach((el) => el.style.setProperty('--skew', `${s.toFixed(2)}deg`));
+    if (Math.abs(v) > 0.05) requestAnimationFrame(loop); else { running = false; els.forEach((el) => el.style.setProperty('--skew', '0deg')); }
+  };
+  addEventListener('scroll', () => { if (!running) { running = true; requestAnimationFrame(loop); } }, { passive: true });
+}
+</script>
+</body>
+</html>

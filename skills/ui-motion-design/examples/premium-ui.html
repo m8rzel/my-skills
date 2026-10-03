@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Premium UI</title>
+<!-- tokens generated with: node scripts/tokens.mjs --brand "#5b5bd6" --out examples/design-tokens --format css -->
+<link rel="stylesheet" href="design-tokens/tokens.css">
+<link rel="stylesheet" href="../assets/motion.css">
+<style>
+  /* ---------- craft layer: everything references semantic tokens ---------- */
+  :root { --sidebar-w: 248px; --h-ctl: 36px; --h-ctl-sm: 32px; --hairline: color-mix(in oklch, var(--foreground) 9%, transparent); }
+  * { box-sizing: border-box; }
+  html { font-feature-settings: "cv11", "ss01"; font-synthesis: none; -webkit-font-smoothing: antialiased; }
+  body { margin: 0; background: var(--background); color: var(--foreground); font: 14px/1.5 var(--font-sans); }
+  ::selection { background: color-mix(in oklch, var(--primary) 25%, transparent); }
+  :focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+  button, input { font: inherit; color: inherit; }
+  .num { font-variant-numeric: tabular-nums; }
+  .muted { color: var(--muted-foreground); }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  kbd { font: 500 12px/1 var(--font-mono); padding: 3px 5px; border-radius: 4px; border: 1px solid var(--hairline); background: var(--muted); color: var(--muted-foreground); }
+
+  /* controls: one height set, concentric radii, state layers via color-mix */
+  .btn { display: inline-flex; flex: none; align-items: center; gap: 6px; height: var(--h-ctl); padding: 0 12px; border-radius: var(--radius-md); border: 1px solid var(--hairline);
+         background: var(--card); color: var(--foreground); font-weight: 500; cursor: pointer; white-space: nowrap;
+         box-shadow: 0 1px 1px color-mix(in oklch, var(--foreground) 5%, transparent);
+         transition: background var(--duration-instant) var(--ease-standard), scale var(--duration-instant) var(--ease-standard); }
+  .btn:hover { background: color-mix(in oklch, var(--foreground) 4%, var(--card)); }
+  .btn:active { scale: .97; }
+  .btn.primary { background: var(--primary); color: var(--primary-foreground); border-color: transparent;
+                 box-shadow: inset 0 1px 0 color-mix(in oklch, white 22%, transparent), 0 1px 2px color-mix(in oklch, var(--primary) 40%, transparent); }
+  .btn.primary:hover { background: color-mix(in oklch, var(--primary-foreground) 8%, var(--primary)); }
+  .btn.ghost { background: transparent; border-color: transparent; box-shadow: none; }
+  .btn.ghost:hover { background: var(--accent); }
+  .btn.sm { height: var(--h-ctl-sm); padding: 0 10px; font-size: 13px; }
+  .btn.icon { width: var(--h-ctl); padding: 0; justify-content: center; }
+  .btn svg { width: 16px; height: 16px; flex: none; }
+  .btn.has-icon-left { padding-left: 10px; } /* optical: less padding on the icon side */
+
+  /* ---------- shell ---------- */
+  .app { display: grid; grid-template-columns: var(--sidebar-w) 1fr; min-height: 100dvh; }
+  .sidebar { background: color-mix(in oklch, var(--foreground) 2.5%, var(--background)); border-right: 1px solid var(--hairline); padding: 12px; display: flex; flex-direction: column; gap: 2px; position: sticky; top: 0; height: 100dvh; }
+  .ws { display: flex; align-items: center; gap: 10px; padding: 6px 8px 14px; font-weight: 600; }
+  .ws-logo { width: 24px; height: 24px; border-radius: 7px; background: linear-gradient(in oklch 135deg, var(--brand-400), var(--brand-700)); box-shadow: inset 0 1px 0 color-mix(in oklch, white 30%, transparent); }
+  .search-trigger { display: flex; align-items: center; gap: 8px; height: var(--h-ctl-sm); padding: 0 8px; margin-bottom: 10px; border-radius: var(--radius-md); border: 1px solid var(--hairline); background: var(--background); color: var(--muted-foreground); cursor: pointer; width: 100%; text-align: left; }
+  .search-trigger kbd { margin-left: auto; }
+  .nav-label { font-size: 12px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; color: var(--muted-foreground); padding: 14px 8px 6px; }
+  .nav a { display: flex; align-items: center; gap: 10px; height: 32px; padding: 0 8px; border-radius: var(--radius-sm); color: color-mix(in oklch, var(--foreground) 72%, transparent); text-decoration: none; font-weight: 500; }
+  .nav a svg { width: 16px; height: 16px; opacity: .7; }
+  .nav a:hover { background: var(--accent); color: var(--foreground); }
+  .nav a[aria-current="page"] { background: var(--accent); color: var(--foreground); }
+  .nav a[aria-current="page"] svg { opacity: 1; color: var(--primary); }
+  .nav .count { margin-left: auto; font-size: 12px; color: var(--muted-foreground); }
+  .sidebar-foot { margin-top: auto; display: flex; align-items: center; gap: 10px; padding: 8px; border-top: 1px solid var(--hairline); padding-top: 12px; }
+  .avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--primary-subtle); color: var(--primary-subtle-foreground); display: grid; place-items: center; font-size: 12px; font-weight: 600; }
+
+  main { min-width: 0; }
+  .topbar { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 12px; height: 56px; padding: 0 24px; border-bottom: 1px solid var(--hairline);
+            background: color-mix(in oklch, var(--background) 82%, transparent); backdrop-filter: blur(12px) saturate(1.4); }
+  @media (prefers-reduced-transparency: reduce) { .topbar { background: var(--background); backdrop-filter: none; } }
+  .crumbs { display: flex; gap: 6px; align-items: center; color: var(--muted-foreground); min-width: 0; white-space: nowrap; }
+  .crumbs b { color: var(--foreground); font-weight: 500; }
+  .topbar .spacer { flex: 1; }
+  .content { padding: 28px 24px 64px; max-width: 1240px; }
+  .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+  h1 { font-size: var(--text-2xl); line-height: var(--leading-2xl); letter-spacing: var(--tracking-2xl); margin: 0; font-weight: 650; text-wrap: balance; }
+  .page-head p { margin: 4px 0 0; }
+
+  /* ---------- KPI row ---------- */
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); border-radius: var(--radius-xl); overflow: hidden; margin-bottom: 24px; }
+  .kpi { background: var(--card); padding: 16px 18px; display: grid; gap: 4px; }
+  .kpi .label { font-size: 13px; color: var(--muted-foreground); display: flex; justify-content: space-between; }
+  .kpi .value { font-size: var(--text-2xl); font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; }
+  .kpi .meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 12px; }
+  .delta { display: inline-flex; align-items: center; gap: 3px; font-weight: 500; padding: 1px 6px; border-radius: 999px; }
+  .delta.up { color: color-mix(in oklab, var(--success) 75%, var(--foreground)); background: color-mix(in oklch, var(--success) 12%, transparent); }
+  .delta.down { color: color-mix(in oklab, var(--destructive) 70%, var(--foreground)); background: color-mix(in oklch, var(--destructive) 10%, transparent); }
+  .spark { width: 84px; height: 24px; color: var(--primary); }
+
+  /* ---------- table card ---------- */
+  .card { background: var(--card); border: 1px solid var(--hairline); border-radius: var(--radius-xl); box-shadow: var(--shadow-xs); }
+  .toolbar { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--hairline); flex-wrap: wrap; min-height: 56px; }
+  .seg { display: inline-flex; padding: 2px; border-radius: var(--radius-md); background: var(--muted); }
+  .seg button { height: 28px; padding: 0 10px; border: 0; border-radius: calc(var(--radius-md) - 2px); background: none; color: var(--muted-foreground); font-weight: 500; cursor: pointer; }
+  .seg button[aria-pressed="true"] { background: var(--card); color: var(--foreground); box-shadow: var(--shadow-xs); }
+  .field { position: relative; }
+  .field svg { position: absolute; left: 9px; top: 50%; translate: 0 -50%; width: 15px; height: 15px; color: var(--muted-foreground); }
+  .field input { height: var(--h-ctl-sm); width: 220px; padding: 0 10px 0 30px; border-radius: var(--radius-md); border: 1px solid var(--input); background: var(--background); }
+  .field input::placeholder { color: var(--muted-foreground); }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip { display: inline-flex; align-items: center; gap: 2px; height: 28px; padding: 0 4px 0 10px; border-radius: 999px; background: var(--primary-subtle); color: var(--primary-subtle-foreground); font-size: 12px; font-weight: 500; }
+  .chip button { width: 24px; height: 24px; margin-right: -2px; border: 0; border-radius: 50%; background: none; color: inherit; cursor: pointer; display: grid; place-items: center; }
+  .chip button:hover { background: color-mix(in oklch, currentColor 14%, transparent); }
+  .toolbar .grow { flex: 1; }
+  .bulk { display: none; align-items: center; gap: 8px; width: 100%; }
+  .card.selecting .bulk { display: flex; }
+  .card.selecting .filters { display: none; }
+
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: separate; border-spacing: 0; }
+  th, td { padding: 0 12px; height: 44px; text-align: left; border-bottom: 1px solid var(--hairline); white-space: nowrap; }
+  th { height: 36px; font-size: 12px; font-weight: 500; color: var(--muted-foreground); background: color-mix(in oklch, var(--foreground) 2%, var(--card)); position: sticky; top: 0; }
+  th:first-child, td:first-child { padding-left: 16px; width: 36px; }
+  th.r, td.r { text-align: right; }
+  th button { all: unset; cursor: pointer; display: inline-flex; gap: 4px; align-items: center; min-height: 28px; }
+  th button:focus-visible { outline: 2px solid var(--ring); border-radius: 4px; }
+  th button .arrow { opacity: 0; transition: opacity var(--duration-fast); }
+  th button:hover .arrow, th[aria-sort] .arrow { opacity: 1; }
+  tbody tr { transition: background var(--duration-instant); }
+  tbody tr:hover { background: color-mix(in oklch, var(--foreground) 2.5%, transparent); }
+  tbody tr[aria-selected="true"] { background: color-mix(in oklch, var(--primary) 7%, transparent); }
+  tbody tr:last-child td { border-bottom: 0; }
+  .client { display: flex; align-items: center; gap: 10px; }
+  .client .logo { width: 24px; height: 24px; border-radius: 6px; display: grid; place-items: center; font-size: 11px; font-weight: 600; background: var(--muted); color: var(--muted-foreground); box-shadow: inset 0 0 0 1px var(--hairline); }
+  .client b { font-weight: 500; }
+  .badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; }
+  .badge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .badge.paid { color: color-mix(in oklab, var(--success) 80%, var(--foreground)); }
+  .badge.open { color: color-mix(in oklab, var(--warning) 55%, var(--foreground)); } /* mix in oklab: oklch would swing the hue through red */
+  .badge.overdue { color: color-mix(in oklab, var(--destructive) 70%, var(--foreground)); }
+  input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--primary); margin: 0; cursor: pointer; }
+  .row-menu { opacity: 0; } tr:hover .row-menu, tr:focus-within .row-menu { opacity: 1; }
+  @media (hover: none) { .row-menu { opacity: 1; } }
+  .table-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px; border-top: 1px solid var(--hairline); font-size: 13px; }
+  .empty { display: none; padding: 56px 24px; text-align: center; }
+  .empty.show { display: block; }
+  .empty h3 { margin: 12px 0 4px; font-size: 15px; } .empty p { margin: 0 auto 16px; max-width: 40ch; }
+  .empty .ico { width: 40px; height: 40px; margin: 0 auto; border-radius: 12px; display: grid; place-items: center; background: var(--muted); color: var(--muted-foreground); }
+
+  /* ---------- AI panel ---------- */
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 20px; align-items: start; }
+  .layout > * { min-width: 0; }
+  .ai { position: sticky; top: 76px; display: flex; flex-direction: column; max-height: calc(100dvh - 96px); }
+  .ai-head { display: flex; align-items: center; gap: 8px; padding: 12px 14px; border-bottom: 1px solid var(--hairline); font-weight: 600; }
+  .ai-head .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 3px color-mix(in oklch, var(--success) 20%, transparent); }
+  .ai-body { padding: 14px; display: grid; gap: 12px; overflow: auto; }
+  .msg { font-size: 13.5px; line-height: 1.55; }
+  .msg.user { justify-self: end; background: var(--muted); padding: 8px 12px; border-radius: 12px 12px 4px 12px; max-width: 85%; }
+  .steps { display: grid; gap: 2px; border: 1px solid var(--hairline); border-radius: var(--radius-lg); padding: 6px; font-size: 12.5px; }
+  .step { display: flex; align-items: center; gap: 8px; padding: 5px 6px; border-radius: 6px; color: var(--muted-foreground); }
+  .step b { color: var(--foreground); font-weight: 500; }
+  .step .st { margin-left: auto; font-size: 12px; }
+  .step svg { width: 14px; height: 14px; flex: none; }
+  .step.done svg { color: var(--success); }
+  .step.run svg { color: var(--primary); }
+  details.tool summary { list-style: none; cursor: pointer; }
+  details.tool summary::-webkit-details-marker { display: none; }
+  details.tool pre { margin: 4px 6px 6px; padding: 8px; border-radius: 6px; background: var(--muted); font: 11.5px/1.5 var(--font-mono); white-space: pre-wrap; color: var(--muted-foreground); }
+  .approval { border: 1px solid color-mix(in oklch, var(--warning) 45%, var(--hairline)); background: color-mix(in oklch, var(--warning) 7%, var(--card)); border-radius: var(--radius-lg); padding: 12px; display: grid; gap: 8px; }
+  .approval h3 { margin: 0; font-size: 13px; display: flex; gap: 6px; align-items: center; }
+  .approval dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; font-size: 12.5px; }
+  .approval dt { color: var(--muted-foreground); } .approval dd { margin: 0; }
+  .approval .row { display: flex; gap: 6px; justify-content: flex-end; }
+  .cite { font-size: 12px; font-weight: 500; padding: 1px 6px; border-radius: 999px; background: var(--muted); color: var(--muted-foreground); text-decoration: none; vertical-align: 1px; }
+  .ai-foot { border-top: 1px solid var(--hairline); padding: 10px; display: grid; gap: 8px; }
+  .suggest { display: flex; gap: 6px; flex-wrap: wrap; }
+  .suggest button { height: 30px; padding: 0 10px; border-radius: 999px; border: 1px solid var(--hairline); background: var(--background); font-size: 12px; cursor: pointer; color: var(--muted-foreground); }
+  .suggest button:hover { color: var(--foreground); background: var(--accent); }
+  .composer { display: flex; gap: 6px; align-items: center; border: 1px solid var(--input); border-radius: var(--radius-lg); padding: 4px 4px 4px 12px; background: var(--background); }
+  .composer:focus-within { outline: 2px solid var(--ring); outline-offset: 1px; }
+  .composer input { flex: 1; border: 0; background: none; outline: none; height: 32px; min-width: 0; }
+  .caveat { font-size: 12px; color: var(--muted-foreground); text-align: center; }
+
+  /* ---------- command palette (glass on the control layer only) ---------- */
+  .cmdk { margin: 12vh auto auto; padding: 0; width: min(620px, calc(100% - 32px)); border-radius: var(--radius-2xl); border: 1px solid var(--hairline);
+          background: color-mix(in oklch, var(--popover) 88%, transparent); backdrop-filter: blur(16px) saturate(1.5); color: var(--foreground); box-shadow: var(--shadow-xl); }
+  @media (prefers-reduced-transparency: reduce) { .cmdk { background: var(--popover); backdrop-filter: none; } }
+  .cmdk input { width: 100%; height: 52px; border: 0; border-bottom: 1px solid var(--hairline); background: none; padding: 0 18px; font-size: 16px; outline: none; }
+  .cmdk ul { list-style: none; margin: 0; padding: 6px; max-height: 340px; overflow: auto; }
+  .cmdk .grp { font-size: 12px; font-weight: 500; color: var(--muted-foreground); padding: 8px 10px 4px; }
+  .cmdk li[role=option] { display: flex; align-items: center; gap: 10px; height: 40px; padding: 0 10px; border-radius: var(--radius-md); cursor: pointer; }
+  .cmdk li[role=option] svg { width: 16px; height: 16px; color: var(--muted-foreground); }
+  .cmdk li[aria-selected="true"] { background: var(--accent); }
+  .cmdk li kbd { margin-left: auto; }
+  .cmdk .none { padding: 24px; text-align: center; color: var(--muted-foreground); }
+  .cmdk-foot { display: flex; gap: 14px; padding: 8px 14px; border-top: 1px solid var(--hairline); font-size: 12px; color: var(--muted-foreground); }
+
+  .toast { position: fixed; left: 50%; bottom: 20px; translate: -50% 0; display: flex; align-items: center; gap: 12px; padding: 8px 8px 8px 14px; border-radius: var(--radius-lg);
+           background: var(--foreground); color: var(--background); box-shadow: var(--shadow-lg); font-weight: 500; z-index: 20; }
+  .toast .btn { height: 28px; background: transparent; color: inherit; border-color: color-mix(in oklch, var(--background) 25%, transparent); box-shadow: none; }
+
+  @media (max-width: 1100px) { .layout { grid-template-columns: 1fr; } .ai { position: static; max-height: none; } }
+  @media (max-width: 760px) {
+    .app { grid-template-columns: 1fr; } .sidebar { display: none; }
+    .content { padding: 20px 16px 48px; } .topbar { padding: 0 16px; }
+    .field input { width: 100%; } .field { flex: 1; }
+    .hide-sm { display: none; }
+    .btn, .btn.sm { height: 44px; } .btn.icon { width: 44px; } /* touch targets */
+    .seg button, .suggest button, th button { min-height: 44px; } .composer .btn.icon { height: 44px !important; width: 44px !important; }
+    .chip { height: 44px; } .chip { padding-right: 0; } .chip button { width: 44px; height: 44px; } .search-trigger { height: 44px; }
+    .field input, .composer input { height: 44px; font-size: 16px; } details.tool summary { min-height: 44px; }
+  }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-dots" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></symbol>
+  <symbol id="i-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-6.2-8.6"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-sparkle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></symbol>
+</svg>
+
+<div class="app">
+  <aside class="sidebar" aria-label="Hauptnavigation">
+    <div class="ws"><span class="ws-logo" aria-hidden="true"></span>Studio Nord</div>
+    <button class="search-trigger" data-cmdk><svg width="15" height="15" aria-hidden="true"><use href="#i-search"/></svg>Suchen oder Befehl<kbd>⌘K</kbd></button>
+    <nav class="nav">
+      <a href="#"><svg aria-hidden="true"><use href="#i-home"/></svg>Übersicht</a>
+      <a href="#" aria-current="page"><svg aria-hidden="true"><use href="#i-file"/></svg>Rechnungen<span class="count num">24</span></a>
+      <a href="#"><svg aria-hidden="true"><use href="#i-users"/></svg>Kunden<span class="count num">18</span></a>
+      <a href="#"><svg aria-hidden="true"><use href="#i-folder"/></svg>Projekte</a>
+      <div class="nav-label">Workspace</div>
+      <a href="#"><svg aria-hidden="true"><use href="#i-gear"/></svg>Einstellungen</a>
+    </nav>
+    <div class="sidebar-foot"><span class="avatar" aria-hidden="true">MW</span><div><div style="font-weight:500">Marcel W.</div><div class="muted" style="font-size:12px">Admin</div></div></div>
+  </aside>
+
+  <main>
+    <div class="topbar">
+      <div class="crumbs"><span class="hide-sm">Finanzen</span><span class="hide-sm" aria-hidden="true">/</span><b>Rechnungen</b></div>
+      <div class="spacer"></div>
+      <button class="btn ghost icon" id="theme" aria-label="Farbschema wechseln" title="Farbschema wechseln"><svg aria-hidden="true"><use href="#i-moon"/></svg></button>
+      <button class="btn primary has-icon-left" id="new"><svg aria-hidden="true"><use href="#i-plus"/></svg>Neue Rechnung</button>
+    </div>
+
+    <div class="content">
+      <div class="page-head">
+        <div><h1>Rechnungen</h1><p class="muted">Oktober 2026 · Beispieldaten · Stand heute, 14:20</p></div>
+      </div>
+
+      <section class="kpis" aria-label="Kennzahlen">
+        <div class="kpi"><div class="label">Umsatz (Monat)</div><div class="value num" data-count="48250" data-fmt="eur">48.250 €</div>
+          <div class="meta"><span class="delta up num" aria-label="plus 12,4 Prozent gegenüber September">↑ 12,4 %</span><span class="muted">vs. Sep.</span><svg class="spark" viewBox="0 0 84 24" aria-hidden="true"><path d="M1 18 L12 15 L23 17 L34 11 L45 13 L56 8 L67 9 L83 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+        <div class="kpi"><div class="label">Offen</div><div class="value num" data-count="9840" data-fmt="eur">9.840 €</div>
+          <div class="meta"><span class="muted num">6 Rechnungen</span></div></div>
+        <div class="kpi"><div class="label">Überfällig</div><div class="value num" data-count="2310" data-fmt="eur">2.310 €</div>
+          <div class="meta"><span class="delta down num" aria-label="plus 1 Rechnung gegenüber September">↑ 1</span><span class="muted">2 Kunden</span></div></div>
+        <div class="kpi"><div class="label">Ø Zahlungsdauer</div><div class="value num">11 Tage</div>
+          <div class="meta"><span class="delta up num" aria-label="2 Tage schneller als im September">↓ 2 Tage</span><span class="muted">Ziel: 14</span></div></div>
+      </section>
+
+      <div class="layout">
+        <section class="card" id="table-card" aria-labelledby="t-title">
+          <h2 id="t-title" class="sr-only">Rechnungsliste</h2>
+          <div class="toolbar">
+            <div class="filters" style="display:contents">
+              <div class="seg" role="group" aria-label="Status"><button aria-pressed="true" data-status="all">Alle</button><button aria-pressed="false" data-status="open">Offen</button><button aria-pressed="false" data-status="overdue">Überfällig</button></div>
+              <div class="field"><svg aria-hidden="true"><use href="#i-search"/></svg><label for="q" class="sr-only">Rechnungen filtern</label><input id="q" placeholder="Kunde oder Nummer" autocomplete="off"></div>
+              <div class="chips" id="chips"><span class="chip">Zeitraum: Okt. 2026<button aria-label="Filter Zeitraum entfernen"><svg width="12" height="12" aria-hidden="true"><use href="#i-x"/></svg></button></span></div>
+            </div>
+            <div class="bulk" role="region" aria-label="Mehrfachauswahl"><b class="num" id="sel-count">0 ausgewählt</b><span class="grow"></span>
+              <button class="btn sm">Als bezahlt markieren</button><button class="btn sm">Mahnung senden…</button><button class="btn sm ghost" id="sel-clear">Abbrechen</button></div>
+          </div>
+          <div class="table-wrap">
+            <table aria-describedby="t-title">
+              <thead><tr>
+                <th scope="col"><input type="checkbox" id="all" aria-label="Alle auswählen"></th>
+                <th scope="col">Kunde</th>
+                <th scope="col" class="hide-sm">Nummer</th>
+                <th scope="col">Status</th>
+                <th scope="col" class="hide-sm" aria-sort="descending"><button data-sort="due">Fällig <span class="arrow" aria-hidden="true">↓</span></button></th>
+                <th scope="col" class="r"><button data-sort="amount">Betrag (€) <span class="arrow" aria-hidden="true">↕</span></button></th>
+                <th scope="col"><span class="sr-only">Aktionen</span></th>
+              </tr></thead>
+              <tbody id="rows"></tbody>
+            </table>
+          </div>
+          <div class="empty" id="empty"><div class="ico"><svg width="20" height="20" aria-hidden="true"><use href="#i-search"/></svg></div>
+            <h3>Keine Rechnungen gefunden</h3><p class="muted">Für diese Filter gibt es keine Treffer. Passe die Suche an oder setze die Filter zurück.</p>
+            <button class="btn sm" id="reset">Filter zurücksetzen</button></div>
+          <div class="table-foot"><span class="muted num" id="foot-count"></span><div style="display:flex;gap:6px"><button class="btn sm" disabled aria-disabled="true">Zurück</button><button class="btn sm">Weiter</button></div></div>
+        </section>
+
+        <aside class="card ai" aria-label="Assistent">
+          <div class="ai-head"><span class="dot" aria-hidden="true"></span>Assistent<span class="muted" style="font-weight:400;margin-left:auto;font-size:12px">KI · kann Fehler machen</span></div>
+          <div class="ai-body" id="ai-body" aria-live="polite">
+            <div class="msg user">Schick allen überfälligen Kunden eine freundliche Zahlungserinnerung.</div>
+            <div class="steps" aria-label="Arbeitsschritte">
+              <div class="step done"><svg aria-hidden="true"><use href="#i-check"/></svg><span><b>Rechnungen gefiltert</b> · Status = überfällig</span><span class="st num">0,4 s</span></div>
+              <details class="tool"><summary class="step done"><svg aria-hidden="true"><use href="#i-check"/></svg><span><b>kunden.lesen</b> · 2 Kontakte</span><span class="st">Details</span></summary>
+                <pre>{ "ids": ["K-1042", "K-1077"], "felder": ["name", "email", "sprache"] }</pre></details>
+              <div class="step run" id="draft-step"><svg class="m-spin" aria-hidden="true"><use href="#i-spin"/></svg><span><b>Entwürfe schreiben</b> · Ton: freundlich</span><span class="st">läuft…</span></div>
+            </div>
+            <div class="msg">Zwei Rechnungen sind überfällig: <b>Bäckerei Krumm</b> (RE-2026-0131, 14 Tage) <a class="cite" href="#">RE-0131</a> und <b>Praxis Dr. Hauser</b> (RE-2026-0128, 21 Tage) <a class="cite" href="#">RE-0128</a>. Ich habe zwei Erinnerungen entworfen.</div>
+            <div class="approval" role="group" aria-labelledby="ap-title">
+              <h3 id="ap-title"><svg width="14" height="14" aria-hidden="true"><use href="#i-alert"/></svg>Freigabe nötig: 2 E-Mails senden</h3>
+              <dl><dt>An</dt><dd>buchhaltung@baeckerei-krumm.de, praxis@dr-hauser.de</dd><dt>Betreff</dt><dd>Freundliche Erinnerung: offene Rechnung</dd><dt>Folge</dt><dd>Wird sofort versendet, nicht rückholbar</dd></dl>
+              <div class="row"><button class="btn sm" id="deny">Ablehnen</button><button class="btn sm">Entwurf ansehen</button><button class="btn sm primary" id="approve">Senden</button></div>
+            </div>
+          </div>
+          <div class="ai-foot">
+            <div class="suggest"><button>Umsatz nach Kunde</button><button>Offene Posten exportieren</button><button>Wer zahlt am langsamsten?</button></div>
+            <form class="composer" id="composer"><label for="prompt" class="sr-only">Nachricht an den Assistenten</label><input id="prompt" placeholder="Frag nach Rechnungen, Kunden, Zahlen…" autocomplete="off">
+              <button class="btn primary icon" style="height:32px;width:32px" aria-label="Senden"><svg aria-hidden="true"><use href="#i-send"/></svg></button></form>
+            <div class="caveat">Beträge vor dem Versand prüfen.</div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+</div>
+
+<dialog class="cmdk m-dialog" id="cmdk" aria-label="Befehlspalette">
+  <input id="cmdk-q" placeholder="Befehl oder Suche…" role="combobox" aria-expanded="true" aria-controls="cmdk-list" aria-autocomplete="list" autocomplete="off">
+  <ul id="cmdk-list" role="listbox" aria-label="Ergebnisse"></ul>
+  <div class="cmdk-foot"><span><kbd>↑</kbd> <kbd>↓</kbd> wählen</span><span><kbd>↵</kbd> ausführen</span><span><kbd>esc</kbd> schließen</span></div>
+</dialog>
+
+<script src="../assets/motion.js"></script>
+<script>
+/* ---------- data ---------- */
+const eur = new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+let data = [
+  { id: 'RE-2026-0142', c: 'Weinhaus Seitz', s: 'open', due: '2026-10-21', a: 3480 },
+  { id: 'RE-2026-0141', c: 'Kanzlei Brandt & Kohl', s: 'paid', due: '2026-10-14', a: 8900 },
+  { id: 'RE-2026-0139', c: 'Ortenau Bikes', s: 'open', due: '2026-10-18', a: 1240 },
+  { id: 'RE-2026-0136', c: 'Hofgut Schuler', s: 'paid', due: '2026-10-09', a: 2100 },
+  { id: 'RE-2026-0131', c: 'Bäckerei Krumm', s: 'overdue', due: '2026-09-19', a: 890 },
+  { id: 'RE-2026-0128', c: 'Praxis Dr. Hauser', s: 'overdue', due: '2026-09-12', a: 1420 },
+  { id: 'RE-2026-0125', c: 'Schwarzwald Events', s: 'paid', due: '2026-09-30', a: 12400 },
+];
+const label = { open: 'Offen', paid: 'Bezahlt', overdue: 'Überfällig' };
+const fmtDate = (d) => new Date(d).toLocaleDateString('de-DE', { day: '2-digit', month: 'short' });
+let status = 'all', query = '', sortKey = 'due', sortDir = -1;
+const rows = document.getElementById('rows');
+
+function render() {
+  const list = data.filter((r) => (status === 'all' || r.s === status) && (!query || (r.c + r.id).toLowerCase().includes(query)))
+    .sort((a, b) => (a[sortKey] > b[sortKey] ? 1 : -1) * sortDir);
+  rows.innerHTML = list.map((r) => `<tr data-id="${r.id}">
+    <td><input type="checkbox" aria-label="${r.id} auswählen"></td>
+    <td><div class="client"><span class="logo" aria-hidden="true">${r.c.split(' ').map((w) => w[0]).slice(0, 2).join('')}</span><b>${r.c}</b></div></td>
+    <td class="hide-sm muted num">${r.id}</td>
+    <td><span class="badge ${r.s}">${label[r.s]}</span></td>
+    <td class="hide-sm num ${r.s === 'overdue' ? '' : 'muted'}">${fmtDate(r.due)}</td>
+    <td class="r num">${eur.format(r.a)}</td>
+    <td class="r"><button class="btn ghost icon row-menu" aria-label="Aktionen für ${r.id}"><svg aria-hidden="true"><use href="#i-dots"/></svg></button></td></tr>`).join('');
+  document.getElementById('empty').classList.toggle('show', !list.length);
+  document.querySelector('.table-wrap').hidden = !list.length;
+  document.getElementById('foot-count').textContent = `${list.length} von ${data.length} Rechnungen · Summe ${eur.format(list.reduce((s, r) => s + r.a, 0))} €`;
+  updateSel();
+}
+
+/* filters, search, sort */
+document.querySelectorAll('[data-status]').forEach((b) => b.onclick = () => {
+  document.querySelectorAll('[data-status]').forEach((x) => x.setAttribute('aria-pressed', x === b)); status = b.dataset.status; render();
+});
+document.getElementById('q').oninput = (e) => { query = e.target.value.trim().toLowerCase(); render(); };
+document.getElementById('reset').onclick = () => { query = ''; document.getElementById('q').value = ''; document.querySelector('[data-status=all]').click(); };
+document.querySelectorAll('[data-sort]').forEach((b) => b.onclick = () => {
+  const k = b.dataset.sort; sortDir = sortKey === k ? -sortDir : -1; sortKey = k;
+  document.querySelectorAll('th').forEach((th) => th.removeAttribute('aria-sort'));
+  b.closest('th').setAttribute('aria-sort', sortDir < 0 ? 'descending' : 'ascending');
+  document.querySelectorAll('[data-sort] .arrow').forEach((a) => a.textContent = '↕');
+  b.querySelector('.arrow').textContent = sortDir < 0 ? '↓' : '↑';
+  motion.flip(rows.children, render);
+});
+document.getElementById('chips').onclick = (e) => { const c = e.target.closest('.chip button'); if (c) motion.exit(c.closest('.chip')); };
+
+/* selection → bulk bar replaces toolbar */
+function updateSel() {
+  const boxes = [...rows.querySelectorAll('input[type=checkbox]')]; const n = boxes.filter((b) => b.checked).length;
+  boxes.forEach((b) => b.closest('tr').setAttribute('aria-selected', b.checked));
+  document.getElementById('table-card').classList.toggle('selecting', n > 0);
+  document.getElementById('sel-count').textContent = `${n} ausgewählt`;
+  const all = document.getElementById('all'); all.checked = n && n === boxes.length; all.indeterminate = n > 0 && n < boxes.length;
+}
+rows.addEventListener('change', updateSel);
+document.getElementById('all').onchange = (e) => { rows.querySelectorAll('input[type=checkbox]').forEach((b) => b.checked = e.target.checked); updateSel(); };
+document.getElementById('sel-clear').onclick = () => { rows.querySelectorAll('input[type=checkbox]').forEach((b) => b.checked = false); updateSel(); };
+
+/* toast with undo (instead of a confirm dialog) */
+function toast(text, undo) {
+  document.querySelector('.toast')?.remove();
+  const t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status');
+  t.innerHTML = `<span>${text}</span>${undo ? '<button class="btn sm">Rückgängig</button>' : ''}`;
+  document.body.append(t); motion.enter(t, { y: 12 });
+  let left = 6000, start = Date.now(), timer;
+  const run = () => { start = Date.now(); timer = setTimeout(() => motion.exit(t), left); };
+  t.onmouseenter = () => { clearTimeout(timer); left -= Date.now() - start; }; t.onmouseleave = run;
+  if (undo) t.querySelector('button').onclick = () => { undo(); motion.exit(t); };
+  run();
+}
+document.getElementById('new').onclick = () => toast('Entwurf RE-2026-0143 erstellt');
+
+/* AI: approval gate */
+document.getElementById('approve').onclick = () => {
+  const card = document.querySelector('.approval');
+  card.innerHTML = '<h3><svg width="14" height="14" aria-hidden="true" style="color:var(--success)"><use href="#i-check"/></svg>2 Erinnerungen gesendet</h3><p class="muted" style="margin:0;font-size:12.5px">Ich melde mich, sobald eine Zahlung eingeht.</p>';
+  const s = document.getElementById('draft-step'); s.className = 'step done'; s.querySelector('svg').classList.remove('m-spin'); s.querySelector('use').setAttribute('href', '#i-check'); s.querySelector('.st').textContent = '2,1 s';
+  toast('2 E-Mails gesendet');
+};
+document.getElementById('deny').onclick = () => { document.querySelector('.approval').innerHTML = '<p class="muted" style="margin:0;font-size:12.5px">Abgelehnt. Nichts wurde gesendet. Soll ich den Ton anpassen?</p>'; };
+document.getElementById('composer').onsubmit = (e) => { e.preventDefault(); const v = e.target.prompt.value.trim(); if (!v) return;
+  const m = document.createElement('div'); m.className = 'msg user'; m.textContent = v; document.getElementById('ai-body').append(m); motion.enter(m); e.target.reset(); };
+document.querySelectorAll('.suggest button').forEach((b) => b.onclick = () => { const i = document.getElementById('prompt'); i.value = b.textContent; i.focus(); });
+
+/* theme */
+document.getElementById('theme').onclick = () => motion.viewTransition(() => {
+  const r = document.documentElement; const dark = r.dataset.theme ? r.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  r.dataset.theme = dark ? 'light' : 'dark';
+});
+
+/* command palette: fuzzy, grouped, keyboard-first, shows shortcuts */
+const cmds = [
+  { g: 'Aktionen', t: 'Neue Rechnung', k: 'C', i: 'i-plus', run: () => document.getElementById('new').click() },
+  { g: 'Aktionen', t: 'Überfällige anzeigen', k: 'G Ü', i: 'i-alert', run: () => document.querySelector('[data-status=overdue]').click() },
+  { g: 'Aktionen', t: 'Farbschema wechseln', k: '⇧ T', i: 'i-moon', run: () => document.getElementById('theme').click() },
+  { g: 'Navigation', t: 'Kunden öffnen', k: 'G K', i: 'i-users', run: () => toast('Kunden (Demo)') },
+  { g: 'Navigation', t: 'Einstellungen', k: 'G ,', i: 'i-gear', run: () => toast('Einstellungen (Demo)') },
+  ...data.map((r) => ({ g: 'Rechnungen', t: `${r.id} · ${r.c}`, i: 'i-file', run: () => { document.getElementById('q').value = r.id; query = r.id.toLowerCase(); render(); } })),
+];
+const fuzzy = (q, s) => { q = q.toLowerCase(); s = s.toLowerCase(); let i = 0; for (const ch of s) if (ch === q[i]) i++; return i === q.length; };
+const dlg = document.getElementById('cmdk'), cq = document.getElementById('cmdk-q'), cl = document.getElementById('cmdk-list');
+let active = 0, shown = [];
+function drawCmds() {
+  const q = cq.value.trim(); shown = cmds.filter((c) => !q || fuzzy(q, c.t)); active = Math.min(active, Math.max(0, shown.length - 1));
+  if (!shown.length) { cl.innerHTML = `<li class="none">Nichts gefunden für „${q.replace(/</g, '&lt;')}“</li>`; return; }
+  let html = '', g = '';
+  shown.forEach((c, i) => { if (c.g !== g) { g = c.g; html += `<li class="grp" role="presentation">${g}</li>`; }
+    html += `<li role="option" id="o${i}" aria-selected="${i === active}" data-i="${i}"><svg aria-hidden="true"><use href="#${c.i}"/></svg>${c.t}${c.k ? `<kbd>${c.k}</kbd>` : ''}</li>`; });
+  cl.innerHTML = html; cq.setAttribute('aria-activedescendant', 'o' + active);
+  cl.querySelector('[aria-selected=true]')?.scrollIntoView({ block: 'nearest' });
+}
+function openCmdk() { cq.value = ''; active = 0; drawCmds(); dlg.showModal(); cq.focus(); }
+document.querySelectorAll('[data-cmdk]').forEach((b) => b.onclick = openCmdk);
+addEventListener('keydown', (e) => { if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); dlg.open ? dlg.close() : openCmdk(); } });
+cq.oninput = () => { active = 0; drawCmds(); };
+cq.onkeydown = (e) => {
+  if (e.key === 'ArrowDown') { active = (active + 1) % shown.length; drawCmds(); e.preventDefault(); }
+  if (e.key === 'ArrowUp') { active = (active - 1 + shown.length) % shown.length; drawCmds(); e.preventDefault(); }
+  if (e.key === 'Enter' && shown[active]) { dlg.close(); shown[active].run(); }
+};
+cl.onclick = (e) => { const o = e.target.closest('[role=option]'); if (o) { dlg.close(); shown[+o.dataset.i].run(); } };
+dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
+
+render();
+document.querySelectorAll('[data-count]').forEach((el) => {
+  const f = new Intl.NumberFormat('de-DE'); const to = +el.dataset.count;
+  if (motion.reduced()) return; let t0 = performance.now();
+  const tick = (now) => { const p = Math.min(1, (now - t0) / 900), v = Math.round(to * (1 - (1 - p) ** 4)); el.textContent = f.format(v) + ' €'; if (p < 1) requestAnimationFrame(tick); };
+  requestAnimationFrame(tick);
+});
+</script>
+</body>
+</html>

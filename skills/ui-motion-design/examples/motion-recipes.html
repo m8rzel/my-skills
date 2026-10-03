@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Motion Recipes</title>
+<link rel="stylesheet" href="../assets/motion.css">
+<style>
+  :root {
+    --background: oklch(99% 0.003 270); --foreground: oklch(18% 0.02 270); --card: oklch(100% 0 0);
+    --muted: oklch(96% 0.006 270); --muted-foreground: oklch(48% 0.02 270); --border: oklch(91% 0.008 270);
+    --primary: oklch(52% 0.22 275); --primary-foreground: oklch(99% 0 0); --ring: oklch(55% 0.2 275);
+    --radius-md: 8px; --radius-lg: 12px; --shadow-lg: 0 4px 8px oklch(0 0 0 / .04), 0 12px 24px oklch(0 0 0 / .1);
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    --background: oklch(16% 0.01 270); --foreground: oklch(97% 0.003 270); --card: oklch(20% 0.012 270);
+    --muted: oklch(26% 0.012 270); --muted-foreground: oklch(72% 0.015 270); --border: oklch(30% 0.012 270);
+    --primary: oklch(72% 0.15 275); --primary-foreground: oklch(18% 0.03 275); --ring: oklch(72% 0.15 275); } }
+  :root[data-theme="dark"] {
+    --background: oklch(16% 0.01 270); --foreground: oklch(97% 0.003 270); --card: oklch(20% 0.012 270);
+    --muted: oklch(26% 0.012 270); --muted-foreground: oklch(72% 0.015 270); --border: oklch(30% 0.012 270);
+    --primary: oklch(72% 0.15 275); --primary-foreground: oklch(18% 0.03 275); --ring: oklch(72% 0.15 275); }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--background); color: var(--foreground); font: 16px/1.55 ui-sans-serif, system-ui, sans-serif; }
+  .page { max-width: 1040px; margin: 0 auto; padding: 48px 16px 120px; }
+  h1 { font-size: clamp(2rem, 1.6rem + 2vw, 3rem); letter-spacing: -0.025em; line-height: 1.05; margin: 0 0 8px; }
+  h2 { font-size: 1.25rem; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .lede, .hint { color: var(--muted-foreground); margin: 0; max-width: 65ch; }
+  .hint { font-size: 14px; margin-bottom: 16px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 16px; margin-top: 40px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .btn { font: inherit; font-weight: 500; min-height: 44px; padding: 8px 14px; border-radius: var(--radius-md); border: 1px solid var(--border); background: var(--card); color: var(--foreground); cursor: pointer; }
+  .btn.primary { background: var(--primary); color: var(--primary-foreground); border-color: transparent; }
+  .btn:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+  code { font: 13px ui-monospace, monospace; background: var(--muted); padding: 1px 5px; border-radius: 4px; }
+  .menu { margin: 0; inset: auto; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--card); color: var(--foreground); padding: 4px; min-width: 180px; box-shadow: var(--shadow-lg); position-area: bottom span-right; margin-top: 6px; }
+  .menu button { display: block; width: 100%; text-align: left; font: inherit; padding: 8px 10px; border: 0; background: none; color: inherit; border-radius: 6px; cursor: pointer; }
+  .menu button:hover, .menu button:focus-visible { background: var(--muted); outline: none; }
+  dialog { border: 1px solid var(--border); background: var(--card); color: var(--foreground); border-radius: var(--radius-lg); padding: 24px; max-width: min(440px, calc(100% - 32px)); }
+  dialog h3 { margin: 0 0 6px; } dialog p { margin: 0 0 20px; color: var(--muted-foreground); }
+  .list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  .list li { display: flex; justify-content: space-between; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--card); }
+  .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .tiles div { aspect-ratio: 1; border-radius: var(--radius-md); background: var(--muted); }
+  .kpi { font-size: 32px; font-weight: 650; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .toasts { position: fixed; right: 16px; bottom: 16px; display: grid; gap: 8px; z-index: 10; width: min(360px, calc(100% - 32px)); }
+  .toast { background: var(--foreground); color: var(--background); padding: 12px 16px; border-radius: var(--radius-md); box-shadow: var(--shadow-lg); font-size: 14px; }
+  .tabs { display: flex; gap: 4px; padding: 4px; background: var(--muted); border-radius: var(--radius-md); width: fit-content; }
+  .tabs button { font: inherit; border: 0; background: none; color: var(--muted-foreground); padding: 6px 12px; min-height: 44px; border-radius: 6px; cursor: pointer; }
+  .tabs button[aria-selected="true"] { background: var(--card); color: var(--foreground); view-transition-name: tab-pill; box-shadow: 0 1px 2px oklch(0 0 0 / .08); }
+  ::view-transition-group(tab-pill) { animation-duration: var(--duration-moderate); animation-timing-function: var(--ease-out); }
+  .panel { margin-top: 12px; color: var(--muted-foreground); font-size: 15px; }
+  .skel { display: grid; gap: 8px; } .skel .m-skeleton { height: 14px; }
+  details summary { cursor: pointer; font-weight: 500; min-height: 44px; display: flex; align-items: center; gap: 8px; }
+  .reveal-zone { margin-top: 48px; display: grid; gap: 16px; }
+  .reveal-zone .card { min-height: 140px; }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>Motion Recipes</h1>
+  <p class="lede">Every pattern from <code>assets/motion.css</code> and <code>assets/motion.js</code> in one page. Turn on "reduce motion" in your OS to see the fallbacks.</p>
+
+  <div class="grid">
+    <section class="card">
+      <h2>Popover menu</h2>
+      <p class="hint"><code>.m-popover</code> on a native <code>[popover]</code>. Exit is shorter than enter.</p>
+      <button class="btn m-press" popovertarget="menu" style="anchor-name: --menu-btn">Aktionen ▾</button>
+      <div id="menu" popover class="menu m-popover" style="position-anchor: --menu-btn">
+        <button>Duplizieren</button><button>Umbenennen</button><button>Archivieren</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Dialog &amp; sheet</h2>
+      <p class="hint"><code>.m-dialog</code>, <code>.m-sheet</code> — backdrop fades, exit is shorter than enter.</p>
+      <div class="row">
+        <button class="btn primary m-press" data-open="dlg">Dialog</button>
+        <button class="btn m-press" data-open="sheet">Bottom sheet</button>
+      </div>
+      <dialog id="dlg" class="m-dialog"><h3>Rechnung löschen?</h3><p>RE-2026-0142 wird endgültig entfernt.</p>
+        <div class="row" style="justify-content:flex-end"><button class="btn" data-close>Abbrechen</button><button class="btn primary" data-close>Löschen</button></div></dialog>
+      <dialog id="sheet" class="m-sheet"><h3>Filter</h3><p>Sheets kommen von der Kante, an der sie andocken.</p><button class="btn" data-close>Fertig</button></dialog>
+    </section>
+
+    <section class="card">
+      <h2>Toasts</h2>
+      <p class="hint"><code>motion.enter()</code> / <code>motion.exit()</code> with WAAPI.</p>
+      <button class="btn m-press" id="toast-btn">Toast zeigen</button>
+    </section>
+
+    <section class="card">
+      <h2>FLIP reorder</h2>
+      <p class="hint"><code>motion.flip(items, mutate)</code> with the smooth spring.</p>
+      <ul class="list" id="flip-list"><li>Angebot Müller <span>1.240 €</span></li><li>Website Relaunch <span>8.900 €</span></li><li>Wartung Q4 <span>450 €</span></li><li>SEO Paket <span>2.100 €</span></li></ul>
+      <div class="row" style="margin-top:12px"><button class="btn m-press" id="shuffle">Sortieren</button></div>
+    </section>
+
+    <section class="card">
+      <h2>Stagger</h2>
+      <p class="hint"><code>.m-stagger</code> — 40ms steps, capped.</p>
+      <div class="tiles m-stagger" id="tiles"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+      <div class="row" style="margin-top:12px"><button class="btn m-press" id="restagger">Nochmal</button></div>
+    </section>
+
+    <section class="card">
+      <h2>Skeleton → content</h2>
+      <p class="hint">Skeleton matches the final layout, content fades in (no movement).</p>
+      <div id="loadzone" class="skel"><div class="m-skeleton" style="width:70%"></div><div class="m-skeleton"></div><div class="m-skeleton" style="width:40%"></div></div>
+      <div class="row" style="margin-top:12px"><button class="btn m-press" id="load">Laden</button></div>
+    </section>
+
+    <section class="card">
+      <h2>Count-up KPI</h2>
+      <p class="hint"><code>motion.countUp()</code> — tabular numbers so width stays stable.</p>
+      <div class="kpi" id="kpi">0</div><div class="hint" style="margin:0">Umsatz Oktober (Beispiel)</div>
+      <div class="row" style="margin-top:12px"><button class="btn m-press" id="count">Abspielen</button></div>
+    </section>
+
+    <section class="card">
+      <h2>Height auto</h2>
+      <p class="hint"><code>.m-collapse</code> (grid rows) and <code>details.m-details</code>.</p>
+      <button class="btn m-press" id="toggle" aria-expanded="false" aria-controls="col">Details</button>
+      <div class="m-collapse" id="col"><div><p class="panel">Rechnungsadresse, Zahlungsziel 14 Tage, Kleinunternehmer nach §19 UStG.</p></div></div>
+      <details class="m-details" style="margin-top:12px"><summary>Native details</summary><p class="panel">Öffnet und schließt mit interpolate-size, wo unterstützt.</p></details>
+    </section>
+
+    <section class="card">
+      <h2>View transition tabs</h2>
+      <p class="hint"><code>motion.viewTransition()</code> morphs the active pill.</p>
+      <div class="tabs" role="tablist" id="tabs"><button role="tab" aria-selected="true">Woche</button><button role="tab" aria-selected="false">Monat</button><button role="tab" aria-selected="false">Jahr</button></div>
+      <div class="panel" id="tabpanel">12 neue Anfragen diese Woche.</div>
+    </section>
+  </div>
+
+  <div class="reveal-zone">
+    <h2>Scroll reveal</h2>
+    <p class="hint"><code>.m-reveal</code> uses scroll-driven animations; no JS.</p>
+    <div class="card m-reveal">Leistungen</div><div class="card m-reveal">Referenzen</div><div class="card m-reveal">Kontakt</div>
+  </div>
+</div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script src="../assets/motion.js"></script>
+<script>
+  document.addEventListener('click', (e) => {
+    const open = e.target.closest('[data-open]'); if (open) document.getElementById(open.dataset.open).showModal();
+    const close = e.target.closest('[data-close]'); if (close) close.closest('dialog').close();
+  });
+  document.querySelectorAll('dialog').forEach((d) => d.addEventListener('click', (e) => { if (e.target === d) d.close(); }));
+
+  let n = 0;
+  document.getElementById('toast-btn').onclick = () => {
+    const t = document.createElement('div'); t.className = 'toast'; t.textContent = `Gespeichert (${++n})`;
+    document.getElementById('toasts').append(t); motion.enter(t, { y: 16 });
+    setTimeout(() => motion.exit(t), 2600);
+  };
+
+  const list = document.getElementById('flip-list'); let asc = false;
+  document.getElementById('shuffle').onclick = () => {
+    const items = [...list.children];
+    const val = (li) => parseFloat(li.querySelector('span').textContent.replace('.', ''));
+    motion.flip(items, () => { asc = !asc; items.sort((a, b) => asc ? val(a) - val(b) : val(b) - val(a)).forEach((li) => list.append(li)); });
+  };
+
+  document.getElementById('restagger').onclick = () => {
+    const t = document.getElementById('tiles'); t.classList.remove('m-stagger'); void t.offsetWidth; t.classList.add('m-stagger');
+  };
+
+  document.getElementById('load').onclick = () => {
+    const z = document.getElementById('loadzone');
+    z.innerHTML = '<div class="m-skeleton" style="width:70%"></div><div class="m-skeleton"></div><div class="m-skeleton" style="width:40%"></div>';
+    setTimeout(() => {
+      z.innerHTML = '<strong>Angebot #142</strong><span class="hint" style="margin:0">Website-Relaunch, 3 Seiten, CMS</span><span>8.900 €</span>';
+      [...z.children].forEach((c, i) => c.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, delay: i * 30, fill: 'backwards' }));
+    }, 1200);
+  };
+
+  document.getElementById('count').onclick = () => motion.countUp(document.getElementById('kpi'), 48250);
+  motion.countUp(document.getElementById('kpi'), 48250);
+
+  document.getElementById('toggle').onclick = (e) => {
+    const c = document.getElementById('col'); const open = c.toggleAttribute('data-open');
+    e.currentTarget.setAttribute('aria-expanded', open);
+  };
+
+  const panels = { Woche: '12 neue Anfragen diese Woche.', Monat: '47 Anfragen im Oktober.', Jahr: '512 Anfragen in 2026.' };
+  document.getElementById('tabs').onclick = (e) => {
+    const b = e.target.closest('[role=tab]'); if (!b || b.getAttribute('aria-selected') === 'true') return;
+    motion.viewTransition(() => {
+      document.querySelectorAll('#tabs [role=tab]').forEach((t) => t.setAttribute('aria-selected', t === b));
+      document.getElementById('tabpanel').textContent = panels[b.textContent];
+    });
+  };
+</script>
+</body>
+</html>

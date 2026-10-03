@@ -25,6 +25,15 @@
       "skills": [
         "./skills/shadcn-artifacts"
       ]
+    },
+    {
+      "name": "ui-motion-design",
+      "description": "UI/UX & Motion Design: OKLCH-Tokens aus einer Markenfarbe, Kontrast-Check (WCAG+APCA), Springs → CSS/Motion/Reanimated, Playwright-UX-Audit, Motion-CSS/JS und Teardowns von Stripe, Apple, Linear, Vercel & Awwwards-Seiten",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/ui-motion-design"
+      ]
     }
   ]
 }

@@ -13,6 +13,7 @@ zum Claude-Code-Plugin-Marketplace.
 /plugin marketplace add m8rzel/my-skills
 /plugin install web-handout-pdf@my-skills
 /plugin install shadcn-artifacts@my-skills
+/plugin install ui-motion-design@my-skills
 ```
 
 **Andere Agents (Codex, Cursor, Amp, …) über die skills-CLI:**
@@ -27,6 +28,7 @@ npx skills add m8rzel/my-skills
 |---|---|
 | `web-handout-pdf` | PDF-Handout bzw. Sales-Deck eines Web-Projekts: Playwright-Screenshots (Desktop + Mobile) in Mockup-Rahmen, gerendert als A4-PDF. Braucht einmalig `npm install` im Skill-Ordner. |
 | `shadcn-artifacts` | Saubere Single-File-HTML-Seiten und Claude-Artifacts im shadcn/ui-Stil: 57 Komponenten als Vanilla HTML/CSS/JS, hell und dunkel, ohne React und ohne Build-Zwang. Beispiel mit allen Komponenten: `skills/shadcn-artifacts/examples/components.html`. |
+| `ui-motion-design` | UI/UX- und Motion-Design auf Expertenniveau. **Wissen:** visuelles Handwerk mit Zahlen (Refactoring UI, Apple HIG, Material 3, Radix, Vercel), recherchierte Regeln für Formulare, Tabellen, Dashboards, Navigation, Overlays, States, Pricing, AI-/Agent-UIs und Mobile (NN/g, Baymard, GOV.UK, HAX), Teardowns von Linear, Stripe, Vercel, Superhuman, Figma, Apple und Awwwards-Gewinnern, Motion-Prinzipien und Wow-Effekt-Rezepte. **Skripte:** `tokens.mjs` (OKLCH-Tokens aus einer Markenfarbe + Style-Tile), `contrast.mjs` (WCAG + APCA, CI-tauglich), `easing.mjs` (Springs → CSS/Motion/Reanimated/GSAP), `audit.mjs` (Playwright-Audit inkl. Reduced Motion; einmalig `npm install`). Demos in `skills/ui-motion-design/examples/` (u. a. `premium-ui.html`). |
 
 ## Neuer Skill
 
