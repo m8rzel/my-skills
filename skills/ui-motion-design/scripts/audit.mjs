@@ -66,6 +66,7 @@ const INIT = () => {
 const AUDIT = ({ isMobile }) => {
   const issues = [];
   const stats = {};
+  const LAYOUT = /^(width|height|top|left|right|bottom|inset|margin|padding|font-size|max-width|max-height|min-width|min-height|flex-basis|border-width)/; // grid-template-rows 0fr→1fr is the sanctioned height:auto technique;
   const sel = (el) => {
     if (!el || el.nodeType !== 1) return '';
     const parts = [];
@@ -127,6 +128,26 @@ const AUDIT = ({ isMobile }) => {
   const vp = document.querySelector('meta[name=viewport]')?.content || '';
   if (!vp) add('zoom', 'error', 'No <meta name="viewport"> — mobile browsers render a zoomed-out desktop page', document.head);
   else if (/user-scalable\s*=\s*(no|0)/.test(vp) || /maximum-scale\s*=\s*1(\.0)?\b/.test(vp)) add('zoom', 'error', `Viewport blocks zoom (${vp}) — WCAG 1.4.4`, document.head);
+
+  // --- running animations
+  const anims = document.getAnimations();
+  const running = anims.filter((x) => x.playState === 'running');
+  const infinite = running.filter((x) => x.effect?.getTiming?.().iterations === Infinity);
+  stats.runningAnimations = running.length; stats.infiniteAnimations = infinite.length;
+  const loops = new Map();
+  for (const x of infinite) { const n = x.animationName || x.id || 'web-animation'; const e = loops.get(n); if (e) e.count++; else loops.set(n, { count: 1, target: x.effect?.target }); }
+  for (const [n, { count, target }] of [...loops].slice(0, 6)) {
+    if (/shimmer|skeleton|spin|rotate|pulse|load/i.test(n)) continue; // loaders are fine
+    add('motion-loop', 'info', `Infinite animation "${n}"${count > 1 ? ` on ${count} elements` : ''} — fine for loaders, distracting for decoration (WCAG 2.2.2: needs pause if > 5s)`, target);
+  }
+  for (const x of running) {
+    const kf = x.effect?.getKeyframes?.() || [];
+    const lay = [...new Set(kf.flatMap((k) => Object.keys(k)).filter((p) => LAYOUT.test(p.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase()))))];
+    if (lay.length && !x.animationName) add('motion-layout', 'warn', `Web animation animates ${lay.join(', ')} — use transform/opacity`, x.effect?.target);
+  }
+
+  // measure final visual states: cancel finite/scroll-driven animations (fades mid-flight would fake low contrast)
+  for (const x of document.getAnimations()) { if (x.effect?.getTiming?.().iterations !== Infinity) { try { x.cancel(); } catch {} } }
 
   // --- overflow
   const vw = document.documentElement.clientWidth;
@@ -257,7 +278,6 @@ const AUDIT = ({ isMobile }) => {
   stats.headings = hs.map((h) => h.tagName.toLowerCase() + ': ' + h.innerText.trim().slice(0, 50));
 
   // --- motion: stylesheets
-  const LAYOUT = /^(width|height|top|left|right|bottom|inset|margin|padding|font-size|max-width|max-height|min-width|min-height|flex-basis|border-width)/; // grid-template-rows 0fr→1fr is the sanctioned height:auto technique;
   let reducedMotionRule = false, sheetsBlocked = 0;
   const layoutKeyframes = new Set(), keyframesAll = new Set();
   const walk = (rules) => {
@@ -294,23 +314,6 @@ const AUDIT = ({ isMobile }) => {
   }
   stats.transitionAll = tAll; stats.transitionLayout = tLayout; stats.willChange = willChange;
   if (willChange > 15) add('motion-perf', 'warn', `${willChange} elements keep will-change — set it only while animating`, document.body);
-
-  // --- running animations
-  const anims = document.getAnimations();
-  const running = anims.filter((x) => x.playState === 'running');
-  const infinite = running.filter((x) => x.effect?.getTiming?.().iterations === Infinity);
-  stats.runningAnimations = running.length; stats.infiniteAnimations = infinite.length;
-  const loops = new Map();
-  for (const x of infinite) { const n = x.animationName || x.id || 'web-animation'; const e = loops.get(n); if (e) e.count++; else loops.set(n, { count: 1, target: x.effect?.target }); }
-  for (const [n, { count, target }] of [...loops].slice(0, 6)) {
-    if (/shimmer|skeleton|spin|rotate|pulse|load/i.test(n)) continue; // loaders are fine
-    add('motion-loop', 'info', `Infinite animation "${n}"${count > 1 ? ` on ${count} elements` : ''} — fine for loaders, distracting for decoration (WCAG 2.2.2: needs pause if > 5s)`, target);
-  }
-  for (const x of running) {
-    const kf = x.effect?.getKeyframes?.() || [];
-    const lay = [...new Set(kf.flatMap((k) => Object.keys(k)).filter((p) => LAYOUT.test(p.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase()))))];
-    if (lay.length && !x.animationName) add('motion-layout', 'warn', `Web animation animates ${lay.join(', ')} — use transform/opacity`, x.effect?.target);
-  }
 
   return { issues, stats };
 };

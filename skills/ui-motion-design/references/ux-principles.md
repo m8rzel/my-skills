@@ -1,6 +1,6 @@
 # UI/UX principles
 
-> This is the baseline. For expert depth read **`ui-craft.md`** (hierarchy, spacing, type, colour, depth, icons — with numbers from Refactoring UI, HIG, Material 3, Radix, Vercel), **`ui-patterns.md`** (research-backed rules per component: forms, tables, dashboards, navigation, overlays, states, settings, pricing, AI interfaces, mobile) and **`product-ui-teardowns.md`** (Linear, Stripe, Vercel, Superhuman, Raycast, Figma, Primer, Polaris, Fluent, Liquid Glass, M3 Expressive + premium checklist).
+> This is the baseline. **Websites:** `website-playbook.md`. **Webapps:** `webapp-playbook.md`. Direction for a new project: `scripts/brief.mjs`. For expert depth read **`ui-craft.md`** (hierarchy, spacing, type, colour, depth, icons — with numbers from Refactoring UI, HIG, Material 3, Radix, Vercel), **`ui-patterns.md`** (research-backed rules per component: forms, tables, dashboards, navigation, overlays, states, settings, pricing, AI interfaces, mobile) and **`product-ui-teardowns.md`** (Linear, Stripe, Vercel, Superhuman, Raycast, Figma, Primer, Polaris, Fluent, Liquid Glass, M3 Expressive + premium checklist).
 
 These are working rules for screens that look intentional and are easy to use. Each rule is a default; break one only when you can name the reason.
 

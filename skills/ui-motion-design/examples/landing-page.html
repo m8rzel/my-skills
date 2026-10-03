@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Belegfix — Rechnungen in 30 Sekunden</title>
+<meta name="description" content="Belegfix schreibt, versendet und mahnt deine Rechnungen — für Kleinunternehmer und Studios. 14 Tage kostenlos testen.">
+<!-- fictional product; tokens: node scripts/tokens.mjs --brand "#5b5bd6" --out examples/design-tokens --format css -->
+<link rel="stylesheet" href="design-tokens/tokens.css">
+<link rel="stylesheet" href="../assets/motion.css">
+<style>
+  :root { --hairline: color-mix(in oklch, var(--foreground) 10%, transparent); --wrap: 1160px; }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; font-synthesis: none; -webkit-font-smoothing: antialiased; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body { margin: 0; background: var(--background); color: var(--foreground); font: 17px/1.6 var(--font-sans); }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; border-radius: 4px; }
+  .wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 20px; }
+  .num { font-variant-numeric: tabular-nums; }
+  .muted { color: var(--muted-foreground); }
+  .skip { position: absolute; left: 12px; top: -60px; z-index: 50; background: var(--foreground); color: var(--background); padding: 10px 14px; border-radius: 8px; }
+  .skip:focus { top: 12px; }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 22px; border-radius: 999px; font: 600 16px/1 var(--font-sans);
+         text-decoration: none; border: 1px solid var(--hairline); background: var(--card); color: var(--foreground); cursor: pointer;
+         transition: scale var(--duration-instant) var(--ease-standard), background var(--duration-instant), box-shadow var(--duration-base); }
+  .btn:active { scale: .97; }
+  .btn.primary { background: var(--primary); color: var(--primary-foreground); border-color: transparent;
+                 box-shadow: inset 0 1px 0 color-mix(in oklch, white 25%, transparent), 0 6px 20px -6px color-mix(in oklch, var(--primary) 60%, transparent); }
+  .btn.primary:hover { background: color-mix(in oklab, var(--primary-foreground) 8%, var(--primary)); }
+  .btn.ghost:hover { background: var(--accent); }
+
+  /* ---------- nav ---------- */
+  header.nav { position: sticky; top: 0; z-index: 20; border-bottom: 1px solid transparent; transition: border-color var(--duration-base), background var(--duration-base); }
+  header.nav.scrolled { border-color: var(--hairline); background: color-mix(in oklch, var(--background) 82%, transparent); backdrop-filter: blur(14px) saturate(1.5); }
+  @media (prefers-reduced-transparency: reduce) { header.nav.scrolled { background: var(--background); backdrop-filter: none; } }
+  .nav .wrap { display: flex; align-items: center; gap: 24px; height: 68px; }
+  .logo { display: flex; align-items: center; gap: 10px; min-height: 44px; font-weight: 700; font-size: 18px; text-decoration: none; letter-spacing: -0.01em; }
+  .logo i { width: 26px; height: 26px; border-radius: 8px; background: linear-gradient(in oklch 135deg, var(--brand-400), var(--brand-700)); box-shadow: inset 0 1px 0 color-mix(in oklch, white 30%, transparent); }
+  .nav nav { display: flex; gap: 4px; margin-left: 12px; }
+  .nav nav a { text-decoration: none; padding: 10px 12px; border-radius: 8px; color: var(--muted-foreground); font-weight: 500; font-size: 15px; }
+  .nav nav a:hover { color: var(--foreground); background: var(--accent); }
+  .nav .right { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+  .nav .btn { min-height: 44px; padding: 0 18px; font-size: 15px; }
+
+  /* ---------- hero ---------- */
+  .hero { position: relative; isolation: isolate; padding: 72px 0 40px; overflow: clip; }
+  .hero::before { content: ""; position: absolute; inset: -20% -10% auto; height: 760px; z-index: -1; filter: blur(10px);
+    background: radial-gradient(40% 50% at 25% 30%, color-mix(in oklch, var(--brand-300) 55%, transparent), transparent 70%),
+                radial-gradient(35% 45% at 75% 20%, color-mix(in oklch, var(--brand-200) 70%, transparent), transparent 70%),
+                radial-gradient(30% 40% at 60% 60%, color-mix(in oklch, oklch(85% 0.1 200) 50%, transparent), transparent 70%); opacity: .7; }
+  .hero::after { content: ""; position: absolute; inset: 0; z-index: -1; opacity: .35; pointer-events: none;
+    background-image: linear-gradient(var(--hairline) 1px, transparent 1px), linear-gradient(90deg, var(--hairline) 1px, transparent 1px); background-size: 56px 56px;
+    mask: radial-gradient(60% 50% at 50% 30%, #000, transparent 75%); }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px 6px 6px; border-radius: 999px; border: 1px solid var(--hairline); background: color-mix(in oklch, var(--card) 70%, transparent); font-size: 14px; font-weight: 500; text-decoration: none; }
+  .eyebrow b { background: var(--primary); color: var(--primary-foreground); padding: 2px 8px; border-radius: 999px; font-size: 12px; }
+  .hero h1 { font-size: clamp(2.6rem, 1.6rem + 4.6vw, 5rem); line-height: 1.02; letter-spacing: -0.04em; margin: 20px 0 18px; max-width: 14ch; text-wrap: balance; font-weight: 700; }
+  .hero h1 em { font-style: italic; font-family: var(--font-display); font-weight: 500; color: var(--primary); }
+  .hero .lede { font-size: clamp(1.05rem, 1rem + .4vw, 1.25rem); color: var(--muted-foreground); max-width: 52ch; margin: 0 0 28px; text-wrap: pretty; }
+  .ctas { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .proof { display: flex; align-items: center; gap: 12px; margin-top: 22px; font-size: 14px; color: var(--muted-foreground); }
+  .avatars { display: flex; } .avatars span { width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--background); margin-left: -8px; display: grid; place-items: center; font-size: 11px; font-weight: 700; background: var(--primary-subtle); color: var(--primary-subtle-foreground); }
+  .avatars span:first-child { margin-left: 0; }
+  .stars { color: oklch(72% 0.17 75); letter-spacing: 1px; }
+
+  /* product mock (real UI, not a screenshot) */
+  .mock { margin-top: 56px; border-radius: 22px; padding: 10px; background: color-mix(in oklch, var(--card) 60%, transparent); border: 1px solid var(--hairline);
+          box-shadow: 0 2px 4px oklch(0 0 0 / .04), 0 24px 64px -12px color-mix(in oklch, var(--brand-700) 30%, transparent); }
+  .mock-inner { border-radius: 14px; overflow: hidden; background: var(--background); border: 1px solid var(--hairline); display: grid; grid-template-columns: 200px 1fr; min-height: 340px; }
+  .mock aside { background: color-mix(in oklch, var(--foreground) 3%, var(--background)); border-right: 1px solid var(--hairline); padding: 14px 10px; display: grid; align-content: start; gap: 4px; font-size: 13px; }
+  .mock aside span { padding: 7px 10px; border-radius: 6px; color: var(--muted-foreground); }
+  .mock aside span.on { background: var(--accent); color: var(--foreground); font-weight: 500; }
+  .mock main { padding: 18px; display: grid; gap: 14px; align-content: start; }
+  .mock .kp { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .mock .kp div { border: 1px solid var(--hairline); border-radius: 10px; padding: 10px 12px; font-size: 12px; color: var(--muted-foreground); }
+  .mock .kp b { display: block; color: var(--foreground); font-size: 20px; letter-spacing: -0.02em; margin-top: 2px; }
+  .mock table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .mock td { padding: 9px 6px; border-top: 1px solid var(--hairline); white-space: nowrap; }
+  .mock td.r { text-align: right; }
+  .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; }
+
+  /* ---------- logos marquee ---------- */
+  .logos { padding: 40px 0 16px; text-align: center; }
+  .logos p { font-size: 14px; margin: 0 0 18px; }
+  .marquee { display: flex; align-items: center; gap: 12px; }
+  .marquee .vp { overflow: clip; flex: 1; min-width: 0; mask: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
+  .marquee .track { display: flex; gap: 56px; width: max-content; animation: m-marquee 40s linear infinite; font-weight: 700; font-size: 20px; color: color-mix(in oklch, var(--foreground) 45%, transparent); letter-spacing: -0.01em; }
+  .marquee.paused .track { animation-play-state: paused; }
+  @keyframes m-marquee { to { translate: -50% 0; } }
+  .marquee button { flex: none; min-height: 44px; min-width: 44px; border-radius: 999px; border: 1px solid var(--hairline); background: var(--card); cursor: pointer; font: 500 14px/1 var(--font-sans); color: var(--muted-foreground); padding: 0 14px; }
+
+  /* ---------- sections ---------- */
+  section.block { padding: clamp(72px, 6vw + 40px, 140px) 0; scroll-margin-top: 68px; }
+  .head { max-width: 640px; margin-bottom: 48px; }
+  .head.center { margin-inline: auto; text-align: center; }
+  .kicker { font-size: 14px; font-weight: 600; color: var(--primary); letter-spacing: .02em; }
+  h2 { font-size: clamp(2rem, 1.4rem + 2.4vw, 3.2rem); line-height: 1.08; letter-spacing: -0.035em; margin: 10px 0 14px; text-wrap: balance; }
+  .head p { margin: 0; color: var(--muted-foreground); font-size: 18px; text-wrap: pretty; }
+  .tint { background: color-mix(in oklch, var(--foreground) 2.5%, var(--background)); border-block: 1px solid var(--hairline); }
+
+  /* problem → outcome */
+  .po { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 16px; }
+  .po article { border: 1px solid var(--hairline); border-radius: 18px; padding: 24px; background: var(--card); }
+  .po s { color: var(--muted-foreground); text-decoration-color: color-mix(in oklab, var(--destructive) 60%, transparent); }
+  .po p { margin: 8px 0 0; font-weight: 600; font-size: 18px; }
+
+  /* bento */
+  .bento { display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: minmax(220px, auto); gap: 16px; }
+  .tile { position: relative; border-radius: 20px; border: 1px solid var(--hairline); background: var(--card); padding: 26px; overflow: hidden; grid-column: span 2; display: flex; flex-direction: column; }
+  .tile.big { grid-column: span 4; grid-row: span 2; }
+  .tile.wide { grid-column: span 3; }
+  .tile h3 { margin: 0 0 6px; font-size: 20px; letter-spacing: -0.01em; }
+  .tile p { margin: 0; color: var(--muted-foreground); font-size: 15.5px; }
+  .tile .viz { margin-top: auto; padding-top: 20px; }
+  .tile::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity var(--duration-base);
+    background: radial-gradient(420px circle at var(--x, 50%) var(--y, 50%), color-mix(in oklch, var(--primary) 9%, transparent), transparent 45%); }
+  @media (hover: hover) and (pointer: fine) { .bento:hover .tile::before { opacity: 1; } }
+  .chat { display: grid; gap: 8px; font-size: 14px; }
+  .chat .u { justify-self: end; background: var(--muted); padding: 8px 12px; border-radius: 12px 12px 4px 12px; }
+  .chat .a { background: var(--primary-subtle); color: var(--primary-subtle-foreground); padding: 10px 12px; border-radius: 12px 12px 12px 4px; max-width: 90%; }
+  .bars { display: flex; align-items: end; gap: 8px; height: 90px; }
+  .bars i { flex: 1; border-radius: 6px 6px 2px 2px; background: color-mix(in oklch, var(--primary) 25%, transparent); }
+  .bars i:last-child { background: var(--primary); }
+  .pill { display: inline-flex; gap: 6px; align-items: center; font-size: 13px; font-weight: 600; padding: 6px 10px; border-radius: 999px; background: var(--muted); }
+
+  /* steps */
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 32px; counter-reset: s; }
+  .steps li { list-style: none; border-top: 2px solid var(--hairline); padding-top: 20px; }
+  .steps li::before { counter-increment: s; content: "0" counter(s); font: 600 14px/1 var(--font-mono); color: var(--primary); }
+  .steps h3 { margin: 12px 0 6px; font-size: 21px; } .steps p { margin: 0; color: var(--muted-foreground); }
+  .steps small { display: block; margin-top: 10px; font-weight: 600; color: var(--foreground); font-size: 14px; }
+  ol.steps { padding: 0; margin: 0; }
+
+  /* testimonial */
+  figure.quote { margin: 0 auto; max-width: 860px; text-align: center; }
+  .quote blockquote { margin: 0; font-size: clamp(1.4rem, 1.1rem + 1.2vw, 2.1rem); line-height: 1.3; letter-spacing: -0.02em; font-weight: 600; text-wrap: balance; }
+  .quote figcaption { margin-top: 24px; display: flex; gap: 12px; align-items: center; justify-content: center; font-size: 15px; }
+  .quote figcaption .av { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(in oklch 135deg, var(--brand-300), var(--brand-600)); }
+  .results { display: flex; gap: 40px; justify-content: center; flex-wrap: wrap; margin-top: 40px; }
+  .results b { display: block; font-size: 34px; letter-spacing: -0.03em; }
+  .results span { color: var(--muted-foreground); font-size: 14px; }
+
+  /* pricing */
+  .billing { display: inline-flex; padding: 4px; border-radius: 999px; background: var(--muted); margin: 0 auto 36px; }
+  .billing button { min-height: 44px; padding: 0 18px; border-radius: 999px; border: 0; background: none; font: 600 15px/1 var(--font-sans); color: var(--muted-foreground); cursor: pointer; }
+  .billing button[aria-pressed="true"] { background: var(--card); color: var(--foreground); box-shadow: var(--shadow-sm); }
+  .billing em { font-style: normal; color: color-mix(in oklab, var(--success) 75%, var(--foreground)); font-size: 13px; }
+  .plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 16px; align-items: stretch; }
+  .plan { border: 1px solid var(--hairline); border-radius: 22px; padding: 28px; background: var(--card); display: flex; flex-direction: column; gap: 16px; }
+  .plan.rec { position: relative; border-color: transparent; background: linear-gradient(var(--card), var(--card)) padding-box, linear-gradient(in oklch 160deg, var(--brand-400), var(--brand-700)) border-box; border: 1.5px solid transparent; box-shadow: var(--shadow-lg); }
+  .plan .badge { position: absolute; top: -12px; left: 28px; background: var(--primary); color: var(--primary-foreground); font-size: 13px; font-weight: 600; padding: 4px 10px; border-radius: 999px; }
+  .plan h3 { margin: 0; font-size: 20px; }
+  .price { font-size: 44px; font-weight: 700; letter-spacing: -0.04em; line-height: 1; }
+  .price small { font-size: 15px; font-weight: 500; color: var(--muted-foreground); letter-spacing: 0; }
+  .plan ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; font-size: 15.5px; }
+  .plan li { display: flex; gap: 10px; } .plan li::before { content: "✓"; color: var(--primary); font-weight: 700; }
+  .plan .btn { margin-top: auto; }
+  .vat { text-align: center; font-size: 14px; margin-top: 20px; }
+
+  /* faq */
+  .faq { max-width: 760px; margin: 0 auto; }
+  .faq details { border-bottom: 1px solid var(--hairline); }
+  .faq summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; gap: 16px; align-items: center; min-height: 64px; font-weight: 600; font-size: 18px; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; font-size: 24px; font-weight: 400; color: var(--muted-foreground); transition: rotate var(--duration-base) var(--ease-standard); }
+  .faq details[open] summary::after { rotate: 45deg; }
+  .faq p { margin: 0 0 20px; color: var(--muted-foreground); max-width: 62ch; }
+
+  /* final cta (dark band) */
+  .final { margin: 0 20px; border-radius: 32px; padding: clamp(56px, 6vw, 96px) 24px; text-align: center; color: oklch(98% 0.005 280);
+           background: radial-gradient(60% 80% at 50% 0%, color-mix(in oklch, var(--brand-500) 70%, transparent), transparent 70%), oklch(18% 0.03 280); }
+  .final h2 { margin-top: 0; } .final p { color: oklch(85% 0.02 280); max-width: 48ch; margin: 0 auto 28px; font-size: 18px; }
+  .final .btn.primary { background: oklch(98% 0.005 280); color: oklch(22% 0.04 280); box-shadow: none; }
+  .final small { display: block; margin-top: 16px; color: oklch(80% 0.02 280); font-size: 14px; }
+
+  footer { padding: 72px 0 120px; font-size: 15px; }
+  .fgrid { display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 32px; }
+  footer h3 { margin: 0 0 12px; font-size: 14px; } footer ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; }
+  footer ul a { text-decoration: none; color: var(--muted-foreground); display: inline-block; padding: 6px 0; min-height: 44px; min-width: 44px; } @media (pointer: fine) { footer ul a { min-height: 0; } } footer ul a:hover { color: var(--foreground); }
+  .legal { border-top: 1px solid var(--hairline); margin-top: 48px; padding-top: 20px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; color: var(--muted-foreground); font-size: 14px; }
+
+  /* mobile sticky CTA */
+  .mbar { display: none; }
+  @media (max-width: 860px) {
+    .nav nav, .nav .login { display: none; }
+    .mock-inner { grid-template-columns: 1fr; } .mock aside { display: none; }
+    .mock .kp { grid-template-columns: 1fr 1fr; } .mock .kp div:last-child { display: none; }
+    .bento { grid-template-columns: 1fr; } .tile, .tile.big, .tile.wide { grid-column: auto; grid-row: auto; }
+    .fgrid { grid-template-columns: 1fr 1fr; } .fgrid > div:first-child { grid-column: 1 / -1; }
+    .mbar { display: flex; position: fixed; inset: auto 0 0; z-index: 30; gap: 8px; padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); background: color-mix(in oklch, var(--background) 92%, transparent); backdrop-filter: blur(12px); border-top: 1px solid var(--hairline); }
+    .mbar .btn { flex: 1; white-space: nowrap; padding: 0 12px; font-size: 15px; }
+    .hero .mock td:nth-child(3) { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { .marquee .track { animation: none; flex-wrap: wrap; width: auto; justify-content: center; gap: 16px 40px; } .marquee [aria-hidden="true"], .marquee button { display: none; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Zum Inhalt springen</a>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="logo" href="#" aria-label="Belegfix Startseite"><i aria-hidden="true"></i>Belegfix</a>
+    <nav aria-label="Hauptnavigation"><a href="#funktionen">Funktionen</a><a href="#ablauf">So geht's</a><a href="#preise">Preise</a><a href="#faq">FAQ</a></nav>
+    <div class="right"><a class="btn ghost login" href="#">Anmelden</a><a class="btn primary" href="#preise">Kostenlos testen</a></div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div class="wrap">
+      <a class="eyebrow m-enter-up" href="#funktionen"><b>Neu</b> KI-Mahnassistent mit Freigabe →</a>
+      <h1>Rechnungen in <em>30 Sekunden.</em> Mahnen erledigt sich.</h1>
+      <p class="lede">Belegfix schreibt, versendet und verfolgt deine Rechnungen — und erinnert säumige Kunden freundlich, aber erst nach deiner Freigabe. Für Kleinunternehmer, Studios und Agenturen.</p>
+      <div class="ctas">
+        <a class="btn primary m-press" href="#preise">14 Tage kostenlos testen</a>
+        <a class="btn ghost" href="#ablauf">So funktioniert's</a>
+      </div>
+      <div class="proof">
+        <div class="avatars" aria-hidden="true"><span>MK</span><span>JS</span><span>LB</span><span>AT</span></div>
+        <span><span class="stars" aria-hidden="true">★★★★★</span> <b class="num">4,9</b> von 1.200+ Selbstständigen (Beispielwerte)</span>
+      </div>
+
+      <div class="mock m-enter-up" role="img" aria-label="Vorschau der Belegfix-App: Rechnungsübersicht mit Kennzahlen und offenen Rechnungen">
+        <div class="mock-inner" aria-hidden="true">
+          <aside><span>Übersicht</span><span class="on">Rechnungen</span><span>Kunden</span><span>Projekte</span><span>Einstellungen</span></aside>
+          <main>
+            <div class="kp"><div>Umsatz Okt.<b class="num">48.250 €</b></div><div>Offen<b class="num">9.840 €</b></div><div>Ø Zahlungsdauer<b class="num">11 Tage</b></div></div>
+            <table><tbody>
+              <tr><td>Weinhaus Seitz</td><td><span class="dot" style="background:var(--warning)"></span>Offen</td><td class="muted num">21. Okt.</td><td class="r num">3.480,00 €</td></tr>
+              <tr><td>Kanzlei Brandt &amp; Kohl</td><td><span class="dot" style="background:var(--success)"></span>Bezahlt</td><td class="muted num">14. Okt.</td><td class="r num">8.900,00 €</td></tr>
+              <tr><td>Bäckerei Krumm</td><td><span class="dot" style="background:var(--destructive)"></span>Überfällig</td><td class="muted num">19. Sept.</td><td class="r num">890,00 €</td></tr>
+              <tr><td>Schwarzwald Events</td><td><span class="dot" style="background:var(--success)"></span>Bezahlt</td><td class="muted num">30. Sept.</td><td class="r num">12.400,00 €</td></tr>
+            </tbody></table>
+          </main>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="logos wrap">
+    <p class="muted">Vertraut von Studios, Handwerksbetrieben und Kanzleien (fiktive Beispiele)</p>
+    <div class="marquee" id="marquee">
+      <div class="vp"><div class="track">
+        <span>Studio Nord</span><span>Hofgut Schuler</span><span>Ortenau Bikes</span><span>Kanzlei Brandt</span><span>Weinhaus Seitz</span><span>Schwarzwald Events</span>
+        <span aria-hidden="true">Studio Nord</span><span aria-hidden="true">Hofgut Schuler</span><span aria-hidden="true">Ortenau Bikes</span><span aria-hidden="true">Kanzlei Brandt</span><span aria-hidden="true">Weinhaus Seitz</span><span aria-hidden="true">Schwarzwald Events</span>
+      </div></div>
+      <button id="mq" aria-pressed="false" aria-label="Laufband anhalten">❙❙</button>
+    </div>
+  </div>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="head m-reveal"><span class="kicker">Warum Belegfix</span><h2>Weniger Papierkram. Mehr bezahlte Rechnungen.</h2><p>Drei Dinge, die Selbstständige jede Woche Zeit und Geld kosten — und wie sie verschwinden.</p></div>
+      <div class="po">
+        <article class="m-reveal"><s>Rechnung in Word zusammenbasteln</s><p>Aus Projekt oder Angebot in 30 Sekunden erstellt</p></article>
+        <article class="m-reveal"><s>Excel-Liste: wer hat schon bezahlt?</s><p>Zahlungen werden automatisch vom Konto abgeglichen</p></article>
+        <article class="m-reveal"><s>Unangenehme Mahn-Mails schreiben</s><p>KI entwirft, du gibst frei — freundlich und rechtssicher</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="block tint" id="funktionen">
+    <div class="wrap">
+      <div class="head m-reveal"><span class="kicker">Funktionen</span><h2>Alles, was nach „Rechnung senden" kommt.</h2><p>Gebaut für Menschen, die lieber arbeiten als buchhalten.</p></div>
+      <div class="bento" id="bento">
+        <article class="tile big m-reveal">
+          <h3>KI-Mahnassistent mit Freigabe</h3>
+          <p>Erkennt überfällige Rechnungen, schreibt passende Erinnerungen im Ton deiner Wahl — und sendet erst, wenn du zustimmst.</p>
+          <div class="viz chat" aria-hidden="true">
+            <div class="u">Erinnere alle überfälligen Kunden freundlich.</div>
+            <div class="a">2 Rechnungen überfällig (Bäckerei Krumm, Praxis Dr. Hauser). Entwürfe sind fertig — <b>freigeben?</b></div>
+            <div><span class="pill">✓ Freigabe nötig · nichts wird automatisch gesendet</span></div>
+          </div>
+        </article>
+        <article class="tile m-reveal"><h3>Kontoabgleich</h3><p>Zahlungseingänge werden automatisch der richtigen Rechnung zugeordnet.</p><div class="viz"><span class="pill num">✓ 23 von 24 zugeordnet</span></div></article>
+        <article class="tile m-reveal"><h3>E-Rechnung ready</h3><p>XRechnung &amp; ZUGFeRD auf Knopfdruck — GoBD-konform archiviert.</p><div class="viz"><span class="pill">XRechnung · ZUGFeRD</span></div></article>
+        <article class="tile wide m-reveal"><h3>Umsatz auf einen Blick</h3><p>Monatsvergleich, offene Posten, Zahlungsdauer pro Kunde.</p><div class="viz bars" aria-hidden="true"><i style="height:38%"></i><i style="height:52%"></i><i style="height:44%"></i><i style="height:66%"></i><i style="height:58%"></i><i style="height:88%"></i></div></article>
+        <article class="tile wide m-reveal"><h3>Kleinunternehmer-tauglich</h3><p>§19-UStG-Hinweis, fortlaufende Nummern und DATEV-Export für deinen Steuerberater.</p><div class="viz"><span class="pill">§19 UStG</span> <span class="pill">DATEV</span></div></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="ablauf">
+    <div class="wrap">
+      <div class="head m-reveal"><span class="kicker">So geht's</span><h2>In drei Schritten startklar.</h2></div>
+      <ol class="steps">
+        <li class="m-reveal"><h3>Konto verbinden</h3><p>Bank und Briefkopf einmal hinterlegen. Vorlagen sind schon da.</p><small>ca. 5 Minuten</small></li>
+        <li class="m-reveal"><h3>Rechnung erstellen</h3><p>Aus Projekt, Angebot oder Vorlage — mit Vorschau und PDF.</p><small>ca. 30 Sekunden</small></li>
+        <li class="m-reveal"><h3>Zurücklehnen</h3><p>Belegfix gleicht Zahlungen ab und bereitet Erinnerungen vor.</p><small>läuft von selbst</small></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="block tint">
+    <div class="wrap">
+      <figure class="quote m-reveal">
+        <blockquote>„Früher habe ich jeden Freitag zwei Stunden Rechnungen hinterhergetelefoniert. Jetzt gebe ich drei Entwürfe frei und bin fertig."</blockquote>
+        <figcaption><span class="av" aria-hidden="true"></span><span><b>Lena Brandt</b><br><span class="muted">Grafikdesignerin, Offenburg (Beispiel)</span></span></figcaption>
+      </figure>
+      <div class="results">
+        <div class="m-reveal"><b class="num">−9 Tage</b><span>schnellere Zahlung im Schnitt</span></div>
+        <div class="m-reveal"><b class="num">2 h</b><span>pro Woche gespart</span></div>
+        <div class="m-reveal"><b class="num">0</b><span>vergessene Rechnungen</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="preise">
+    <div class="wrap" style="text-align:center">
+      <div class="head center m-reveal"><span class="kicker">Preise</span><h2>Fair. Monatlich kündbar.</h2><p>Alle Tarife 14 Tage kostenlos testen — ohne Kreditkarte.</p></div>
+      <div class="billing" role="group" aria-label="Abrechnungszeitraum"><button aria-pressed="false" data-b="m">Monatlich</button><button aria-pressed="true" data-b="y">Jährlich <em>−20 %</em></button></div>
+      <div class="plans" style="text-align:left">
+        <article class="plan m-reveal"><h3>Start</h3><p class="muted" style="margin:0">Für den Anfang</p><div class="price num"><span data-m="0" data-y="0">0 €</span> <small>/ Monat</small></div>
+          <ul><li>5 Rechnungen pro Monat</li><li>PDF &amp; E-Mail-Versand</li><li>Kundenverwaltung</li></ul><a class="btn" href="#">Kostenlos starten</a></article>
+        <article class="plan rec m-reveal"><span class="badge">Empfohlen</span><h3>Pro</h3><p class="muted" style="margin:0">Für Selbstständige &amp; Studios</p><div class="price num"><span data-m="15 €" data-y="12 €">12 €</span> <small>/ Monat</small></div>
+          <ul><li>Unbegrenzte Rechnungen</li><li>Kontoabgleich</li><li>KI-Mahnassistent mit Freigabe</li><li>XRechnung &amp; ZUGFeRD</li></ul><a class="btn primary" href="#">14 Tage kostenlos testen</a></article>
+        <article class="plan m-reveal"><h3>Team</h3><p class="muted" style="margin:0">Für Agenturen ab 3 Personen</p><div class="price num"><span data-m="39 €" data-y="31 €">31 €</span> <small>/ Monat</small></div>
+          <ul><li>Alles aus Pro</li><li>Rollen &amp; Freigaben</li><li>DATEV-Export</li><li>Priorisierter Support</li></ul><a class="btn" href="#">Team testen</a></article>
+      </div>
+      <p class="vat muted">Preise zzgl. USt. · Fiktives Produkt, Beispielpreise.</p>
+    </div>
+  </section>
+
+  <section class="block tint" id="faq">
+    <div class="wrap">
+      <div class="head center m-reveal"><span class="kicker">FAQ</span><h2>Häufige Fragen</h2></div>
+      <div class="faq">
+        <details class="m-details"><summary>Sendet die KI Mails ohne meine Zustimmung?</summary><p>Nein. Jede Erinnerung ist ein Entwurf, den du ansiehst, änderst oder ablehnst. Ohne Freigabe verlässt nichts dein Konto.</p></details>
+        <details class="m-details"><summary>Wo liegen meine Daten?</summary><p>Auf Servern in Deutschland, verschlüsselt. Einen Auftragsverarbeitungsvertrag (AVV) bekommst du in den Einstellungen.</p></details>
+        <details class="m-details"><summary>Kann ich jederzeit kündigen?</summary><p>Ja, monatlich. Deine Rechnungen kannst du jederzeit als PDF und CSV exportieren.</p></details>
+        <details class="m-details"><summary>Funktioniert das für Kleinunternehmer nach §19 UStG?</summary><p>Ja. Der Hinweis wird automatisch gesetzt, und es wird keine Umsatzsteuer ausgewiesen.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" style="padding-bottom:0">
+    <div class="final m-reveal">
+      <h2>Die nächste Rechnung schreibst du in 30 Sekunden.</h2>
+      <p>Teste Belegfix 14 Tage kostenlos. Keine Kreditkarte, keine Mindestlaufzeit.</p>
+      <a class="btn primary m-press" href="#preise">Jetzt kostenlos testen</a>
+      <small>Einrichtung in ca. 5 Minuten · Antwort vom Support in &lt; 24 h</small>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div><a class="logo" href="#"><i aria-hidden="true"></i>Belegfix</a><p class="muted" style="max-width:34ch">Rechnungen, Zahlungen und Mahnungen für Selbstständige. Ein fiktives Beispielprodukt aus dem Skill ui-motion-design.</p></div>
+      <div><h3>Produkt</h3><ul><li><a href="#funktionen">Funktionen</a></li><li><a href="#preise">Preise</a></li><li><a href="#">Changelog</a></li></ul></div>
+      <div><h3>Hilfe</h3><ul><li><a href="#faq">FAQ</a></li><li><a href="#">Kontakt</a></li><li><a href="#">Status</a></li></ul></div>
+      <div><h3>Rechtliches</h3><ul><li><a href="#">Impressum</a></li><li><a href="#">Datenschutz</a></li><li><a href="#">AGB</a></li><li><a href="#">Cookie-Einstellungen</a></li></ul></div>
+    </div>
+    <div class="legal"><span>© 2026 Belegfix (fiktiv)</span><span>Made in Offenburg</span></div>
+  </div>
+</footer>
+
+<div class="mbar" role="region" aria-label="Schnellaktion"><a class="btn primary" href="#preise">Kostenlos testen</a><a class="btn" href="#faq">Fragen</a></div>
+
+<script src="../assets/motion.js"></script>
+<script>
+  // nav border/blur once scrolled
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('scrolled', scrollY > 8);
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  // marquee pause (WCAG 2.2.2)
+  document.getElementById('mq').onclick = (e) => {
+    const p = document.getElementById('marquee').classList.toggle('paused');
+    e.currentTarget.setAttribute('aria-pressed', p); e.currentTarget.setAttribute('aria-label', p ? 'Laufband abspielen' : 'Laufband anhalten'); e.currentTarget.textContent = p ? '▶' : '❙❙';
+  };
+
+  // billing toggle with number transition
+  document.querySelectorAll('[data-b]').forEach((b) => b.onclick = () => {
+    document.querySelectorAll('[data-b]').forEach((x) => x.setAttribute('aria-pressed', x === b));
+    document.querySelectorAll('.price span[data-m]').forEach((s) => { s.textContent = s.dataset[b.dataset.b]; if (!motion.reduced()) s.animate([{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }], { duration: 200, easing: 'cubic-bezier(0.16,1,0.3,1)' }); });
+  });
+
+  // bento glow follows pointer (fine pointers only)
+  if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    const g = document.getElementById('bento'); let ev = null, q = false;
+    g.addEventListener('pointermove', (e) => { ev = e; if (q) return; q = true; requestAnimationFrame(() => { q = false; g.querySelectorAll('.tile').forEach((t) => { const r = t.getBoundingClientRect(); t.style.setProperty('--x', ev.clientX - r.left + 'px'); t.style.setProperty('--y', ev.clientY - r.top + 'px'); }); }); });
+  }
+
+  // reveal fallback where scroll-driven animations are unsupported
+  if (!CSS.supports('animation-timeline: view()')) motion.revealOnScroll('.m-reveal');
+</script>
+</body>
+</html>

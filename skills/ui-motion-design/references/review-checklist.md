@@ -14,6 +14,23 @@ Write findings as follows:
 
 Lead with the 3–5 most important findings, not 40 nitpicks.
 
+## 0. Priority order (fix in this order)
+
+| # | Category | Impact | Typical blockers |
+|---|---|---|---|
+| 1 | Accessibility | critical | contrast, focus visible, keyboard, labels/names, zoom blocked |
+| 2 | Touch & interaction | critical | targets < 24/44 px, hover-only, no press/loading feedback |
+| 3 | Performance | high | LCP > 2.5 s, CLS > 0.1, heavy canvas/JS, unoptimized images |
+| 4 | Style fit & consistency | high | style doesn't match product/audience, mixed styles, emoji icons, random shadows/radii |
+| 5 | Layout & responsive | high | horizontal scroll, broken stacking, no max-width |
+| 6 | Typography & colour | medium | body < 16 px, grey on grey, raw hex in components |
+| 7 | Motion | medium | no reduced motion, layout-property animation, decorative loops without pause |
+| 8 | Forms & feedback | medium | placeholder labels, errors only at top, disabled submit |
+| 9 | Navigation | high | hidden desktop nav, broken back, no deep links |
+| 10 | Charts & data | low | colour-only meaning, no context, no units |
+
+(Order adapted from ui-ux-pro-max-skill, MIT.)
+
 ## 1. Purpose & hierarchy
 
 - [ ] Within 5 seconds a user can tell what this screen is for and what to do next.
@@ -115,6 +132,9 @@ Lead with the 3–5 most important findings, not 40 nitpicks.
 - [ ] Page zoom at 200 %: content reflows, and nothing is cut off or overlapping.
 - [ ] Screen reader: headings outline the page, landmarks are present, live regions announce toasts, and split text is read as whole words.
 - [ ] `lang` is set, and zoom is not blocked in the viewport meta.
+- [ ] WCAG 2.2 additions: focus not obscured by sticky headers/cookie banners (2.4.11); every drag has a single-pointer/keyboard alternative (2.5.7); targets ≥ 24 px or spaced (2.5.8); help in a consistent place (3.2.6); no redundant re-entry in one process (3.3.7); login allows paste/password managers, no cognitive puzzles (3.3.8).
+- [ ] Skip link to main content; sticky headers don't cover anchored headings (`scroll-margin-top`).
+
 
 ## Review output template
 

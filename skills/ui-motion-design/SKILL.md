@@ -1,32 +1,50 @@
 ---
 name: ui-motion-design
-description: "Expert UI/UX and motion design toolkit. Knowledge from Refactoring UI, Apple HIG, Material 3, Radix, NN/g, Baymard, GOV.UK and Vercel, teardowns of Linear, Stripe, Vercel, Apple and Awwwards winners, and rules for forms, tables, dashboards, navigation, overlays, states, pricing, AI/agent UIs and mobile. Scripts: OKLCH design tokens from one brand color (shadcn light/dark, fluid type, motion springs), WCAG+APCA contrast checks, spring to CSS/Motion/Reanimated conversion, Playwright UX/a11y/motion audits. Use when building or reviewing UI, design systems, animations, 'wow' landing pages, or on 'mach das schöner', 'UI/UX', 'Motion Design', 'Animationen', 'Design-Review', 'wie Stripe/Apple/Linear', 'Dashboard', 'Formular', 'AI-Chat-UI', 'Kontrast prüfen'."
+description: "Expert UI/UX and motion design toolkit for websites (landing, local business, agency, shop) and webapps (SaaS, dashboards, admin, AI/agent UIs, mobile). brief.mjs turns a product description into style, fonts, palette, page pattern or app shell and anti-patterns; tokens.mjs builds OKLCH tokens (shadcn light/dark); plus contrast (WCAG+APCA), spring conversion and Playwright UX/a11y/motion audits. Knowledge from Refactoring UI, Apple HIG, Material 3, NN/g, Baymard, GOV.UK, Vercel; teardowns of Linear, Stripe, Apple, Awwwards winners; 21st.dev component sourcing. Use when building or reviewing UI, design systems, animations or landing pages, or on 'mach das schöner', 'UI/UX', 'Motion Design', 'Animationen', 'Design-Review', 'welcher Stil', 'wie Stripe/Apple/Linear', 'Landingpage', 'Dashboard', 'AI-Chat-UI'."
 ---
 
 # ui-motion-design
 
-A toolkit for interfaces that look intentional and move with purpose. It covers four areas:
+A toolkit for interfaces that look intentional and move with purpose — **equally for websites** (marketing, landing, local business, agency, shop) **and webapps** (SaaS, dashboards, admin, AI/agent UIs, mobile apps). It covers:
 
+- **Direction**: `brief.mjs` turns a product description into style, palette seed, fonts, page pattern/app shell, motion level and anti-patterns
 - **Foundations**: tokens and contrast
-- **UX rules**
+- **UX/UI knowledge**: craft, component patterns, website & webapp playbooks, product teardowns
 - **Motion**: principles, recipes, drop-in assets
-- **Signature effects**: what Stripe, Apple, Linear, Vercel and award-winning studios do, rebuilt as recipes
-
-It also includes an automated audit for the result.
+- **Signature effects & component sourcing**: Stripe/Apple/Awwwards techniques, 21st.dev & shadcn animation libraries
+- **Audit** for the result
 
 `<skill-dir>` below means the directory that contains this SKILL.md.
+
+## 0. Website or webapp? Start with a brief
+
+```bash
+node <skill-dir>/scripts/brief.mjs "website für eine schreinerei in offenburg, warm und bodenständig"
+node <skill-dir>/scripts/brief.mjs "ki assistent für steuerberater" --name "Belegfix" --brand "#5b5bd6" --out ./design-system --tokens
+node <skill-dir>/scripts/brief.mjs "…" --out ./design-system --page checkout     # page override template
+node <skill-dir>/scripts/brief.mjs --list products|styles|fonts|patterns
+```
+
+It matches ~25 product types (German + English keywords, incl. Handwerk, Praxis, Kanzlei, Restaurant, SaaS, AI, devtool, fintech, shop, agency, event …) and mood words ("dunkel", "luxus", "verspielt", "minimal", "3d", "warm", "ruhig", "natur", "glas" …) to a **style** (`references/style-catalog.md`), **font pairing**, **brand seed**, **website pattern or app shell**, **motion level**, **signature idea**, must-haves, anti-patterns and 21st.dev categories. With `--out` it persists `design-system/<slug>/MASTER.md` (+ `pages/<page>.md` overrides that win over the master for that page); with `--tokens` it also runs `tokens.mjs` with the chosen fonts. **Read MASTER.md (and the page override) before building any page.** The brief is a starting point — the client's real brand wins.
+
+| Building a… | Read | Reference build |
+|---|---|---|
+| **Website** (landing, local business, agency, shop, event) | `references/website-playbook.md` → section library, page types, conversion, SEO/CWV, German legal UX; then `signature-effects.md` + `showcase-teardowns.md` for the one wow moment | `examples/landing-page.html` |
+| **Webapp** (SaaS, dashboard, admin, AI, mobile) | `references/webapp-playbook.md` → shells, IA, speed, density, keyboard, safety, billing/team pages; then `ui-patterns.md` per component + `product-ui-teardowns.md` | `examples/premium-ui.html` |
+| Both | same tokens, same brief; the marketing site may be more expressive than the app | both examples share one token set |
 
 ## Pick the workflow
 
 | The user wants… | Do this |
 |---|---|
+| A new site/app, "welcher Stil passt?", palette/fonts/direction | **0. Brief** → A |
 | A palette, design system, or "make it look like our brand" | **A. Tokens** |
 | A screen, page, component, dashboard, form, table, AI chat/agent UI or prototype that looks *really* good | **B. Build UI** |
 | Animations, micro-interactions, "make it feel smooth" | **C. Motion** |
-| A "wow" landing page or scroll storytelling, "like Apple/Stripe", "krasse Animationen" | **D. Signature effects** |
+| A "wow" landing page or scroll storytelling, "like Apple/Stripe", "krasse Animationen", components from 21st.dev | **D. Signature effects** |
 | A critique, "what's wrong with this page", or a quality gate before launch | **E. Review & audit** |
 
-Most real tasks combine several workflows. A new landing page, for example, runs A → B → D → E.
+Most real tasks combine several workflows. A new landing page runs 0 → A → B → D → E; a new app screen 0 → A → B → C → E.
 
 ---
 
@@ -122,8 +140,9 @@ For standalone HTML/Claude artifacts in the shadcn look, combine with the `shadc
    - Rive/Lottie
 
    It also has a stack table: Motion, GSAP (free incl. plugins), Lenis, View Transitions, three.js/R3F, with browser support as of October 2026.
-3. A vanilla, dependency-free demo of the most common effects is in `examples/signature-effects.html`: WebGL mesh gradient, split text, magnetic CTA, scramble numbers, pausable marquee, glow cards, clip reveal, sticky zoom, pinned horizontal and velocity skew.
-4. Guardrails, every time:
+3. **Source instead of hand-building** where it saves time: `references/component-sourcing.md` covers 21st.dev (registry, `npx shadcn add "https://21st.dev/r/<author>/<slug>?api_key=…"`, the 21st MCP), Magic UI, Aceternity, Motion Primitives, Cult UI, React Bits, Kokonut — with a license table, a section→component map and a **10-point vetting checklist** (reduced motion is usually missing, gradient text contrast, SSR/hydration, bundle size).
+4. A vanilla, dependency-free demo of the most common effects is in `examples/signature-effects.html`: WebGL mesh gradient, split text, magnetic CTA, scramble numbers, pausable marquee, glow cards, clip reveal, sticky zoom, pinned horizontal and velocity skew.
+5. Guardrails, every time:
    - content stays in the DOM
    - the placeholder renders first
    - DPR is capped
@@ -131,7 +150,7 @@ For standalone HTML/Claude artifacts in the shadcn look, combine with the `shadc
    - there is a simpler mobile version
    - reduced motion gets a still image or a fade
    - scroll stays native
-5. **Copy the technique, never the brand.** Don't reproduce another company's gradients, illustrations, product imagery or layouts. Use the client's own brand.
+6. **Copy the technique, never the brand.** Don't reproduce another company's gradients, illustrations, product imagery or layouts. Use the client's own brand.
 
 ### E. Review & audit
 
@@ -165,15 +184,25 @@ ui-motion-design/
 ├── SKILL.md
 ├── package.json                  ← only needed for audit.mjs (Playwright)
 ├── scripts/
+│   ├── brief.mjs                 ← product description → design brief (MASTER.md + page overrides) [+ tokens]
 │   ├── tokens.mjs                ← brand colour → tokens (css, tailwind, ts, json) + style tile
 │   ├── contrast.mjs              ← WCAG + APCA for pairs or whole token files (CI exit code)
 │   ├── easing.mjs                ← springs → linear()/Motion/Reanimated/GSAP, presets, playground
 │   ├── audit.mjs                 ← Playwright UX/a11y/motion audit → report.md
 │   └── lib/color.mjs, lib/spring.mjs
+├── data/                         ← curated JSON behind brief.mjs (edit to tune recommendations)
+│   ├── products.json             ← ~25 product types → style, fonts, brand seed, pattern/shell, must/avoid, components
+│   ├── styles.json               ← 20 style directions (regenerate style-catalog.md: brief.mjs --catalog)
+│   ├── fonts.json                ← 22 Google-Fonts pairings (self-host for GDPR)
+│   └── patterns.json             ← website section orders + webapp shells
 ├── assets/
 │   ├── motion.css                ← drop-in motion primitives (@layer motion, reduced-motion aware)
 │   └── motion.js                 ← viewTransition, flip, enter/exit, stagger, countUp, revealOnScroll
 ├── references/
+│   ├── website-playbook.md       ← sections, page types, conversion, SEO/CWV, German legal UX, QA
+│   ├── webapp-playbook.md        ← shells, IA, speed, density, keyboard, safety, onboarding, billing/team, QA
+│   ├── style-catalog.md          ← generated from data/styles.json
+│   ├── component-sourcing.md     ← 21st.dev + shadcn animation libs: install, licenses, vetting, trends
 │   ├── ux-principles.md          ← baseline: job-first, hierarchy, layout, type, colour, states, a11y, product types
 │   ├── ui-craft.md               ← expert visual craft with numbers (Refactoring UI, HIG, M3, Radix, Vercel, Butterick)
 │   ├── ui-patterns.md            ← research-backed component/screen rules incl. AI interfaces (NN/g, Baymard, GOV.UK, HAX)
@@ -184,6 +213,7 @@ ui-motion-design/
 │   ├── showcase-teardowns.md     ← Stripe, Apple, Linear, Vercel, GitHub, Awwwards winners (with sources)
 │   └── review-checklist.md       ← manual review rubric (incl. dashboards, AI, premium) + report template
 └── examples/
+    ├── landing-page.html         ← reference website (same product), audit-clean
     ├── premium-ui.html           ← reference app UI (tokens → craft → patterns → AI panel), audit-clean
     ├── design-tokens/tokens.css  ← generated by tokens.mjs for premium-ui.html
     ├── motion-recipes.html       ← all UI motion patterns, live
@@ -191,3 +221,5 @@ ui-motion-design/
 ```
 
 Scripts need Node 18+ and have no dependencies, except `audit.mjs`, which needs Playwright.
+
+Credits: the brief/design-system-generator idea and the priority-ordered rule categories were inspired by [ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) (MIT). Data and code here are written from scratch.
