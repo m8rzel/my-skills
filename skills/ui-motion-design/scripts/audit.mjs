@@ -201,7 +201,9 @@ const AUDIT = ({ isMobile }) => {
       const chars = el.getBoundingClientRect().width / (fs * 0.5);
       if (chars > 90) add('measure', 'warn', `Paragraph line length ≈ ${Math.round(chars)} characters — aim for 45–75 (max-width: 65ch)`, el);
       const lh = cs.lineHeight === 'normal' ? 1.2 : parseFloat(cs.lineHeight) / fs;
-      if (lh < 1.35) add('leading', 'warn', `Paragraph line-height ${lh.toFixed(2)} — body text reads best at 1.45–1.7`, el);
+      // display-size paragraphs (pull quotes, intros ≥ 24px) are meant to run tighter
+      if (lh < 1.35 && fs < 24) add('leading', 'warn', `Paragraph line-height ${lh.toFixed(2)} — body text reads best at 1.45–1.7`, el);
+      else if (lh < 1.1) add('leading', 'info', `Display paragraph line-height ${lh.toFixed(2)} — descenders may collide; 1.15–1.3 for large text`, el);
       if (isMobile && fs < 16) add('body-size', 'info', `Body text ${fs}px on mobile — 16px avoids zooming and iOS input zoom`, el);
     }
   }

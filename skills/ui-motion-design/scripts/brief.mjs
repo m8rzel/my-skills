@@ -70,7 +70,7 @@ const esc = (x) => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const hit = (al) => new RegExp(`(^|[^a-z0-9äöüß])${esc(al)}${al.length <= 4 ? '($|[^a-z0-9äöüß])' : ''}`).test(q);
 const scoreProduct = (p) => {
   let s = 0;
-  for (const al of p.aliases) if (hit(al)) s += al.length > 3 ? 4 : 3;
+  for (const al of p.aliases) if (hit(al)) s += (al.length > 3 ? 4 : 3) + (al.includes(' ') ? 2 : 0); // multi-word aliases are more specific
   for (const w of words) if (w.length > 4 && p.name.toLowerCase().split(/[^a-zäöüß]+/).includes(w)) s += 1;
   return s;
 };
@@ -83,7 +83,7 @@ const kindHint = /\b(app|webapp|dashboard|tool|admin|portal|crm|backend|plattfor
 const kind = a.kind || (product.kind === 'both' ? (kindHint || 'both') : product.kind);
 
 const MOODS = [
-  [/(dunkel|dark|nacht|tech|futur)/, 'dark-glow'], [/(luxus|luxury|edel|premium|elegant)/, 'luxury-minimal'],
+  [/(dunkel|dark|nacht|futuristisch|neon)/, 'dark-glow'], [/(luxus|luxury|edel|premium|elegant)/, 'luxury-minimal'],
   [/(verspielt|playful|bunt|fun|kinder)/, 'playful-vibrant'], [/(brutal|roh|raw|laut|bold)/, 'neubrutalism'],
   [/(minimal|clean|schlicht|reduziert)/, 'swiss-minimal'], [/(3d|webgl|immersiv|immersive|krass|wow)/, 'immersive-3d'],
   [/(warm|handgemacht|regional|lokal|familiär|bodenständig)/, 'warm-craft'], [/(ruhig|calm|seriös|vertrauen|trust)/, 'trust-clean'],

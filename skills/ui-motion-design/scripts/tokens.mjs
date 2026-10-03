@@ -160,7 +160,7 @@ function semantic(mode) {
     'primary-subtle-foreground': L ? { ...B[800], l: Math.min(B[800].l, 0.45) } : B[200],
     border: L ? n(0.922) : n(0.3),
     input: L ? n(0.88) : n(0.34),
-    ring: ringFor(P.fill, L ? WHITE : n(0.16), L),
+    ring: ringFor(P.fill, L ? (BG_L ? n(BG_L, 1.2) : WHITE) : n(0.16), L),
   };
   for (const [k, v] of Object.entries(status)) {
     s[k] = v[mode];
