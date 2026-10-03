@@ -1,27 +1,682 @@
 {
   "_about": "Curated Google-Fonts pairings (all with Latin Extended, so ä ö ü ß work). heading/body are family names; weights are what to load. Self-host via fontsource or next/font for GDPR (no Google CDN in DE without consent).",
   "pairings": [
-    { "id": "inter-system", "name": "Neutral Product", "heading": "Inter", "body": "Inter", "mono": "JetBrains Mono", "weights": { "heading": [600, 700], "body": [400, 500, 600] }, "mood": ["neutral", "precise", "product", "calm"], "for": ["webapp", "dashboard", "saas", "docs"], "notes": "Use 'Inter Display' optical size for headings if self-hosting Inter 4; enable cv11/ss01 for a crisper look." },
-    { "id": "geist", "name": "Developer Clean", "heading": "Geist", "body": "Geist", "mono": "Geist Mono", "weights": { "heading": [600, 700], "body": [400, 500] }, "mood": ["technical", "minimal", "modern"], "for": ["devtool", "ai", "saas"], "notes": "npm i geist (Vercel) or Google Fonts. Tight tracking on display sizes." },
-    { "id": "jakarta", "name": "Friendly SaaS", "heading": "Plus Jakarta Sans", "body": "Plus Jakarta Sans", "mono": "JetBrains Mono", "weights": { "heading": [600, 700, 800], "body": [400, 500, 600] }, "mood": ["friendly", "modern", "approachable"], "for": ["saas", "webapp", "startup", "fintech"], "notes": "Slightly rounder than Inter; good for SMB-facing products." },
-    { "id": "grotesk-dm", "name": "Tech Startup", "heading": "Space Grotesk", "body": "DM Sans", "mono": "Space Mono", "weights": { "heading": [500, 600, 700], "body": [400, 500] }, "mood": ["techy", "bold", "startup", "ai"], "for": ["ai", "startup", "devtool", "agency"], "notes": "Space Grotesk only for headings ≥ 24px; DM Sans for UI." },
-    { "id": "manrope", "name": "Calm Premium", "heading": "Manrope", "body": "Manrope", "mono": "JetBrains Mono", "weights": { "heading": [600, 700, 800], "body": [400, 500, 600] }, "mood": ["premium", "calm", "clean"], "for": ["fintech", "saas", "consulting", "realestate"] },
-    { "id": "outfit-work", "name": "Geometric Modern", "heading": "Outfit", "body": "Work Sans", "mono": "JetBrains Mono", "weights": { "heading": [500, 600, 700], "body": [400, 500] }, "mood": ["geometric", "fresh", "versatile"], "for": ["agency", "portfolio", "startup", "local"] },
-    { "id": "fraunces-inter", "name": "Warm Editorial", "heading": "Fraunces", "body": "Inter", "mono": "JetBrains Mono", "weights": { "heading": [500, 600, 700], "body": [400, 500, 600] }, "mood": ["warm", "editorial", "crafted", "trustworthy"], "for": ["craft", "food", "local", "wellness", "agency"], "notes": "Fraunces has a SOFT/WONK axis — keep WONK off for professional contexts." },
-    { "id": "playfair-inter", "name": "Classic Elegant", "heading": "Playfair Display", "body": "Inter", "mono": "JetBrains Mono", "weights": { "heading": [500, 600, 700], "body": [400, 500] }, "mood": ["elegant", "luxury", "editorial"], "for": ["luxury", "beauty", "hotel", "wedding", "fashion"], "notes": "Playfair only ≥ 28px; its thin strokes break at small sizes." },
-    { "id": "cormorant-montserrat", "name": "Luxury Serif", "heading": "Cormorant Garamond", "body": "Montserrat", "mono": "JetBrains Mono", "weights": { "heading": [500, 600], "body": [400, 500] }, "mood": ["luxury", "refined", "quiet"], "for": ["luxury", "jewelry", "realestate", "winery"] },
-    { "id": "newsreader-inter", "name": "Modern Editorial", "heading": "Newsreader", "body": "Inter", "mono": "JetBrains Mono", "weights": { "heading": [500, 600], "body": [400, 500] }, "mood": ["editorial", "journalistic", "thoughtful"], "for": ["blog", "media", "newsletter", "research"] },
-    { "id": "lora-source", "name": "Wellness Calm", "heading": "Lora", "body": "Source Sans 3", "mono": "Source Code Pro", "weights": { "heading": [500, 600], "body": [400, 600] }, "mood": ["calm", "caring", "soft"], "for": ["wellness", "therapy", "health", "yoga"] },
-    { "id": "figtree", "name": "Medical Clean", "heading": "Figtree", "body": "Figtree", "mono": "JetBrains Mono", "weights": { "heading": [600, 700], "body": [400, 500] }, "mood": ["clean", "caring", "clear"], "for": ["medical", "dental", "pharmacy", "health"] },
-    { "id": "atkinson", "name": "Accessibility First", "heading": "Atkinson Hyperlegible Next", "body": "Atkinson Hyperlegible Next", "mono": "Atkinson Hyperlegible Mono", "weights": { "heading": [600, 700], "body": [400, 500] }, "mood": ["accessible", "clear", "public"], "for": ["government", "senior", "health", "education"] },
-    { "id": "ibm-plex", "name": "Financial Trust", "heading": "IBM Plex Sans", "body": "IBM Plex Sans", "mono": "IBM Plex Mono", "weights": { "heading": [500, 600], "body": [400, 500] }, "mood": ["trustworthy", "corporate", "precise"], "for": ["bank", "insurance", "legal", "enterprise"] },
-    { "id": "garamond-lato", "name": "Legal Professional", "heading": "EB Garamond", "body": "Lato", "mono": "JetBrains Mono", "weights": { "heading": [500, 600], "body": [400, 700] }, "mood": ["formal", "established", "trust"], "for": ["legal", "tax", "notary", "consulting"] },
-    { "id": "barlow", "name": "Sport & Craft", "heading": "Barlow Condensed", "body": "Barlow", "mono": "JetBrains Mono", "weights": { "heading": [600, 700, 800], "body": [400, 500, 600] }, "mood": ["strong", "athletic", "practical"], "for": ["fitness", "sports", "construction", "trades", "automotive"] },
-    { "id": "archivo", "name": "Bold Statement", "heading": "Archivo", "body": "Inter", "mono": "JetBrains Mono", "weights": { "heading": [700, 800, 900], "body": [400, 500] }, "mood": ["bold", "loud", "confident"], "for": ["agency", "event", "festival", "marketing"], "notes": "Archivo has a width axis — use expanded/condensed for kinetic headlines." },
-    { "id": "syne-manrope", "name": "Fashion Forward", "heading": "Syne", "body": "Manrope", "mono": "Space Mono", "weights": { "heading": [600, 700, 800], "body": [400, 500] }, "mood": ["artistic", "avant-garde", "creative"], "for": ["portfolio", "gallery", "fashion", "agency"] },
-    { "id": "fredoka-nunito", "name": "Playful Rounded", "heading": "Fredoka", "body": "Nunito", "mono": "JetBrains Mono", "weights": { "heading": [500, 600, 700], "body": [400, 600, 700] }, "mood": ["playful", "friendly", "kids"], "for": ["kids", "education", "pets", "games"] },
-    { "id": "anton-epilogue", "name": "Gen Z Brutal", "heading": "Anton", "body": "Epilogue", "mono": "Space Mono", "weights": { "heading": [400], "body": [400, 500, 700] }, "mood": ["loud", "streetwear", "brutal"], "for": ["streetwear", "music", "event", "festival", "games"] },
-    { "id": "mono-plex", "name": "Terminal", "heading": "JetBrains Mono", "body": "IBM Plex Sans", "mono": "JetBrains Mono", "weights": { "heading": [500, 700], "body": [400, 500] }, "mood": ["hacker", "developer", "raw"], "for": ["devtool", "cli", "security"] },
-    { "id": "instrument", "name": "Studio Serif", "heading": "Instrument Serif", "body": "Inter", "mono": "JetBrains Mono", "weights": { "heading": [400], "body": [400, 500, 600] }, "mood": ["refined", "contemporary", "studio"], "for": ["agency", "ai", "saas", "portfolio"], "notes": "Popular 2025–26 pairing on AI/SaaS marketing: one italic serif word inside a sans headline. Instrument Serif has a single weight." }
+    {
+      "id": "inter-system",
+      "name": "Neutral Product",
+      "heading": "Inter",
+      "body": "Inter",
+      "mono": "JetBrains Mono",
+      "weights": {
+        "heading": [
+          600,
+          700
+        ],
+        "body": [
+          400,
+          500,
+          600
+        ]
+      },
+      "mood": [
+        "neutral",
+        "precise",
+        "product",
+        "calm"
+      ],
+      "for": [
+        "webapp",
+        "dashboard",
+        "saas",
+        "docs"
+      ],
+      "notes": "Use 'Inter Display' optical size for headings if self-hosting Inter 4; enable cv11/ss01 for a crisper look."
+    },
+    {
+      "id": "geist",
+      "name": "Developer Clean",
+      "heading": "Geist",
+      "body": "Geist",
+      "mono": "Geist Mono",
+      "weights": {
+        "heading": [
+          600,
+          700
+        ],
+        "body": [
+          400,
+          500
+        ]
+      },
+      "mood": [
+        "technical",
+        "minimal",
+        "modern"
+      ],
+      "for": [
+        "devtool",
+        "ai",
+        "saas"
+      ],
+      "notes": "npm i geist (Vercel) or Google Fonts. Tight tracking on display sizes."
+    },
+    {
+      "id": "jakarta",
+      "name": "Friendly SaaS",
+      "heading": "Plus Jakarta Sans",
+      "body": "Plus Jakarta Sans",
+      "mono": "JetBrains Mono",
+      "weights": {
+        "heading": [
+          600,
+          700,
+          800
+        ],
+        "body": [
+          400,
+          500,
+          600
+        ]
+      },
+      "mood": [
+        "friendly",
+        "modern",
+        "approachable"
+      ],
+      "for": [
+        "saas",
+        "webapp",
+        "startup",
+        "fintech"
+      ],
+      "notes": "Slightly rounder than Inter; good for SMB-facing products."
+    },
+    {
+      "id": "grotesk-dm",
+      "name": "Tech Startup",
+      "heading": "Space Grotesk",
+      "body": "DM Sans",
+      "mono": "Space Mono",
+      "weights": {
+        "heading": [
+          500,
+          600,
+          700
+        ],
+        "body": [
+          400,
+          500
+        ]
+      },
+      "mood": [
+        "techy",
+        "bold",
+        "startup",
+        "ai"
+      ],
+      "for": [
+        "ai",
+        "startup",
+        "devtool",
+        "agency"
+      ],
+      "notes": "Space Grotesk only for headings ≥ 24px; DM Sans for UI."
+    },
+    {
+      "id": "manrope",
+      "name": "Calm Premium",
+      "heading": "Manrope",
+      "body": "Manrope",
+      "mono": "JetBrains Mono",
+      "weights": {
+        "heading": [
+          600,
+          700,
+          800
+        ],
+        "body": [
+          400,
+          500,
+          600
+        ]
+      },
+      "mood": [
+        "premium",
+        "calm",
+        "clean"
+      ],
+      "for": [
+        "fintech",
+        "saas",
+        "consulting",
+        "realestate"
+      ]
+    },
+    {
+      "id": "outfit-work",
+      "name": "Geometric Modern",
+      "heading": "Outfit",
+      "body": "Work Sans",
+      "mono": "JetBrains Mono",
+      "weights": {
+        "heading": [
+          500,
+          600,
+          700
+        ],
+        "body": [
+          400,
+          500
+        ]
+      },
+      "mood": [
+        "geometric",
+        "fresh",
+        "versatile"
+      ],
+      "for": [
+        "agency",
+        "portfolio",
+        "startup",
+        "local"
+      ]
+    },
+    {
+      "id": "fraunces-inter",
+      "name": "Warm Editorial",
+      "heading": "Fraunces",
+      "body": "Inter",
+      "mono": "JetBrains Mono",
+      "weights": {
+        "heading": [
+          500,
+          600,
+          700
+        ],
+        "body": [
+          400,
+          500,
+          600
+        ]
+      },
+      "mood": [
+        "warm",
+        "editorial",
+        "crafted",
+        "trustworthy"
+      ],
+      "for": [
+        "craft",
+        "food",
+        "local",
+        "wellness",
+        "agency"
+      ],
+      "notes": "Fraunces has a SOFT/WONK axis — keep WONK off for professional contexts."
+    },
+    {
+      "id": "playfair-inter",
+      "name": "Classic Elegant",
+      "heading": "Playfair Display",
+      "body": "Inter",
+      "mono": "JetBrains Mono",
+      "weights": {
+        "heading": [
+          500,
+          600,
+          700
+        ],
+        "body": [
+          400,
+          500
+        ]
+      },
+      "mood": [
+        "elegant",
+        "luxury",
+        "editorial"
+      ],
+      "for": [
+        "luxury",
+        "beauty",
+        "hotel",
+        "wedding",
+        "fashion"
+      ],
+      "notes": "Playfair only ≥ 28px; its thin strokes break at small sizes."
+    },
+    {
+      "id": "cormorant-montserrat",
+      "name": "Luxury Serif",
+      "heading": "Cormorant Garamond",
+      "body": "Montserrat",
+      "mono": "JetBrains Mono",
+      "weights": {
+        "heading": [
+          500,
+          600
+        ],
+        "body": [
+          400,
+          500
+        ]
+      },
+      "mood": [
+        "luxury",
+        "refined",
+        "quiet"
+      ],
+      "for": [
+        "luxury",
+        "jewelry",
+        "realestate",
+        "winery"
+      ]
+    },
+    {
+      "id": "newsreader-inter",
+      "name": "Modern Editorial",
+      "heading": "Newsreader",
+      "body": "Inter",
+      "mono": "JetBrains Mono",
+      "weights": {
+        "heading": [
+          500,
+          600
+        ],
+        "body": [
+          400,
+          500
+        ]
+      },
+      "mood": [
+        "editorial",
+        "journalistic",
+        "thoughtful"
+      ],
+      "for": [
+        "blog",
+        "media",
+        "newsletter",
+        "research"
+      ]
+    },
+    {
+      "id": "lora-source",
+      "name": "Wellness Calm",
+      "heading": "Lora",
+      "body": "Source Sans 3",
+      "mono": "Source Code Pro",
+      "weights": {
+        "heading": [
+          500,
+          600
+        ],
+        "body": [
+          400,
+          600
+        ]
+      },
+      "mood": [
+        "calm",
+        "caring",
+        "soft"
+      ],
+      "for": [
+        "wellness",
+        "therapy",
+        "health",
+        "yoga"
+      ]
+    },
+    {
+      "id": "figtree",
+      "name": "Medical Clean",
+      "heading": "Figtree",
+      "body": "Figtree",
+      "mono": "JetBrains Mono",
+      "weights": {
+        "heading": [
+          600,
+          700
+        ],
+        "body": [
+          400,
+          500
+        ]
+      },
+      "mood": [
+        "clean",
+        "caring",
+        "clear"
+      ],
+      "for": [
+        "medical",
+        "dental",
+        "pharmacy",
+        "health"
+      ]
+    },
+    {
+      "id": "atkinson",
+      "name": "Accessibility First",
+      "heading": "Atkinson Hyperlegible Next",
+      "body": "Atkinson Hyperlegible Next",
+      "mono": "Atkinson Hyperlegible Mono",
+      "weights": {
+        "heading": [
+          600,
+          700
+        ],
+        "body": [
+          400,
+          500
+        ]
+      },
+      "mood": [
+        "accessible",
+        "clear",
+        "public"
+      ],
+      "for": [
+        "government",
+        "senior",
+        "health",
+        "education"
+      ]
+    },
+    {
+      "id": "ibm-plex",
+      "name": "Financial Trust",
+      "heading": "IBM Plex Sans",
+      "body": "IBM Plex Sans",
+      "mono": "IBM Plex Mono",
+      "weights": {
+        "heading": [
+          500,
+          600
+        ],
+        "body": [
+          400,
+          500
+        ]
+      },
+      "mood": [
+        "trustworthy",
+        "corporate",
+        "precise"
+      ],
+      "for": [
+        "bank",
+        "insurance",
+        "legal",
+        "enterprise"
+      ]
+    },
+    {
+      "id": "garamond-lato",
+      "name": "Legal Professional",
+      "heading": "EB Garamond",
+      "body": "Lato",
+      "mono": "JetBrains Mono",
+      "weights": {
+        "heading": [
+          500,
+          600
+        ],
+        "body": [
+          400,
+          700
+        ]
+      },
+      "mood": [
+        "formal",
+        "established",
+        "trust"
+      ],
+      "for": [
+        "legal",
+        "tax",
+        "notary",
+        "consulting"
+      ]
+    },
+    {
+      "id": "barlow",
+      "name": "Sport & Craft",
+      "heading": "Barlow Condensed",
+      "body": "Barlow",
+      "mono": "JetBrains Mono",
+      "weights": {
+        "heading": [
+          600,
+          700,
+          800
+        ],
+        "body": [
+          400,
+          500,
+          600
+        ]
+      },
+      "mood": [
+        "strong",
+        "athletic",
+        "practical"
+      ],
+      "for": [
+        "fitness",
+        "sports",
+        "construction",
+        "trades",
+        "automotive"
+      ]
+    },
+    {
+      "id": "archivo",
+      "name": "Bold Statement",
+      "heading": "Archivo",
+      "body": "Inter",
+      "mono": "JetBrains Mono",
+      "weights": {
+        "heading": [
+          700,
+          800,
+          900
+        ],
+        "body": [
+          400,
+          500
+        ]
+      },
+      "mood": [
+        "bold",
+        "loud",
+        "confident"
+      ],
+      "for": [
+        "agency",
+        "event",
+        "festival",
+        "marketing"
+      ],
+      "notes": "Archivo has a width axis — use expanded/condensed for kinetic headlines."
+    },
+    {
+      "id": "syne-manrope",
+      "name": "Fashion Forward",
+      "heading": "Syne",
+      "body": "Manrope",
+      "mono": "Space Mono",
+      "weights": {
+        "heading": [
+          600,
+          700,
+          800
+        ],
+        "body": [
+          400,
+          500
+        ]
+      },
+      "mood": [
+        "artistic",
+        "avant-garde",
+        "creative"
+      ],
+      "for": [
+        "portfolio",
+        "gallery",
+        "fashion",
+        "agency"
+      ]
+    },
+    {
+      "id": "fredoka-nunito",
+      "name": "Playful Rounded",
+      "heading": "Fredoka",
+      "body": "Nunito",
+      "mono": "JetBrains Mono",
+      "weights": {
+        "heading": [
+          500,
+          600,
+          700
+        ],
+        "body": [
+          400,
+          600,
+          700
+        ]
+      },
+      "mood": [
+        "playful",
+        "friendly",
+        "kids"
+      ],
+      "for": [
+        "kids",
+        "education",
+        "pets",
+        "games"
+      ]
+    },
+    {
+      "id": "anton-epilogue",
+      "name": "Gen Z Brutal",
+      "heading": "Anton",
+      "body": "Epilogue",
+      "mono": "Space Mono",
+      "weights": {
+        "heading": [
+          400
+        ],
+        "body": [
+          400,
+          500,
+          700
+        ]
+      },
+      "mood": [
+        "loud",
+        "streetwear",
+        "brutal"
+      ],
+      "for": [
+        "streetwear",
+        "music",
+        "event",
+        "festival",
+        "games"
+      ]
+    },
+    {
+      "id": "mono-plex",
+      "name": "Terminal",
+      "heading": "JetBrains Mono",
+      "body": "IBM Plex Sans",
+      "mono": "JetBrains Mono",
+      "weights": {
+        "heading": [
+          500,
+          700
+        ],
+        "body": [
+          400,
+          500
+        ]
+      },
+      "mood": [
+        "hacker",
+        "developer",
+        "raw"
+      ],
+      "for": [
+        "devtool",
+        "cli",
+        "security"
+      ]
+    },
+    {
+      "id": "instrument",
+      "name": "Studio Serif",
+      "heading": "Instrument Serif",
+      "body": "Inter",
+      "mono": "JetBrains Mono",
+      "weights": {
+        "heading": [
+          400
+        ],
+        "body": [
+          400,
+          500,
+          600
+        ]
+      },
+      "mood": [
+        "refined",
+        "contemporary",
+        "studio"
+      ],
+      "for": [
+        "agency",
+        "ai",
+        "saas",
+        "portfolio"
+      ],
+      "notes": "Popular 2025–26 pairing on AI/SaaS marketing: one italic serif word inside a sans headline. Instrument Serif has a single weight."
+    },
+    {
+      "id": "bricolage",
+      "name": "Characterful Tech",
+      "heading": "Bricolage Grotesque",
+      "body": "Hanken Grotesk",
+      "mono": "IBM Plex Mono",
+      "weights": {
+        "heading": [
+          500,
+          700,
+          800
+        ],
+        "body": [
+          400,
+          500,
+          600
+        ]
+      },
+      "mood": [
+        "warm",
+        "characterful",
+        "tech",
+        "consumer"
+      ],
+      "for": [
+        "hardware",
+        "consumer",
+        "smart home",
+        "startup"
+      ],
+      "notes": "Bricolage has an optical-size axis (opsz 12–96) — let it run large in headlines; Hanken stays neutral for body."
+    }
   ]
 }

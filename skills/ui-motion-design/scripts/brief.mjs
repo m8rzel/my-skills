@@ -91,7 +91,8 @@ const MOODS = [
   [/(glas|glass)/, 'liquid-glass'], [/(bento)/, 'bento'], [/(typo|kinetic|kinetisch)/, 'kinetic-type'],
 ];
 const moodStyle = MOODS.find(([re]) => re.test(q))?.[1];
-const fits = (id) => { const st = styles.find((x) => x.id === id); return st && (kind === 'both' || st.for.includes(kind)); };
+const moodWords = [...new Set((q.match(/(warm|dunkel|dark|hell|ruhig|calm|verspielt|playful|luxus|premium|minimal|clean|bunt|laut|bold|natur|edel|seriös|modern|privat)/g) || []))];
+const fits = (id) => { const st = styles.find((x) => x.id === id); return st && (kind === 'both' || st.for.includes(kind)) && (!st.requires?.pattern || st.requires.pattern === product.pattern); };
 const styleId = a.style || (moodStyle && !product.styles.includes(moodStyle) && fits(moodStyle) ? moodStyle : product.styles.find(fits) || product.styles[0]);
 const style = styles.find((s) => s.id === styleId) || styles.find((s) => s.id === product.styles[0]);
 const secondary = styles.find((s) => s.id === (product.styles.find((id) => id !== style.id) || product.styles[1]));
@@ -133,7 +134,7 @@ const md = `# Design brief — ${name}
 | Style | **${style.name}** — ${style.summary}${secondary ? `<br>Secondary (marketing accents only): ${secondary.name}` : ''} |
 | Brand seed | \`${brand}\` → run \`tokens.mjs --brand "${brand}"\` (contrast-checked light/dark) |
 | Fonts | **${fonts.heading}** (headings) + **${fonts.body}** (body) + ${fonts.mono} (mono) |
-| Motion level | **${motion}** — ${MOTION.budget} |
+| Motion level | **${motion}** — ${MOTION.budget} |${moodWords.length ? `\n| Tone words | ${moodWords.join(', ')} — let these steer neutrals (warm/cool tint), accent temperature and copy voice${moodStyle && moodStyle !== style.id ? ` (style "${moodStyle}" was not applied: it doesn't fit this product type)` : ''} |` : ''}
 | Signature idea | ${product.signature} |
 
 ## Style rules — ${style.name}

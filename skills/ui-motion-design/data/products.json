@@ -1,29 +1,1085 @@
 {
   "_about": "Product types → design direction. kind: website | webapp | both. styles: [primary, secondary]. brand: suggested starting colour (always override with the client's real brand). pattern = website pattern id, shell = webapp shell id (data/patterns.json). components = 21st.dev categories to browse (references/component-sourcing.md).",
   "products": [
-    { "id": "saas-b2b", "name": "B2B SaaS", "aliases": ["saas", "b2b", "software", "tool", "plattform", "platform", "startup"], "kind": "both", "styles": ["calm-product", "bento"], "fonts": "inter-system", "brand": "#4f46e5", "pattern": "saas-landing", "shell": "sidebar-shell", "motion": "standard", "signature": "product UI in hero + bento features; optional mesh gradient", "must": ["real product screenshot/UI in hero", "pricing with recommended plan", "security/DSGVO note", "⌘K in app"], "avoid": ["stock photos of handshakes", "five CTAs in hero", "dark-only marketing for non-technical buyers"], "components": ["Heroes", "Features", "Grids & Bento", "Pricing Sections", "Testimonials", "Calls to Action", "Sidebars", "Tables", "Dashboards"] },
-    { "id": "ai-product", "name": "AI product / agent", "aliases": ["ai", "ki", "agenten", "ai agent", "ki agent", "copilot", "assistant", "assistent", "llm", "chatbot", "gpt"], "kind": "both", "styles": ["ai-native", "dark-glow"], "fonts": "grotesk-dm", "brand": "#7c3aed", "pattern": "saas-landing", "shell": "chat-agent", "motion": "standard", "signature": "prompt composer as hero, streaming demo; aurora/orb as presence", "must": ["show a real output example", "what it can/can't do", "data handling & privacy", "approval gates for actions in the app"], "avoid": ["sparkle icons everywhere", "fake 'AI magic' without example", "auto-scrolling streams"], "components": ["AI Chats", "Heroes", "Shaders", "Texts", "Features"] },
-    { "id": "devtool", "name": "Developer tool / API", "aliases": ["developer", "devtool", "api", "sdk", "cli", "infrastructure", "open source", "entwickler"], "kind": "both", "styles": ["dark-glow", "calm-product"], "fonts": "geist", "brand": "#0ea5e9", "pattern": "saas-landing", "shell": "sidebar-shell", "motion": "standard", "signature": "code/terminal in hero, animated beam integration diagram", "must": ["copyable install command", "docs link in nav", "code samples with syntax highlight", "status/changelog"], "avoid": ["marketing fluff without code", "light grey text on black"], "components": ["Heroes", "Backgrounds", "Borders", "Features", "Calls to Action"] },
-    { "id": "fintech", "name": "Fintech / banking / insurance", "aliases": ["fintech", "bank", "banking", "finanzen", "versicherung", "insurance", "payment", "zahlung", "invest", "pension", "altersvorsorge", "bav"], "kind": "both", "styles": ["trust-clean", "soft-premium"], "fonts": "manrope", "brand": "#0f766e", "pattern": "saas-landing", "shell": "dashboard-home", "motion": "calm", "signature": "calm mesh gradient + number count-up with context", "must": ["regulatory info (BaFin etc.)", "security & data location", "clear fees", "tabular numbers"], "avoid": ["playful bounce", "crypto-neon look", "hidden costs"], "components": ["Heroes", "Stats & KPIs", "Features", "FAQs", "Dashboards", "Charts & Data Viz"] },
-    { "id": "dashboard-analytics", "name": "Analytics / ops dashboard", "aliases": ["dashboard", "analytics", "reporting", "monitoring", "kpi", "bi", "admin"], "kind": "webapp", "styles": ["data-dense", "calm-product"], "fonts": "inter-system", "brand": "#2563eb", "shell": "dashboard-home", "motion": "calm", "signature": "none — speed and clarity", "must": ["context for every number", "global date range", "export", "empty/error states per widget"], "avoid": ["gauges", "3D charts", "rainbow palettes"], "components": ["Dashboards", "Charts & Data Viz", "Tables", "Stats & KPIs"] },
-    { "id": "crm-admin", "name": "CRM / admin / internal tool", "aliases": ["crm", "erp", "verwaltung", "intern", "backoffice", "cms", "admin panel", "auftragsverwaltung", "rechnung", "invoice"], "kind": "webapp", "styles": ["calm-product", "data-dense"], "fonts": "inter-system", "brand": "#4f46e5", "shell": "list-detail", "motion": "calm", "signature": "none", "must": ["list-detail with side panel", "bulk actions", "undo", "autosave indicator", "keyboard shortcuts"], "avoid": ["modal for every edit", "disabled submit buttons"], "components": ["Tables", "Sidebars", "Forms", "Dialogs / Modals", "Toasts", "Empty States"] },
-    { "id": "ecommerce", "name": "E-commerce / shop", "aliases": ["shop", "e-commerce", "ecommerce", "onlineshop", "store", "produkt", "retail"], "kind": "website", "styles": ["soft-premium", "editorial"], "fonts": "outfit-work", "brand": "#111827", "pattern": "ecommerce", "motion": "standard", "signature": "product image hover swap, smooth add-to-cart feedback", "must": ["costs & delivery early", "guest checkout", "filters as chips", "reviews"], "avoid": ["auto-carousels", "pop-up before content", "fake urgency timers"], "components": ["Cards", "Carousels", "Galleries", "Navigation Menus", "Search Bars"] },
-    { "id": "luxury", "name": "Luxury / fashion / jewelry", "aliases": ["luxus", "luxury", "fashion", "mode", "schmuck", "jewelry", "boutique", "premium brand"], "kind": "website", "styles": ["luxury-minimal", "editorial"], "fonts": "cormorant-montserrat", "brand": "#1c1917", "pattern": "ecommerce", "motion": "standard", "signature": "slow clip-path image reveals, full-bleed imagery", "must": ["exceptional photography", "restraint", "concierge contact"], "avoid": ["discount badges", "bright saturated colours", "busy layouts"], "components": ["Galleries", "Heroes", "Images", "Texts"] },
-    { "id": "agency", "name": "Agency / studio", "aliases": ["agentur", "agency", "studio", "design studio", "webdesign", "marketing agentur", "spacelane"], "kind": "website", "styles": ["kinetic-type", "editorial"], "fonts": "instrument", "brand": "#ff4d2e", "pattern": "agency-portfolio", "motion": "expressive", "signature": "kinetic headline + case studies with clip reveals; page transitions", "must": ["work first", "case studies with results", "clear contact", "fast despite effects"], "avoid": ["10 different effects", "hidden navigation on desktop", "no real projects"], "components": ["Heroes", "Texts", "Galleries", "Marquees", "Cursors", "Testimonials"] },
-    { "id": "portfolio", "name": "Personal portfolio", "aliases": ["portfolio", "personal", "freelancer", "lebenslauf", "cv", "resume"], "kind": "website", "styles": ["swiss-minimal", "kinetic-type"], "fonts": "syne-manrope", "brand": "#18181b", "pattern": "agency-portfolio", "motion": "standard", "signature": "one personal interaction (cursor, 3D, type)", "must": ["projects with role & outcome", "contact", "about with face"], "avoid": ["skill bars with percentages", "loading screens"], "components": ["Galleries", "Texts", "Cursors", "Docks"] },
-    { "id": "handwerk", "name": "Handwerk / trades", "aliases": ["handwerk", "handwerker", "schreiner", "tischler", "elektriker", "sanitär", "dachdecker", "maler", "bau", "zimmerei", "installateur", "trades", "construction", "plumber"], "kind": "website", "styles": ["warm-craft", "trust-clean"], "fonts": "barlow", "brand": "#b45309", "pattern": "local-business", "motion": "calm", "signature": "before/after compare slider of real projects", "must": ["phone + WhatsApp above fold & sticky on mobile", "Meisterbetrieb/certificates", "service area", "real project photos", "Google reviews"], "avoid": ["stock photos", "heavy animations", "contact only via form"], "components": ["Heroes", "Galleries", "Testimonials", "Maps", "Forms", "Comparisons"] },
-    { "id": "medical", "name": "Arztpraxis / Zahnarzt / Therapie", "aliases": ["arzt", "praxis", "zahnarzt", "dental", "medical", "klinik", "clinic", "physio", "therapie", "therapy", "health", "gesundheit", "tierarzt", "vet"], "kind": "website", "styles": ["trust-clean", "organic"], "fonts": "figtree", "brand": "#0e7490", "pattern": "local-business", "motion": "calm", "signature": "none — calm, warm photography of the team", "must": ["online booking (Doctolib etc.)", "opening hours & emergency info", "team with qualifications", "accessibility of the location", "large readable type"], "avoid": ["clinical cold blue only", "tiny text", "autoplay video"], "components": ["Heroes", "Team Sections", "FAQs", "Maps", "Calendars"] },
-    { "id": "legal-tax", "name": "Kanzlei / Steuerberater / Beratung", "aliases": ["kanzlei", "anwalt", "rechtsanwalt", "steuerberater", "notar", "legal", "law", "tax", "beratung", "consulting", "unternehmensberatung"], "kind": "website", "styles": ["trust-clean", "editorial"], "fonts": "garamond-lato", "brand": "#1e3a5f", "pattern": "local-business", "motion": "calm", "signature": "none — authority through typography and clarity", "must": ["practice areas", "team with credentials", "first-consultation CTA", "clear fees/process"], "avoid": ["gavel/scale stock imagery", "flashy motion"], "components": ["Heroes", "Team Sections", "FAQs", "Steppers", "Forms"] },
-    { "id": "restaurant", "name": "Restaurant / Café / Bäckerei", "aliases": ["restaurant", "café", "cafe", "bäckerei", "bakery", "bar", "gastro", "gastronomie", "food", "weingut", "winery", "brauerei"], "kind": "website", "styles": ["warm-craft", "editorial"], "fonts": "fraunces-inter", "brand": "#9a3412", "pattern": "local-business", "motion": "calm", "signature": "appetising full-bleed photography, menu as real HTML", "must": ["menu as HTML (not PDF)", "opening hours", "reservation CTA", "address/map", "allergens"], "avoid": ["PDF-only menus", "autoplay music", "text on busy photos"], "components": ["Heroes", "Galleries", "Maps", "Testimonials"] },
-    { "id": "hotel", "name": "Hotel / tourism / events venue", "aliases": ["hotel", "pension", "ferienwohnung", "tourismus", "travel", "reise", "venue", "location"], "kind": "website", "styles": ["luxury-minimal", "organic"], "fonts": "playfair-inter", "brand": "#14532d", "pattern": "local-business", "motion": "standard", "signature": "slow image reveals, room gallery", "must": ["booking widget", "rooms with prices", "location & arrival", "reviews"], "avoid": ["hidden prices", "auto-carousel hero"], "components": ["Heroes", "Galleries", "Calendars", "Maps"] },
-    { "id": "fitness-wellness", "name": "Fitness / wellness / spa / yoga", "aliases": ["fitness", "gym", "studio", "yoga", "spa", "wellness", "kosmetik", "beauty", "massage", "coaching"], "kind": "both", "styles": ["organic", "soft-premium"], "fonts": "lora-source", "brand": "#65a30d", "pattern": "local-business", "shell": "mobile-tabs", "motion": "standard", "signature": "calm video/photo hero, class schedule", "must": ["schedule/booking", "pricing/memberships", "trainer profiles", "trial offer"], "avoid": ["aggressive before/after body imagery", "neon overload"], "components": ["Heroes", "Pricing Sections", "Calendars", "Team Sections"] },
-    { "id": "education", "name": "Education / course / e-learning", "aliases": ["kurs", "course", "e-learning", "schule", "akademie", "bildung", "education", "lms", "workshop", "seminar"], "kind": "both", "styles": ["soft-premium", "playful-vibrant"], "fonts": "jakarta", "brand": "#2563eb", "pattern": "lead-magnet", "shell": "sidebar-shell", "motion": "standard", "signature": "curriculum stepper, progress visuals", "must": ["curriculum", "instructor credibility", "outcomes", "price & guarantee"], "avoid": ["walls of text", "unclear time commitment"], "components": ["Steppers", "Timelines", "Pricing Sections", "Testimonials", "Progress"] },
-    { "id": "kids", "name": "Kids / family / pets", "aliases": ["kinder", "kids", "kita", "familie", "family", "pets", "haustier", "spiel"], "kind": "both", "styles": ["playful-vibrant", "claymorphism"], "fonts": "fredoka-nunito", "brand": "#f97316", "pattern": "local-business", "shell": "mobile-tabs", "motion": "expressive", "signature": "friendly illustrations, bouncy success states", "must": ["parent-facing trust info", "large targets", "simple language"], "avoid": ["dark patterns", "tiny text", "flashing"], "components": ["Buttons", "Cards", "Onboarding"] },
-    { "id": "nonprofit-public", "name": "Non-profit / public sector / Verein", "aliases": ["verein", "non-profit", "nonprofit", "ngo", "stiftung", "gemeinde", "stadt", "behörde", "government", "public", "kirche"], "kind": "website", "styles": ["trust-clean", "swiss-minimal"], "fonts": "atkinson", "brand": "#15803d", "pattern": "content-blog", "motion": "calm", "signature": "impact numbers with context", "must": ["accessibility (BITV/WCAG AA)", "plain language", "donate/participate CTA", "transparency"], "avoid": ["heavy effects", "low contrast"], "components": ["Stats & KPIs", "Timelines", "FAQs", "Forms"] },
-    { "id": "realestate", "name": "Real estate / architecture / interior", "aliases": ["immobilien", "real estate", "makler", "architekt", "architecture", "interior", "innenarchitektur", "bauträger"], "kind": "website", "styles": ["luxury-minimal", "swiss-minimal"], "fonts": "manrope", "brand": "#44403c", "pattern": "agency-portfolio", "motion": "standard", "signature": "large imagery, sticky zoom into project", "must": ["listings with filters", "floor plans", "contact agent", "location"], "avoid": ["low-res photos", "cluttered listings"], "components": ["Galleries", "Maps", "Heroes", "Cards"] },
-    { "id": "event", "name": "Event / festival / conference", "aliases": ["event", "festival", "konferenz", "conference", "messe", "party", "konzert", "beerpong", "turnier"], "kind": "website", "styles": ["kinetic-type", "neubrutalism"], "fonts": "anton-epilogue", "brand": "#e11d48", "pattern": "event", "motion": "expressive", "signature": "kinetic date/name, marquee lineup (with pause)", "must": ["date, place, tickets above fold", "agenda", "add to calendar", "arrival"], "avoid": ["countdown as only info", "unreadable type over video"], "components": ["Heroes", "Marquees", "Timelines", "Team Sections", "Pricing Sections"] },
-    { "id": "media-blog", "name": "Blog / media / newsletter", "aliases": ["blog", "magazin", "magazine", "news", "newsletter", "podcast", "content"], "kind": "website", "styles": ["editorial", "swiss-minimal"], "fonts": "newsreader-inter", "brand": "#b91c1c", "pattern": "content-blog", "motion": "calm", "signature": "none — reading experience", "must": ["18px body, 65ch", "reading time", "TOC on long posts", "subscribe inline"], "avoid": ["intrusive popups", "sidebar clutter"], "components": ["Cards", "Texts", "Calls to Action"] },
-    { "id": "mobile-consumer", "name": "Consumer mobile app", "aliases": ["app", "mobile app", "ios", "android", "expo", "react native", "consumer"], "kind": "webapp", "styles": ["soft-premium", "playful-vibrant"], "fonts": "jakarta", "brand": "#6366f1", "shell": "mobile-tabs", "motion": "standard", "signature": "gesture-driven sheets, springy feedback, haptics on commit", "must": ["thumb zone actions", "sheets over modals", "offline states", "onboarding ≤ 3 screens"], "avoid": ["hamburger as primary nav", "custom gestures without visible alternative"], "components": ["Onboarding", "Cards", "Toggles", "Notifications"] },
-    { "id": "game-web", "name": "Browser game / interactive experience", "aliases": ["game", "spiel", "arcade", "interactive", "3d", "webgl", "experience"], "kind": "website", "styles": ["immersive-3d", "playful-vibrant"], "fonts": "archivo", "brand": "#facc15", "pattern": "product-launch", "motion": "expressive", "signature": "the experience itself; sound opt-in", "must": ["loading progress", "controls hint", "pause/mute", "mobile fallback"], "avoid": ["blocking LCP with canvas", "no way to skip intro"], "components": ["Shaders", "Backgrounds", "Cursors", "Globes"] }
+    {
+      "id": "saas-b2b",
+      "name": "B2B SaaS",
+      "aliases": [
+        "saas",
+        "b2b",
+        "software",
+        "tool",
+        "plattform",
+        "platform",
+        "startup"
+      ],
+      "kind": "both",
+      "styles": [
+        "calm-product",
+        "bento"
+      ],
+      "fonts": "inter-system",
+      "brand": "#4f46e5",
+      "pattern": "saas-landing",
+      "shell": "sidebar-shell",
+      "motion": "standard",
+      "signature": "product UI in hero + bento features; optional mesh gradient",
+      "must": [
+        "real product screenshot/UI in hero",
+        "pricing with recommended plan",
+        "security/DSGVO note",
+        "⌘K in app"
+      ],
+      "avoid": [
+        "stock photos of handshakes",
+        "five CTAs in hero",
+        "dark-only marketing for non-technical buyers"
+      ],
+      "components": [
+        "Heroes",
+        "Features",
+        "Grids & Bento",
+        "Pricing Sections",
+        "Testimonials",
+        "Calls to Action",
+        "Sidebars",
+        "Tables",
+        "Dashboards"
+      ]
+    },
+    {
+      "id": "ai-product",
+      "name": "AI product / agent",
+      "aliases": [
+        "ai",
+        "ki",
+        "agenten",
+        "ai agent",
+        "ki agent",
+        "copilot",
+        "assistant",
+        "assistent",
+        "llm",
+        "chatbot",
+        "gpt"
+      ],
+      "kind": "both",
+      "styles": [
+        "ai-native",
+        "dark-glow"
+      ],
+      "fonts": "grotesk-dm",
+      "brand": "#7c3aed",
+      "pattern": "saas-landing",
+      "shell": "chat-agent",
+      "motion": "standard",
+      "signature": "prompt composer as hero, streaming demo; aurora/orb as presence",
+      "must": [
+        "show a real output example",
+        "what it can/can't do",
+        "data handling & privacy",
+        "approval gates for actions in the app"
+      ],
+      "avoid": [
+        "sparkle icons everywhere",
+        "fake 'AI magic' without example",
+        "auto-scrolling streams"
+      ],
+      "components": [
+        "AI Chats",
+        "Heroes",
+        "Shaders",
+        "Texts",
+        "Features"
+      ]
+    },
+    {
+      "id": "hardware",
+      "name": "Hardware / smart device launch",
+      "aliases": [
+        "hardware",
+        "gerät",
+        "geraet",
+        "gadget",
+        "device",
+        "smart home",
+        "smarthome",
+        "lautsprecher",
+        "speaker",
+        "wearable",
+        "esp32",
+        "iot",
+        "produktpräsentation",
+        "produktpraesentation",
+        "product launch",
+        "produktlaunch",
+        "launch",
+        "kickstarter",
+        "crowdfunding"
+      ],
+      "kind": "website",
+      "styles": [
+        "soft-premium",
+        "dark-glow"
+      ],
+      "fonts": "bricolage",
+      "brand": "#e8590c",
+      "pattern": "product-launch",
+      "motion": "expressive",
+      "signature": "the device itself rendered in CSS/SVG/3D, reacting to scroll (states, light, exploded view); pinned scroll story",
+      "must": [
+        "product visual above the fold",
+        "how it works in 3–5 pinned moments",
+        "specs table with real units",
+        "what's in the box / compatibility",
+        "price or waitlist/preorder with honest date",
+        "privacy & data flow if it listens or tracks"
+      ],
+      "avoid": [
+        "vague 'smart' claims without a concrete example",
+        "heavy 3D that blocks LCP",
+        "fake reviews before launch",
+        "dark patterns in preorder"
+      ],
+      "components": [
+        "Heroes",
+        "Scroll Areas",
+        "Features",
+        "Comparisons",
+        "Stats & KPIs",
+        "FAQs"
+      ]
+    },
+    {
+      "id": "devtool",
+      "name": "Developer tool / API",
+      "aliases": [
+        "developer",
+        "devtool",
+        "api",
+        "sdk",
+        "cli",
+        "infrastructure",
+        "open source",
+        "entwickler"
+      ],
+      "kind": "both",
+      "styles": [
+        "dark-glow",
+        "calm-product"
+      ],
+      "fonts": "geist",
+      "brand": "#0ea5e9",
+      "pattern": "saas-landing",
+      "shell": "sidebar-shell",
+      "motion": "standard",
+      "signature": "code/terminal in hero, animated beam integration diagram",
+      "must": [
+        "copyable install command",
+        "docs link in nav",
+        "code samples with syntax highlight",
+        "status/changelog"
+      ],
+      "avoid": [
+        "marketing fluff without code",
+        "light grey text on black"
+      ],
+      "components": [
+        "Heroes",
+        "Backgrounds",
+        "Borders",
+        "Features",
+        "Calls to Action"
+      ]
+    },
+    {
+      "id": "fintech",
+      "name": "Fintech / banking / insurance",
+      "aliases": [
+        "fintech",
+        "bank",
+        "banking",
+        "finanzen",
+        "versicherung",
+        "insurance",
+        "payment",
+        "zahlung",
+        "invest",
+        "pension",
+        "altersvorsorge",
+        "bav"
+      ],
+      "kind": "both",
+      "styles": [
+        "trust-clean",
+        "soft-premium"
+      ],
+      "fonts": "manrope",
+      "brand": "#0f766e",
+      "pattern": "saas-landing",
+      "shell": "dashboard-home",
+      "motion": "calm",
+      "signature": "calm mesh gradient + number count-up with context",
+      "must": [
+        "regulatory info (BaFin etc.)",
+        "security & data location",
+        "clear fees",
+        "tabular numbers"
+      ],
+      "avoid": [
+        "playful bounce",
+        "crypto-neon look",
+        "hidden costs"
+      ],
+      "components": [
+        "Heroes",
+        "Stats & KPIs",
+        "Features",
+        "FAQs",
+        "Dashboards",
+        "Charts & Data Viz"
+      ]
+    },
+    {
+      "id": "dashboard-analytics",
+      "name": "Analytics / ops dashboard",
+      "aliases": [
+        "dashboard",
+        "analytics",
+        "reporting",
+        "monitoring",
+        "kpi",
+        "bi",
+        "admin"
+      ],
+      "kind": "webapp",
+      "styles": [
+        "data-dense",
+        "calm-product"
+      ],
+      "fonts": "inter-system",
+      "brand": "#2563eb",
+      "shell": "dashboard-home",
+      "motion": "calm",
+      "signature": "none — speed and clarity",
+      "must": [
+        "context for every number",
+        "global date range",
+        "export",
+        "empty/error states per widget"
+      ],
+      "avoid": [
+        "gauges",
+        "3D charts",
+        "rainbow palettes"
+      ],
+      "components": [
+        "Dashboards",
+        "Charts & Data Viz",
+        "Tables",
+        "Stats & KPIs"
+      ]
+    },
+    {
+      "id": "crm-admin",
+      "name": "CRM / admin / internal tool",
+      "aliases": [
+        "crm",
+        "erp",
+        "verwaltung",
+        "intern",
+        "backoffice",
+        "cms",
+        "admin panel",
+        "auftragsverwaltung",
+        "rechnung",
+        "invoice"
+      ],
+      "kind": "webapp",
+      "styles": [
+        "calm-product",
+        "data-dense"
+      ],
+      "fonts": "inter-system",
+      "brand": "#4f46e5",
+      "shell": "list-detail",
+      "motion": "calm",
+      "signature": "none",
+      "must": [
+        "list-detail with side panel",
+        "bulk actions",
+        "undo",
+        "autosave indicator",
+        "keyboard shortcuts"
+      ],
+      "avoid": [
+        "modal for every edit",
+        "disabled submit buttons"
+      ],
+      "components": [
+        "Tables",
+        "Sidebars",
+        "Forms",
+        "Dialogs / Modals",
+        "Toasts",
+        "Empty States"
+      ]
+    },
+    {
+      "id": "ecommerce",
+      "name": "E-commerce / shop",
+      "aliases": [
+        "shop",
+        "e-commerce",
+        "ecommerce",
+        "onlineshop",
+        "store",
+        "retail"
+      ],
+      "kind": "website",
+      "styles": [
+        "soft-premium",
+        "editorial"
+      ],
+      "fonts": "outfit-work",
+      "brand": "#111827",
+      "pattern": "ecommerce",
+      "motion": "standard",
+      "signature": "product image hover swap, smooth add-to-cart feedback",
+      "must": [
+        "costs & delivery early",
+        "guest checkout",
+        "filters as chips",
+        "reviews"
+      ],
+      "avoid": [
+        "auto-carousels",
+        "pop-up before content",
+        "fake urgency timers"
+      ],
+      "components": [
+        "Cards",
+        "Carousels",
+        "Galleries",
+        "Navigation Menus",
+        "Search Bars"
+      ]
+    },
+    {
+      "id": "luxury",
+      "name": "Luxury / fashion / jewelry",
+      "aliases": [
+        "luxus",
+        "luxury",
+        "fashion",
+        "mode",
+        "schmuck",
+        "jewelry",
+        "boutique",
+        "premium brand"
+      ],
+      "kind": "website",
+      "styles": [
+        "luxury-minimal",
+        "editorial"
+      ],
+      "fonts": "cormorant-montserrat",
+      "brand": "#1c1917",
+      "pattern": "ecommerce",
+      "motion": "standard",
+      "signature": "slow clip-path image reveals, full-bleed imagery",
+      "must": [
+        "exceptional photography",
+        "restraint",
+        "concierge contact"
+      ],
+      "avoid": [
+        "discount badges",
+        "bright saturated colours",
+        "busy layouts"
+      ],
+      "components": [
+        "Galleries",
+        "Heroes",
+        "Images",
+        "Texts"
+      ]
+    },
+    {
+      "id": "agency",
+      "name": "Agency / studio",
+      "aliases": [
+        "agentur",
+        "agency",
+        "studio",
+        "design studio",
+        "webdesign",
+        "marketing agentur",
+        "spacelane"
+      ],
+      "kind": "website",
+      "styles": [
+        "kinetic-type",
+        "editorial"
+      ],
+      "fonts": "instrument",
+      "brand": "#ff4d2e",
+      "pattern": "agency-portfolio",
+      "motion": "expressive",
+      "signature": "kinetic headline + case studies with clip reveals; page transitions",
+      "must": [
+        "work first",
+        "case studies with results",
+        "clear contact",
+        "fast despite effects"
+      ],
+      "avoid": [
+        "10 different effects",
+        "hidden navigation on desktop",
+        "no real projects"
+      ],
+      "components": [
+        "Heroes",
+        "Texts",
+        "Galleries",
+        "Marquees",
+        "Cursors",
+        "Testimonials"
+      ]
+    },
+    {
+      "id": "portfolio",
+      "name": "Personal portfolio",
+      "aliases": [
+        "portfolio",
+        "personal",
+        "freelancer",
+        "lebenslauf",
+        "cv",
+        "resume"
+      ],
+      "kind": "website",
+      "styles": [
+        "swiss-minimal",
+        "kinetic-type"
+      ],
+      "fonts": "syne-manrope",
+      "brand": "#18181b",
+      "pattern": "agency-portfolio",
+      "motion": "standard",
+      "signature": "one personal interaction (cursor, 3D, type)",
+      "must": [
+        "projects with role & outcome",
+        "contact",
+        "about with face"
+      ],
+      "avoid": [
+        "skill bars with percentages",
+        "loading screens"
+      ],
+      "components": [
+        "Galleries",
+        "Texts",
+        "Cursors",
+        "Docks"
+      ]
+    },
+    {
+      "id": "handwerk",
+      "name": "Handwerk / trades",
+      "aliases": [
+        "handwerk",
+        "handwerker",
+        "schreiner",
+        "tischler",
+        "elektriker",
+        "sanitär",
+        "dachdecker",
+        "maler",
+        "bau",
+        "zimmerei",
+        "installateur",
+        "trades",
+        "construction",
+        "plumber"
+      ],
+      "kind": "website",
+      "styles": [
+        "warm-craft",
+        "trust-clean"
+      ],
+      "fonts": "barlow",
+      "brand": "#b45309",
+      "pattern": "local-business",
+      "motion": "calm",
+      "signature": "before/after compare slider of real projects",
+      "must": [
+        "phone + WhatsApp above fold & sticky on mobile",
+        "Meisterbetrieb/certificates",
+        "service area",
+        "real project photos",
+        "Google reviews"
+      ],
+      "avoid": [
+        "stock photos",
+        "heavy animations",
+        "contact only via form"
+      ],
+      "components": [
+        "Heroes",
+        "Galleries",
+        "Testimonials",
+        "Maps",
+        "Forms",
+        "Comparisons"
+      ]
+    },
+    {
+      "id": "medical",
+      "name": "Arztpraxis / Zahnarzt / Therapie",
+      "aliases": [
+        "arzt",
+        "praxis",
+        "zahnarzt",
+        "dental",
+        "medical",
+        "klinik",
+        "clinic",
+        "physio",
+        "therapie",
+        "therapy",
+        "health",
+        "gesundheit",
+        "tierarzt",
+        "vet"
+      ],
+      "kind": "website",
+      "styles": [
+        "trust-clean",
+        "organic"
+      ],
+      "fonts": "figtree",
+      "brand": "#0e7490",
+      "pattern": "local-business",
+      "motion": "calm",
+      "signature": "none — calm, warm photography of the team",
+      "must": [
+        "online booking (Doctolib etc.)",
+        "opening hours & emergency info",
+        "team with qualifications",
+        "accessibility of the location",
+        "large readable type"
+      ],
+      "avoid": [
+        "clinical cold blue only",
+        "tiny text",
+        "autoplay video"
+      ],
+      "components": [
+        "Heroes",
+        "Team Sections",
+        "FAQs",
+        "Maps",
+        "Calendars"
+      ]
+    },
+    {
+      "id": "legal-tax",
+      "name": "Kanzlei / Steuerberater / Beratung",
+      "aliases": [
+        "kanzlei",
+        "anwalt",
+        "rechtsanwalt",
+        "steuerberater",
+        "notar",
+        "legal",
+        "law",
+        "tax",
+        "beratung",
+        "consulting",
+        "unternehmensberatung"
+      ],
+      "kind": "website",
+      "styles": [
+        "trust-clean",
+        "editorial"
+      ],
+      "fonts": "garamond-lato",
+      "brand": "#1e3a5f",
+      "pattern": "local-business",
+      "motion": "calm",
+      "signature": "none — authority through typography and clarity",
+      "must": [
+        "practice areas",
+        "team with credentials",
+        "first-consultation CTA",
+        "clear fees/process"
+      ],
+      "avoid": [
+        "gavel/scale stock imagery",
+        "flashy motion"
+      ],
+      "components": [
+        "Heroes",
+        "Team Sections",
+        "FAQs",
+        "Steppers",
+        "Forms"
+      ]
+    },
+    {
+      "id": "restaurant",
+      "name": "Restaurant / Café / Bäckerei",
+      "aliases": [
+        "restaurant",
+        "café",
+        "cafe",
+        "bäckerei",
+        "bakery",
+        "bar",
+        "gastro",
+        "gastronomie",
+        "food",
+        "weingut",
+        "winery",
+        "brauerei"
+      ],
+      "kind": "website",
+      "styles": [
+        "warm-craft",
+        "editorial"
+      ],
+      "fonts": "fraunces-inter",
+      "brand": "#9a3412",
+      "pattern": "local-business",
+      "motion": "calm",
+      "signature": "appetising full-bleed photography, menu as real HTML",
+      "must": [
+        "menu as HTML (not PDF)",
+        "opening hours",
+        "reservation CTA",
+        "address/map",
+        "allergens"
+      ],
+      "avoid": [
+        "PDF-only menus",
+        "autoplay music",
+        "text on busy photos"
+      ],
+      "components": [
+        "Heroes",
+        "Galleries",
+        "Maps",
+        "Testimonials"
+      ]
+    },
+    {
+      "id": "hotel",
+      "name": "Hotel / tourism / events venue",
+      "aliases": [
+        "hotel",
+        "pension",
+        "ferienwohnung",
+        "tourismus",
+        "travel",
+        "reise",
+        "venue",
+        "location"
+      ],
+      "kind": "website",
+      "styles": [
+        "luxury-minimal",
+        "organic"
+      ],
+      "fonts": "playfair-inter",
+      "brand": "#14532d",
+      "pattern": "local-business",
+      "motion": "standard",
+      "signature": "slow image reveals, room gallery",
+      "must": [
+        "booking widget",
+        "rooms with prices",
+        "location & arrival",
+        "reviews"
+      ],
+      "avoid": [
+        "hidden prices",
+        "auto-carousel hero"
+      ],
+      "components": [
+        "Heroes",
+        "Galleries",
+        "Calendars",
+        "Maps"
+      ]
+    },
+    {
+      "id": "fitness-wellness",
+      "name": "Fitness / wellness / spa / yoga",
+      "aliases": [
+        "fitness",
+        "gym",
+        "studio",
+        "yoga",
+        "spa",
+        "wellness",
+        "kosmetik",
+        "beauty",
+        "massage",
+        "coaching"
+      ],
+      "kind": "both",
+      "styles": [
+        "organic",
+        "soft-premium"
+      ],
+      "fonts": "lora-source",
+      "brand": "#65a30d",
+      "pattern": "local-business",
+      "shell": "mobile-tabs",
+      "motion": "standard",
+      "signature": "calm video/photo hero, class schedule",
+      "must": [
+        "schedule/booking",
+        "pricing/memberships",
+        "trainer profiles",
+        "trial offer"
+      ],
+      "avoid": [
+        "aggressive before/after body imagery",
+        "neon overload"
+      ],
+      "components": [
+        "Heroes",
+        "Pricing Sections",
+        "Calendars",
+        "Team Sections"
+      ]
+    },
+    {
+      "id": "education",
+      "name": "Education / course / e-learning",
+      "aliases": [
+        "kurs",
+        "course",
+        "e-learning",
+        "schule",
+        "akademie",
+        "bildung",
+        "education",
+        "lms",
+        "workshop",
+        "seminar"
+      ],
+      "kind": "both",
+      "styles": [
+        "soft-premium",
+        "playful-vibrant"
+      ],
+      "fonts": "jakarta",
+      "brand": "#2563eb",
+      "pattern": "lead-magnet",
+      "shell": "sidebar-shell",
+      "motion": "standard",
+      "signature": "curriculum stepper, progress visuals",
+      "must": [
+        "curriculum",
+        "instructor credibility",
+        "outcomes",
+        "price & guarantee"
+      ],
+      "avoid": [
+        "walls of text",
+        "unclear time commitment"
+      ],
+      "components": [
+        "Steppers",
+        "Timelines",
+        "Pricing Sections",
+        "Testimonials",
+        "Progress"
+      ]
+    },
+    {
+      "id": "kids",
+      "name": "Kids / family / pets",
+      "aliases": [
+        "kinder",
+        "kids",
+        "kita",
+        "familie",
+        "family",
+        "pets",
+        "haustier",
+        "spiel"
+      ],
+      "kind": "both",
+      "styles": [
+        "playful-vibrant",
+        "claymorphism"
+      ],
+      "fonts": "fredoka-nunito",
+      "brand": "#f97316",
+      "pattern": "local-business",
+      "shell": "mobile-tabs",
+      "motion": "expressive",
+      "signature": "friendly illustrations, bouncy success states",
+      "must": [
+        "parent-facing trust info",
+        "large targets",
+        "simple language"
+      ],
+      "avoid": [
+        "dark patterns",
+        "tiny text",
+        "flashing"
+      ],
+      "components": [
+        "Buttons",
+        "Cards",
+        "Onboarding"
+      ]
+    },
+    {
+      "id": "nonprofit-public",
+      "name": "Non-profit / public sector / Verein",
+      "aliases": [
+        "verein",
+        "non-profit",
+        "nonprofit",
+        "ngo",
+        "stiftung",
+        "gemeinde",
+        "stadt",
+        "behörde",
+        "government",
+        "public",
+        "kirche"
+      ],
+      "kind": "website",
+      "styles": [
+        "trust-clean",
+        "swiss-minimal"
+      ],
+      "fonts": "atkinson",
+      "brand": "#15803d",
+      "pattern": "content-blog",
+      "motion": "calm",
+      "signature": "impact numbers with context",
+      "must": [
+        "accessibility (BITV/WCAG AA)",
+        "plain language",
+        "donate/participate CTA",
+        "transparency"
+      ],
+      "avoid": [
+        "heavy effects",
+        "low contrast"
+      ],
+      "components": [
+        "Stats & KPIs",
+        "Timelines",
+        "FAQs",
+        "Forms"
+      ]
+    },
+    {
+      "id": "realestate",
+      "name": "Real estate / architecture / interior",
+      "aliases": [
+        "immobilien",
+        "real estate",
+        "makler",
+        "architekt",
+        "architecture",
+        "interior",
+        "innenarchitektur",
+        "bauträger"
+      ],
+      "kind": "website",
+      "styles": [
+        "luxury-minimal",
+        "swiss-minimal"
+      ],
+      "fonts": "manrope",
+      "brand": "#44403c",
+      "pattern": "agency-portfolio",
+      "motion": "standard",
+      "signature": "large imagery, sticky zoom into project",
+      "must": [
+        "listings with filters",
+        "floor plans",
+        "contact agent",
+        "location"
+      ],
+      "avoid": [
+        "low-res photos",
+        "cluttered listings"
+      ],
+      "components": [
+        "Galleries",
+        "Maps",
+        "Heroes",
+        "Cards"
+      ]
+    },
+    {
+      "id": "event",
+      "name": "Event / festival / conference",
+      "aliases": [
+        "event",
+        "festival",
+        "konferenz",
+        "conference",
+        "messe",
+        "party",
+        "konzert",
+        "beerpong",
+        "turnier"
+      ],
+      "kind": "website",
+      "styles": [
+        "kinetic-type",
+        "neubrutalism"
+      ],
+      "fonts": "anton-epilogue",
+      "brand": "#e11d48",
+      "pattern": "event",
+      "motion": "expressive",
+      "signature": "kinetic date/name, marquee lineup (with pause)",
+      "must": [
+        "date, place, tickets above fold",
+        "agenda",
+        "add to calendar",
+        "arrival"
+      ],
+      "avoid": [
+        "countdown as only info",
+        "unreadable type over video"
+      ],
+      "components": [
+        "Heroes",
+        "Marquees",
+        "Timelines",
+        "Team Sections",
+        "Pricing Sections"
+      ]
+    },
+    {
+      "id": "media-blog",
+      "name": "Blog / media / newsletter",
+      "aliases": [
+        "blog",
+        "magazin",
+        "magazine",
+        "news",
+        "newsletter",
+        "podcast",
+        "content"
+      ],
+      "kind": "website",
+      "styles": [
+        "editorial",
+        "swiss-minimal"
+      ],
+      "fonts": "newsreader-inter",
+      "brand": "#b91c1c",
+      "pattern": "content-blog",
+      "motion": "calm",
+      "signature": "none — reading experience",
+      "must": [
+        "18px body, 65ch",
+        "reading time",
+        "TOC on long posts",
+        "subscribe inline"
+      ],
+      "avoid": [
+        "intrusive popups",
+        "sidebar clutter"
+      ],
+      "components": [
+        "Cards",
+        "Texts",
+        "Calls to Action"
+      ]
+    },
+    {
+      "id": "mobile-consumer",
+      "name": "Consumer mobile app",
+      "aliases": [
+        "app",
+        "mobile app",
+        "ios",
+        "android",
+        "expo",
+        "react native",
+        "consumer"
+      ],
+      "kind": "webapp",
+      "styles": [
+        "soft-premium",
+        "playful-vibrant"
+      ],
+      "fonts": "jakarta",
+      "brand": "#6366f1",
+      "shell": "mobile-tabs",
+      "motion": "standard",
+      "signature": "gesture-driven sheets, springy feedback, haptics on commit",
+      "must": [
+        "thumb zone actions",
+        "sheets over modals",
+        "offline states",
+        "onboarding ≤ 3 screens"
+      ],
+      "avoid": [
+        "hamburger as primary nav",
+        "custom gestures without visible alternative"
+      ],
+      "components": [
+        "Onboarding",
+        "Cards",
+        "Toggles",
+        "Notifications"
+      ]
+    },
+    {
+      "id": "game-web",
+      "name": "Browser game / interactive experience",
+      "aliases": [
+        "game",
+        "spiel",
+        "arcade",
+        "interactive",
+        "3d",
+        "webgl",
+        "experience"
+      ],
+      "kind": "website",
+      "styles": [
+        "immersive-3d",
+        "playful-vibrant"
+      ],
+      "fonts": "archivo",
+      "brand": "#facc15",
+      "pattern": "product-launch",
+      "motion": "expressive",
+      "signature": "the experience itself; sound opt-in",
+      "must": [
+        "loading progress",
+        "controls hint",
+        "pause/mute",
+        "mobile fallback"
+      ],
+      "avoid": [
+        "blocking LCP with canvas",
+        "no way to skip intro"
+      ],
+      "components": [
+        "Shaders",
+        "Backgrounds",
+        "Cursors",
+        "Globes"
+      ]
+    }
   ]
 }

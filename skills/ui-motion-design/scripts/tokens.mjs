@@ -5,7 +5,7 @@
 //
 //   node tokens.mjs --brand "#6d28d9" [--name brand] [--out ./design-tokens] [--format all]
 //                   [--ratio 1.25] [--ratio-min 1.2] [--base 16] [--radius 0.625rem]
-//                   [--neutral-chroma 0.012] [--font-sans "Geist"] [--font-display "…"] [--preview]
+//                   [--neutral-chroma 0.012] [--neutral-hue 230] [--background-light 0.975] [--font-sans "Geist"] [--font-display "…"] [--preview]
 //
 // Formats: css (tokens.css), tailwind (tailwind.css, Tailwind v4 + shadcn layout),
 //          json (tokens.json), ts (tokens.ts — React / React Native / Motion / Reanimated), all.
@@ -29,6 +29,8 @@ const { values: args } = parseArgs({
     base: { type: 'string', default: '16' },
     radius: { type: 'string', default: '0.625rem' },
     'neutral-chroma': { type: 'string', default: '0.012' },
+    'neutral-hue': { type: 'string' },
+    'background-light': { type: 'string' },
     'font-sans': { type: 'string', default: 'ui-sans-serif, system-ui, sans-serif' },
     'font-display': { type: 'string' },
     'font-mono': { type: 'string', default: 'ui-monospace, SFMono-Regular, Menlo, monospace' },
@@ -41,7 +43,7 @@ const { values: args } = parseArgs({
 if (args.help || !args.brand) {
   console.log(`Usage: node tokens.mjs --brand "#6d28d9" [--name brand] [--out ./design-tokens]
        [--format all|css|tailwind|json|ts] [--ratio 1.25] [--ratio-min 1.2] [--base 16]
-       [--radius 0.625rem] [--neutral-chroma 0.012] [--font-sans "Geist, sans-serif"]
+       [--radius 0.625rem] [--neutral-chroma 0.012] [--neutral-hue <deg>] [--background-light <L 0–1>] [--font-sans "Geist, sans-serif"]
        [--font-display "…"] [--preview]`);
   process.exit(args.help ? 0 : 1);
 }
@@ -75,9 +77,11 @@ function ramp({ h, c }, { snap } = {}) {
 const brandPeakC = Math.max(brand.c, 0.04);
 const brandRamp = ramp({ h: brand.h, c: brandPeakC }, { snap: brand });
 const brandStep = brandRamp._brandStep; delete brandRamp._brandStep;
-const neutralRamp = ramp({ h: brand.h, c: 0 });
+// neutrals default to the brand hue; --neutral-hue lets them run cooler/warmer than the accent (e.g. cool stone + ember)
+const NH = args['neutral-hue'] !== undefined ? Number(args['neutral-hue']) : brand.h;
+const neutralRamp = ramp({ h: NH, c: 0 });
 // neutral ramp uses a flat, tiny chroma (tinted gray)
-for (const s of STEPS) neutralRamp[s].c = Math.min(Number(args['neutral-chroma']), maxChroma(neutralRamp[s].l, brand.h));
+for (const s of STEPS) neutralRamp[s].c = Math.min(Number(args['neutral-chroma']), maxChroma(neutralRamp[s].l, NH));
 
 const ok = (o) => formatOklch(o);
 const hex = (o) => toHex(oklchToRgb(o));
@@ -116,7 +120,8 @@ const lightPrimary = primaryFill('light');
 const darkPrimary = primaryFill('dark');
 const NC = Number(args['neutral-chroma']);
 // surfaces use fixed lightness (not ramp steps) so contrast holds for every brand
-const n = (l, cScale = 1) => ({ l, c: Math.min(NC * cScale, maxChroma(l, brand.h)), h: brand.h });
+const n = (l, cScale = 1) => ({ l, c: Math.min(NC * cScale, maxChroma(l, NH)), h: NH });
+const BG_L = args['background-light'] ? Number(args['background-light']) : null; // tinted page background instead of pure white
 
 const status = {
   destructive: { light: { l: 0.577, c: 0.245, h: 27.3 }, dark: { l: 0.704, c: 0.191, h: 22.2 } },
@@ -137,7 +142,7 @@ function semantic(mode) {
   const L = mode === 'light';
   const P = L ? lightPrimary : darkPrimary;
   const s = {
-    background: L ? WHITE : n(0.16),
+    background: L ? (BG_L ? n(BG_L, 1.2) : WHITE) : n(0.16),
     foreground: L ? n(0.17, 1.5) : n(0.985, 0.3),
     card: L ? WHITE : n(0.2),
     'card-foreground': L ? n(0.17, 1.5) : n(0.985, 0.3),
@@ -211,7 +216,7 @@ const radius = {
   xl: `calc(${radiusBase} + 4px)`, '2xl': `calc(${radiusBase} + 8px)`, full: '9999px',
 };
 
-const sh = (a, mode) => `oklch(${mode === 'light' ? 0.2 : 0} 0.02 ${round(brand.h, 1)} / ${a})`;
+const sh = (a, mode) => `oklch(${mode === 'light' ? 0.2 : 0} 0.02 ${round(NH, 1)} / ${a})`;
 const shadows = (mode) => {
   const k = mode === 'light' ? 1 : 2.4;
   const c = (a) => sh(round(Math.min(0.6, a * k), 3), mode);
@@ -293,12 +298,14 @@ ${staticVars()}
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]):not(.light) {
+    color-scheme: dark;
 ${semVars(dark, '    ')}
 ${shadowVars('dark', '    ')}
   }
 }
 
 :root[data-theme="dark"], .dark {
+  color-scheme: dark;
 ${semVars(dark)}
 ${shadowVars('dark')}
 }
